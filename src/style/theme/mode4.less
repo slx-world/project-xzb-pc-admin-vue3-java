@@ -1,0 +1,408 @@
+:root[theme-color='mode4'] {
+  // 主题色板
+  --color-main: #E34D59;
+  --color-aux1: #e34250;
+  --color-aux2: #e84b58;
+  --color-aux3: #fdf1f2;
+  --color-aux4: #fffafa;
+
+  --color-success: #27ba9b;
+  --color-warning: #FFAB2E;
+  --color-error: #e34d59;
+  --color-error1: #e9717a;
+  --color-error2: #cb2633;
+  --color-error3: #f0a5ab;
+
+  --color-black: #000000;
+  --color-bk1: #191919;
+  --color-bk2: #262626;
+  --color-bk3: #595959;
+  --color-bk4: #999999;
+  --color-bk6: #bfbfbf;
+  --color-bk7: #f1e5e5;
+  --color-bk8: #e2d0d1;
+  --color-bk9: #fbedee;
+  --color-bk10: #FAFAFA;
+  --color-bk11:#ecdbdc;
+  
+  --color-white: #ffffff;
+  --color-bk: #979797;
+  --color-border: #e8e8e8;
+  --color-border1: #d9d9d9;
+  --color-border2: #CCD2D9;
+
+  --color-active: #d43946;
+  --color-hover: rgba(#E34D59, 0.80);
+  --color-disable: rgba(#E34D59, 0.50);
+
+  --color-font1: #737373;
+  --color-font2: #727272;
+
+  //列表表头颜色
+  --color-tableHeader-bg: #fdf4f5;
+  //列表行hover颜色
+  --color-tableTr-hover: #fffafb;
+  // 间距
+  --space-main-min: 0px;
+  --space-main: 20px;
+}
+
+.mode4 {
+  a {
+    text-decoration: none;
+    color: var(--color-main);
+
+    &:active {
+      color: var(--color-font1);
+    }
+
+    &:hover {
+      color: var(--color-font1);
+    }
+  }
+
+  // 全局容器 - 适配 先干掉
+  .container {
+    // width: 1200px;
+    // margin: 0 auto;
+  }
+
+  .logo img {
+    width: 158.33px;
+    height: 48px;
+  }
+
+  // 原子化CSS定义 将高频使用的样式单独抽离 使用时拼合到calss里
+
+  // 按钮
+  .bt,
+  .bt-grey,
+  .bt-red {
+    display: block;
+    line-height: 30px;
+    width: 100%;
+    font-size: 14px;
+    background: var(--color-main);
+    color: var(--color-white);
+    border-radius: 3px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background-color: var(--color-hover);
+    }
+
+    &:active {
+      background-color: var(--color-active);
+    }
+  }
+
+  .bt-grey {
+    color: var(--color-bk1);
+    background: var(--color-bk7);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bk8);
+    }
+
+    &:active {
+      background-color: var(--color-bk8);
+    }
+  }
+
+  .bt-red {
+    color: var(--color-white);
+    background: var(--color-error);
+
+    &:hover {
+      background-color: var(--color-error1);
+    }
+
+    &:active {
+      background-color: var(--color-error2);
+    }
+  }
+
+  // 文字按钮
+  .font-bt {
+    color: var(--color-main);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-hover);
+    }
+
+    &:active {
+      color: var(--color-active);
+    }
+  }
+
+  .font-del {
+    color: var(--color-main);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-main);
+    }
+
+    &:active {
+      color: var(--color-active);
+    }
+  }
+
+  .font-bt2 {
+    color: var(--color-font1);
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      color: var(--color-main);
+    }
+  }
+
+  .font-bt3 {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-white);
+      background-color: #8E9BA5;
+    }
+
+    &:active {
+      color: var(--color-white);
+      background-color: var(--color-font1);
+    }
+  }
+
+  .font-bt4 {
+    color: var(--color-font3);
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      color: var(--color-main);
+    }
+  }
+
+  // 禁用样式
+  .text-forbidden {
+    color: var(--color-bk4);
+    cursor: no-drop;
+
+    &:hover {
+      color: var(--color-bk6);
+    }
+  }
+
+  // 背景
+  .bg {
+    background-color: var(--color-bk);
+  }
+
+  .bg-wt {
+    background-color: var(--color-white);
+  }
+
+  // flex 布局
+  .fx {
+    display: flex;
+  }
+
+  .fx-fd-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fx-1 {
+    flex: 1;
+  }
+
+  .fx-sb {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .fx-ct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .fx-cl-ct {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .fx-al-ct {
+    display: flex;
+    align-items: center;
+  }
+
+  .fx-wp {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  // 位置
+
+  .pt-rt {
+    position: relative;
+  }
+
+  .pt-at {
+    position: absolute;
+  }
+
+  // 常用(内外)边距
+  .marg-24 {
+    margin: 24px;
+  }
+
+  .marg-main {
+    margin: 0 20px;
+  }
+
+  .pd-main {
+    padding: 0 20px;
+  }
+
+  .marg-24 {
+    margin: 32px;
+  }
+
+  .pd-24 {
+    padding: 24px;
+  }
+
+  .pd-32 {
+    padding: 32px;
+  }
+
+  .mb-24 {
+    margin-bottom: 24px;
+  }
+
+  .mt-24 {
+    margin-top: 24px;
+  }
+
+  // 文字
+  .ft-ct {
+    text-align: center;
+  }
+
+  .ft-rt {
+    text-align: right;
+  }
+
+  .ft-wt-400 {
+    font-weight: 400;
+  }
+
+  .ft-wt-600 {
+    font-weight: 600;
+  }
+
+  .ft-12 {
+    font-size: 12px;
+  }
+
+  .ft-14 {
+    font-size: 14px;
+  }
+
+  .ft-16 {
+    font-size: 16px;
+  }
+
+  .ft-18 {
+    font-size: 18px;
+  }
+
+  .ft-20 {
+    font-size: 20px;
+  }
+
+  .ft-cl-1 {
+    color: var(--color-font1);
+  }
+
+  .ft-cl-des {
+    color: var(--color-font3);
+  }
+
+  .ft-cl-err {
+    color: var(--color-error);
+  }
+
+  .ft-cl-wt {
+    color: var(--color-white);
+  }
+
+  // 常用样式
+  .cur-pt {
+    cursor: pointer;
+  }
+
+  .bd-non {
+    border: none !important;
+  }
+
+  .br-8 {
+    border-radius: 8px;
+  }
+
+  // 公用图片头像
+  .img {
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    margin-right: 10px;
+  }
+
+  // 变小手
+  .pt {
+    cursor: pointer;
+  }
+
+  // 定义宽度(用于常见的按钮宽度或者其他)
+  .wt-60 {
+    width: 60px;
+  }
+
+  // 用于常见input宽度或者其他
+  .wt-240 {
+    width: 240px;
+  }
+
+  // 定义右侧内容自动高度
+  .ht {
+    height: calc(100% - 20px);
+  }
+
+  // 宽度400
+  .wt-400 {
+    width: 400px;
+  }
+
+  // 最小宽度480
+  .mw-480 {
+    min-width: 480px;
+  }
+
+  // 圆角2px
+  .br-2 {
+    border-radius: 2px;
+  }
+
+  // 
+  .t-checkbox__label {
+    color: var(--color-bk3);
+  }
+}

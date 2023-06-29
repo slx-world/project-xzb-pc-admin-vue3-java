@@ -1,0 +1,124 @@
+:deep(.t-card__body) {
+  padding-left: 14.2%;
+  padding-right: 14.2%;
+  padding-top: 43px;
+}
+.form-step-container {
+  background-color: var(--td-bg-color-container);
+  height: 50rem;
+}
+.rule-tips .t-alert {
+  height: 46px;
+  padding: 12px 28px 12px 25px;
+  background: rgba(0, 97, 253, 0.09);
+}
+.step-container {
+  padding-bottom: 0;
+}
+.formBox {
+  display: flex;
+  justify-content: center;
+}
+.formBox .step-form {
+  padding: 24px;
+  padding-left: 8px;
+}
+.formBox .formBoxbody {
+  margin-top: 24px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid #e8e8e8;
+}
+.formBox .formBoxbody .Title {
+  font-size: 14px;
+  color: var(--color-bk4);
+  letter-spacing: 0;
+  display: flex;
+  margin-bottom: 16px;
+}
+.formBox .formBoxbody .Title .itemTitle {
+  min-width: 84px;
+  justify-content: end;
+  align-self: center;
+  text-align: left;
+  line-height: 28px;
+}
+.formBox .formBoxbody .Title .item {
+  font-weight: 400;
+  font-size: 14px;
+  left: 96px;
+  color: var(--color-black);
+  letter-spacing: 0;
+  text-align: justify;
+  line-height: 28px;
+}
+.formBox .formBoxbody .Title .item span {
+  font-size: 24px;
+  margin-right: 4px;
+}
+.formBox .formBoxbody .Title .item .Bigitem {
+  font-size: 14px;
+  margin-left: 10px;
+}
+.formBox .formBoxbottom {
+  margin-top: 3px;
+}
+.step-form-4 {
+  text-align: center;
+  padding-bottom: 24px;
+  margin-top: 25px;
+}
+.step-form-4 > .t-icon {
+  margin-bottom: 24px;
+}
+.step-form-4 > .text {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--color-bk2);
+}
+.step-form-4 > .tips {
+  color: var(--color-bk4);
+}
+.step-form-4 > .button-group {
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+}
+.formBoxbody-3 {
+  min-width: 557px;
+  background: rgba(245, 245, 245, 0.5);
+  border-radius: 2px;
+  margin-top: 0 !important;
+  padding: 32px 40px 17px;
+  margin-bottom: 30px !important;
+  border-bottom: 0 !important;
+}
+.next {
+  width: 74px;
+  margin-right: 16px;
+}
+.submit-btn {
+  width: 65px;
+}
+.again {
+  width: 88px;
+  margin-right: 16px;
+}
+:deep(.t-alert__title) {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-bk1);
+  letter-spacing: 0;
+}
+:deep(.t-form__label) {
+  padding-right: 0;
+}
+.t-form-item__password {
+  margin-bottom: 32px;
+}
+.confirm {
+  margin-bottom: 24px !important;
+}
+:deep(.t-alert--info .t-alert__icon) {
+  color: #0061FD;
+}
