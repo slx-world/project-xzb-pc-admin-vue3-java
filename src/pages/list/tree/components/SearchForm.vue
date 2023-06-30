@@ -1,7 +1,7 @@
 <!-- 搜索框 -->
 <template>
   <!-- 表单 -->
-  <div class="formBox">
+  <div class="formBox bg-wt">
     <t-form ref="form" :data="formData" :label-width="70">
       <t-row>
         <t-col>

@@ -44,7 +44,7 @@ li.t-menu__item {
 
     .t-menu__item.t-is-active,
     .t-menu__item:hover {
-      background-color: var(--color-bk11) !important;
+      background-color: #FFF6F6 !important;
     }
   }
 }
@@ -1108,7 +1108,8 @@ button {
 
 // 下层被选中状态(一级菜单)
 .t-default-menu .t-menu__item.t-is-active:not(.t-is-opened) {
-  background-color: transparent;
+  background-color: #FFF6F6;
+  border-right: 4px solid var(--color-main);
 
   .t-menu__content {
     font-weight: 500;
@@ -1136,7 +1137,12 @@ button {
 }
 
 .t-default-menu .t-menu__item:hover:not(.t-is-active):not(.t-is-disabled) {
-  background-color: var(--color-bk11);
+  background-color: #FFF6F6 !important;
+  svg{
+    path{
+      fill: var(--color-main);
+    }
+  }
 }
 
 .t-default-menu .t-menu__item.t-is-opened {
@@ -1152,13 +1158,13 @@ button {
 
 // 侧边栏选中样式
 .t-menu__popup .t-menu__item.t-is-active {
-  background-color: #fff;
+  background-color: #FFF6F6;
   height: 28px;
   color: var(--color-main);
 }
 
 .t-menu__item.t-menu__item-spacer.t-menu__item-spacer--right.t-is-active {
-  background-color: transparent !important;
+  background-color: #FFF6F6 !important;
   color: var(--color-main);
   .t-icon{
     path{
@@ -1478,8 +1484,7 @@ button {
 // 整体列表搜索
 .formBox {
   padding: 0 12px var(--space-main);
-  margin-bottom: var(--space-main);
-  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 24px;
 
   .t-form__item {
     width: 100%;
@@ -1721,7 +1726,7 @@ button {
   width: auto !important;
 
   .t-menu__item {
-    padding: 0 12px !important;
+    padding: 0 20px !important;
   }
 }
 
@@ -1897,4 +1902,8 @@ button {
 }
 .t-range-input-popup--visible .t-range-input .t-icon-time, .t-range-input-popup--visible .t-range-input .t-icon-calendar{
   color: var(--color-main);
+}
+.t-menu__popup-wrapper{
+  padding-left: 0;
+  overflow-y: auto;
 }

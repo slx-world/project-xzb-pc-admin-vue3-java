@@ -1,6 +1,6 @@
 <!-- 基础列表页（带图） -->
 <template>
-  <div class="base-up-wapper bg-wt">
+  <div class="base-up-wapper bgTable">
     <!-- 搜索表单区域 -->
     <searchFormBox
       @handleSearch="handleSearch"

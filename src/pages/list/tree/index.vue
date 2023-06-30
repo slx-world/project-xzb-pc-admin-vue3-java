@@ -1,6 +1,6 @@
 <!-- 树状列表页 -->
 <template>
-  <div class="tree-wapper bg-wt fx br-2">
+  <div class="tree-wapper bgTable fx br-2">
     <!-- 左半部分树 -->
     <div class="left">
       <Tree @getTreeData="getTreeData" />
@@ -8,7 +8,7 @@
     <!-- end -->
     <!-- 右半部分列表 -->
     <div class="right">
-      <div class="bg-wt">
+      <div class="bgTable">
         <div class="baseList">
           <!-- 搜索表单 -->
           <searchFormBox
@@ -161,7 +161,7 @@ const handleClickDelete = (row: { rowIndex: any }) => {
   }
   .right {
     width: 100%;
-    background: #ffffff;
+    // background: #ffffff;
   }
 }
 </style>

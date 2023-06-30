@@ -1,6 +1,6 @@
 <!-- 基础表格组件 -->
 <template>
-  <div class="baseList">
+  <div class="baseList bg-wt">
     <div class="tableBoxs">
       <div class="newBox">
         <!-- tab -->
@@ -28,7 +28,6 @@
         @filter-change="FilterChange"
         @sort-change="sortChange"
         @select-change="rehandleSelectChange"
-
       >
         <!-- 添加昵称 -->
         <template #name="{ row }">

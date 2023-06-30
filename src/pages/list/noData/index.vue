@@ -1,6 +1,6 @@
 <!-- 无数据列表页 -->
 <template>
-  <div class="base-no-data bg-wt">
+  <div class="base-no-data bgTable">
     <div class="baseList MH-716">
       <searchFormBox
         :pagination="pagination"
@@ -121,7 +121,7 @@ const handleClickDelete = (row: { rowIndex: any }) => {
 }
 </script>
 <style lang="less" scoped>
-.bg-wt {
+.bgTable {
   .MH-716 {
     min-height: 644px;
   }

@@ -2,7 +2,7 @@
 <template>
   <!-- 详情页 -->
   <router-view v-if="url === '/list/base/detail'"></router-view>
-  <div v-else class="base-wapper bg-wt">
+  <div v-else class="base-wapper bgTable">
     <!-- 筛选区域 -->
     <searchFormBox
       :pagination="pagination"

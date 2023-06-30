@@ -1,6 +1,6 @@
 <!-- tab顶部列表页 -->
 <template>
-  <div class="toptab-wapper bg-wt">
+  <div class="toptab-wapper bgTable">
     <switchBar :data="tableBar" @changeId="changeId"></switchBar>
     <!-- 占位 -->
     <div class="division"></div>

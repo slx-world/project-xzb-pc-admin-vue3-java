@@ -1,6 +1,6 @@
 <!-- tab列表页 -->
 <template>
-  <div class="tab-wapper bg-wt">
+  <div class="tab-wapper bgTable">
     <!-- 否所表单 -->
     <searchFormBox
       @handleSearch="handleSearch"

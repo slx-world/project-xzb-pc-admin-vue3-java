@@ -176,8 +176,8 @@ const handleLogout = () => {
   height: 70px;
 }
 .logo {
-  width: 24px;
-  height: 27px;
+  width: 40px;
+  height: 40px;
 }
 .t-default-menu__inner .t-menu--scroll {
   padding-top: 24px;
