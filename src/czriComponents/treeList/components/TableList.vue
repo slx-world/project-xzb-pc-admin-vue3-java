@@ -195,6 +195,14 @@ const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
   deleteIdx.value = row.rowIndex
 }
+// 点击翻页
+const onPageChange = (val) => {
+  pagination.value.defaultCurrent = val.current
+  emit('fetchData', {
+    defaultCurrent: val.current,
+    defaultPageSize: val.pageSize
+  })
+}
 
 // 点击新建
 const handleBulid = () => {
@@ -340,10 +348,7 @@ const onTreeExpandChange = (context) => {
     }, 50)
   }, 30)
 }
-// 切换分页
-const onPageChange = (val) => {
-  emit('fetchData', val)
-}
+
 </script>
 <style lang="less" scoped src="../index.less"></style>
 <style lang="less" scoped>

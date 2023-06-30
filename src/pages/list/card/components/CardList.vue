@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 // 接收父组件的数据
 const props = defineProps({
   productList: {

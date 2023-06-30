@@ -178,5 +178,13 @@ const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
   deleteIdx.value = row.rowIndex
 }
+// 点击翻页
+const onPageChange = (val) => {
+  pagination.value.defaultCurrent = val.current
+  emit('fetchData', {
+    defaultCurrent: val.current,
+    defaultPageSize: val.pageSize
+  })
+}
 </script>
 <style lang="less" scoped src="../../index.less"></style>

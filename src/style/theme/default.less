@@ -1,7 +1,7 @@
 :root, :root[theme-color='defult']  {
   // 主题色板
-  --color-main: #0061FD;
-  --color-aux1: #3381FD;
+  --color-main: #F74346;
+  --color-aux1: #0698FF;
   --color-aux2: #7FB0FE;
   --color-aux3: #F5F9FF;
   --color-aux4: #FAFCFF;
@@ -9,32 +9,32 @@
   --color-success: #27ba9b;
   --color-warning: #FFAB2E;
   --color-error: #e34d59;
-  --color-error1: #e9717a;
+  --color-error1: #E8707A;
   --color-error2: #cb2633;
   --color-error3: #f0a5ab;
 
   --color-black: #000000;
-  --color-bk1: #191919;
+  --color-bk1: #191919; // 重要颜色
   --color-bk2: #262626;
-  --color-bk3: #595959;
-  --color-bk4: #999999;
+  --color-bk3: #595959; // 次重要颜色
+  --color-bk4: #999999; // 次要颜色
   --color-bk5: #737373;
   --color-bk6: #bfbfbf;
   --color-bk7: #e1e6f0;
   --color-bk8: #cdd3e0;
   --color-bk9: #ecf2fe;
-  --color-bk10: #FAFAFA;
+  --color-bk10: #FAFAFA; // 背景色
   --color-bk11:#d9e1eb;
 
-  --color-white: #ffffff;
+  --color-white: #ffffff; // 中性色
   --color-bk: #979797;
-  --color-border: #e8e8e8;
+  --color-border: #e8e8e8; // 边框颜色，用于分割线
   --color-border1: #d9d9d9;
   --color-border2:#CCD2D9;
 
   --color-active: #1C55CF;
-  --color-hover: rgba(0, 97, 253, 0.80);
-  --color-disable: rgba(0, 97, 253, 0.50);
+  --color-hover: #3280FD;
+  --color-disable: #A7C9FF;
 
   --color-font1:#737373;
   --color-font2:#727272;
@@ -91,11 +91,11 @@ a {
   user-select: none;
 
   &:hover {
-    background-color: var(--color-hover);
+    background-color: var(--color-error1);
   }
 
   &:active {
-    background-color: var(--color-active);
+    background-color: var(--color-error2);
   }
 }
 
@@ -109,7 +109,10 @@ a {
   }
 
   &:active {
-    background-color: var(--color-bk8);
+    background-color: #ababab;
+  }
+  &:disabled {
+    background-color: #ababab;
   }
 }
 
@@ -124,11 +127,14 @@ a {
   &:active {
     background-color: var(--color-error2);
   }
+  &:disabled {
+    background-color: var(--color-error3);
+  }
 }
 
 // 文字按钮
 .font-bt {
-  color: var(--color-main);
+  color: var(--color-aux1);
   cursor: pointer;
 
   &:hover {
@@ -141,15 +147,15 @@ a {
 }
 
 .font-del {
-  color: var(--color-main);
+  color: var(--color-error);
   cursor: pointer;
 
   &:hover {
-    color: var(--color-main);
+    color: var(--color-error1);
   }
 
   &:active {
-    color: var(--color-active);
+    color: var(--color-error2);
   }
 }
 

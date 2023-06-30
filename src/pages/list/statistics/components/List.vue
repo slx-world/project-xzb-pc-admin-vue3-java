@@ -14,6 +14,7 @@
         :hide-sort-tips="true"
         :show-sort-column-bg-color="true"
         table-layout="auto"
+        @page-change="onPageChange"
         @filter-change="FilterChange"
         @sort-change="sortChange"
       >
@@ -157,6 +158,9 @@ const handleEdit = (val) => {
 // 打开弹层
 const handleOpenDelete = (val) => {
   emit('handleOpenDelete', val)
+}
+const onPageChange = (pageInfo) => {
+  emit('getStatus', pageInfo)
 }
 // 点击删除
 // const handleClickDelete = (row) => {

@@ -1,6 +1,6 @@
-<!-- 用户名密码登录 - 风格一 -->
+<!-- 用户名密码登录 - 风格二 -->
 <template>
-  <switchBar :data="tableBar" @changeId="changeId"></switchBar>
+  <div>账号密码登录</div>
   <t-form
     ref="form"
     :class="['item-container', `login-${type}`]"
@@ -49,55 +49,7 @@
       </div>
     </template>
 
-    <!-- 扫码登陆
-  <template v-else-if="type == 'qrcode'">
-      <div class="tip-container">
-        <span class="tip">请使用微信扫一扫登录</span>
-        <span class="refresh">刷新 <t-icon name="refresh" /> </span>
-      </div>
-      <qrcode-vue value="" :size="192" level="H" />
-    </template> -->
-
-    <!-- 手机号登陆 -->
-    <template v-else>
-      <t-form-item name="phone">
-        <t-input
-          v-model="formData.phone"
-          size="large"
-          placeholder="手机号"
-          onkeyup="this.value=this.value.replace(/\D/g,'')"
-          :format="formatPhone"
-        >
-          <template #prefix-icon>
-            <t-icon name="mobile" />
-          </template>
-        </t-input>
-      </t-form-item>
-
-      <t-form-item class="verification-code" name="verifyCode">
-        <t-input
-          v-model="formData.verifyCode"
-          size="large"
-          :format="formatPhone"
-          placeholder="验证码"
-          onkeyup="this.value=this.value.replace(/\D/g,'')"
-        >
-          <template #prefix-icon>
-            <t-icon name="mail" />
-          </template>
-        </t-input>
-        <t-button variant="outline" :disabled="countDown > 0" @click="sendCode">
-          {{ countDown == 0 ? '获取验证码' : `${countDown}秒后可重发` }}
-        </t-button>
-      </t-form-item>
-      <div class="check-container remember-pwd">
-        <t-checkbox>记住手机号</t-checkbox>
-      </div>
-    </template>
-
     <t-form-item class="btn-container">
-      <!-- <t-button block size="large" class="bt" type="submit"> 登录 </t-button> -->
-
       <t-loading v-if="loadSt" indicator class="bt load"></t-loading>
       <button v-else class="bt" type="submit">登录</button>
     </t-form-item>
@@ -109,12 +61,9 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { MessagePlugin } from 'tdesign-vue-next'
 import type { FormInstanceFunctions, FormRule } from 'tdesign-vue-next'
-import { useCounter } from '@/hooks'
 import { useUserStore } from '@/store'
 import { userLogins, getUserInfo } from '@/api/user'
-import switchBar from '@/components/switchBar/switchBarindex.vue' // tab切换组件
 import { validatePhone, validateCode } from '@/utils/validate'
-import { tableBar } from './commonData'
 // tab切换数据
 const userStore = useUserStore()
 // 登录loadding
@@ -163,25 +112,8 @@ const form = ref<FormInstanceFunctions>()
 const formData = ref({ ...INITIAL_DATA })
 const showPsw = ref(false)
 
-const [countDown, handleCounter] = useCounter()
-
-const changeId = (val: number) => {
-  type.value = val
-}
-
 const router = useRouter()
 const route = useRoute()
-
-/**
- * 发送验证码
- */
-const sendCode = () => {
-  form.value.validate({ fields: ['phone'] }).then((e) => {
-    if (e === true) {
-      handleCounter()
-    }
-  })
-}
 
 const onSubmit = async ({ validateResult }) => {
   if (validateResult === true) {
@@ -207,9 +139,6 @@ const onSubmit = async ({ validateResult }) => {
       }
     })
   }
-}
-const formatPhone = (val: string) => {
-  return val.replace(/\s/g, '').replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 }
 const formataccount = (val: string) => {
   return val.replace(/\s/g, '')

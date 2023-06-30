@@ -24,9 +24,11 @@
         :hide-sort-tips="true"
         :show-sort-column-bg-color="true"
         table-layout="auto"
+        @page-change="onPageChange"
         @filter-change="FilterChange"
         @sort-change="sortChange"
         @select-change="rehandleSelectChange"
+
       >
         <!-- 添加昵称 -->
         <template #name="{ row }">
@@ -202,6 +204,14 @@ const deleteIdx = ref(-1) // 删除的索引
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
   deleteIdx.value = row.rowIndex
+}
+// 点击翻页
+const onPageChange = (val) => {
+  pagination.value.defaultCurrent = val.current
+  emit('fetchData', {
+    defaultCurrent: val.current,
+    defaultPageSize: val.pageSize
+  })
 }
 
 // 点击新建

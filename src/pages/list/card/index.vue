@@ -119,6 +119,7 @@ const onPageSizeChange = (size: number) => {
 }
 const onCurrentChange = (current: number) => {
   pagination.value.current = current
+  fetchData()
 }
 </script>
 

@@ -20,6 +20,7 @@
         :hide-sort-tips="true"
         :show-sort-column-bg-color="true"
         table-layout="auto"
+        @page-change="onPageChange"
         @filter-change="FilterChange"
         @sort-change="sortChange"
         @select-change="rehandleSelectChange"
@@ -71,7 +72,6 @@ export default {
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-// import { isNumber } from 'lodash'
 import { random } from 'lodash'
 import { COLUMNS } from '../constants' // 表格列
 
@@ -133,21 +133,6 @@ const sortChange = (val) => {
 // 模拟异步请求进行排序
 const onFilterChange = (val) => {
   emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   if (val) {
-  //     data.value = data.value
-  //       .concat()
-  //       .sort((a, b) =>
-  //         val.descending
-  //           ? b[val.sortBy] - a[val.sortBy]
-  //           : a[val.sortBy] - b[val.sortBy]
-  //       )
-  //   } else {
-  //     // 如果没有排序，就按照原来的顺序进行排序
-  //     data.value = data.value.concat().sort((a, b) => a.index - b.index)
-  //   }
-  //   clearTimeout(timer)
-  // }, 100)
 }
 // 筛选
 const FilterChange = (val) => {
@@ -156,16 +141,6 @@ const FilterChange = (val) => {
 // 模拟异步请求进行筛选
 const ONFilterChange = (val) => {
   emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   data.value = data.value.filter((timer) => {
-  //     let result = true
-  //     if (isNumber(val.status)) {
-  //       result = timer.status === val.status
-  //     }
-  //     return result
-  //   })
-  //   clearTimeout(timer)
-  // }, 150)
 }
 
 // 选中的行
@@ -186,6 +161,14 @@ const deleteIdx = ref(-1) // 删除的索引
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
   deleteIdx.value = row.rowIndex
+}
+// 点击翻页
+const onPageChange = (val) => {
+  pagination.value.defaultCurrent = val.current
+  emit('fetchData', {
+    defaultCurrent: val.current,
+    defaultPageSize: val.pageSize
+  })
 }
 
 // 点击新建

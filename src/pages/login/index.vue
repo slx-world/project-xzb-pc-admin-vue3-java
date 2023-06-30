@@ -1,24 +1,7 @@
 <template>
   <div>
-    <!-- 风格一的登录 -->
-    <div v-if="setting.layout.value === 'side'" class="login-wrapper">
-      <login-header />
-      <div class="login-container">
-        <div class="title-container">
-          <h1 class="title">
-            <img src="@/assets/test-img/logofull.png" alt="" class="logo" />
-          </h1>
-        </div>
-        <login v-if="type === 'login'" />
-        <register v-else @register-success="switchType('login')" />
-      </div>
-      <div class="companyFooter">
-        Copyright @ 2019-2020 Tencent. All Rights Reserved
-      </div>
-    </div>
     <!-- 风格二的登录 -->
-    <div v-else class="login-wrapper type2">
-      <login-header />
+    <div class="login-wrapper type2">
       <div class="left">
         <div class="login-container">
           <div class="title-container">
@@ -26,7 +9,7 @@
               <img src="@/assets/test-img/logofull.png" alt="" class="logo" />
             </h1>
           </div>
-          <login2 v-if="type === 'login'" />
+          <login v-if="type === 'login'" />
         </div>
         <footer class="copyright">
           Copyright @ 2021-2022 czri. All Rights Reserved
@@ -39,21 +22,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import Login from './components/Login.vue'
-import Login2 from './components/Login2.vue'
-import Register from './components/Register.vue'
 import LoginHeader from './components/Header.vue'
-// 设置相关操作
-import { useSettingStore } from '@/store'
-
-const settingStore = useSettingStore()
-const setting = storeToRefs(settingStore)
 
 const type = ref('login')
-const switchType = (val: string) => {
-  type.value = val
-}
 </script>
 
 <style lang="less" scoped>
@@ -102,7 +74,7 @@ const switchType = (val: string) => {
   }
 }
 .logo {
-  width: 167px;
-  height: 60px;
+  width: 150px;
+  height: 70px;
 }
 </style>

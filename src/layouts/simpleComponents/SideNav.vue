@@ -172,9 +172,8 @@ const handleLogout = () => {
   margin-top: 31px;
 }
 .logofull {
-  width: 121px;
-  height: 42px;
-  margin-left: -50px;
+  width: 150px;
+  height: 70px;
 }
 .logo {
   width: 24px;

@@ -48,7 +48,10 @@ const transform: AxiosTransform = {
     if (hasSuccess) {
       return data
     }
-
+    // 添加数据流的处理
+    if (res && !code) {
+      return res
+    }
     throw new Error(`请求接口错误, 错误码: ${code}`)
   },
 
@@ -187,7 +190,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           // 接口前缀
           // 例如: https://www.baidu.com/api
           urlPrefix: '/api',
-          // urlPrefix: "",
+          // urlPrefix: '',
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理

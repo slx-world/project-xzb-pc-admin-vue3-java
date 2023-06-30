@@ -24,6 +24,7 @@
         :expand-icon="expandIcon"
         @filter-change="FilterChange"
         @sort-change="sortChange"
+        @page-change="onPageChange"
         @select-change="rehandleSelectChange"
         @expand-change="rehandleExpandChange"
       >
@@ -187,6 +188,14 @@ const deleteIdx = ref(-1) // 删除的索引
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
   deleteIdx.value = row.rowIndex
+}
+// 点击翻页
+const onPageChange = (val) => {
+  pagination.value.defaultCurrent = val.current
+  emit('fetchData', {
+    defaultCurrent: val.current,
+    defaultPageSize: val.pageSize
+  })
 }
 
 // 点击新建

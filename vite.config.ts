@@ -59,7 +59,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       hmr: true,
       proxy: {
         '/api': {
-          target: 'http://mock.boxuegu.com/mock/3547/',
+          target: 'https://czri-admin.itheima.net/api',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }
