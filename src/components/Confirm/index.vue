@@ -1,6 +1,6 @@
 <!--删除弹层-->
 <template>
-  <div class="deleteDialog baseDialog">
+  <div class="confirmDialog baseDialog">
     <t-dialog
       v-model:visible="dialogVisible"
       :header="title"
@@ -8,7 +8,7 @@
       :on-close="handleClose"
       :on-confirm="handleSubmit"
     >
-      {{ deleteText }}
+      {{ confirmText }}
       <div class="dialog-footer">
         <button
           theme="primary"
@@ -35,26 +35,27 @@ import { ref, watch } from 'vue'
 // 获取父组件值、方法
 const props = defineProps({
   // 弹层隐藏显示
-  dialogDeleteVisible: {
+  dialogConfirmVisible: {
     type: Boolean,
     default: false
   },
-  deleteText: {
+  confirmText: {
     type: String,
     default: ''
   },
+  // 标题
   title: {
     type: String,
-    default: '确认删除'
+    default: ''
   }
 })
 // ------定义变量------
-const emit = defineEmits(['handleClose', 'handleDelete']) // 子组件获取父组件事件传值
-const dialogVisible = ref<boolean>(false)
+const emit = defineEmits(['handleClose', 'handleConfirm']) // 子组件获取父组件事件传值
+const dialogVisible = ref(false)
 watch(
-  () => props.dialogDeleteVisible,
+  () => props.dialogConfirmVisible,
   () => {
-    dialogVisible.value = props.dialogDeleteVisible
+    dialogVisible.value = props.dialogConfirmVisible
   }
 )
 // ------定义方法------
@@ -64,6 +65,6 @@ const handleClose = () => {
 }
 // 提交确定删除
 const handleSubmit = () => {
-  emit('handleDelete')
+  emit('handleConfirm')
 }
 </script>

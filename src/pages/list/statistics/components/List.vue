@@ -9,7 +9,6 @@
         vertical-align="middle"
         :hover="true"
         :pagination="pagination"
-        :disable-data-page="pagination.total <= 10"
         :loading="dataLoading"
         :hide-sort-tips="true"
         :show-sort-column-bg-color="true"

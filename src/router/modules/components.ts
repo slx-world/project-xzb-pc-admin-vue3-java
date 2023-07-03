@@ -3,8 +3,78 @@ import ListIcon from '@/assets/test-img/icon_menu_shuju.svg'
 import FormIcon from '@/assets/test-img/icon_menu_cheliang.svg'
 import GrzxIcon from '@/assets/test-img/icon_menu_grzx.svg'
 import DetailIcon from '@/assets/test-img/icon_xq.svg'
+import serviceIcon from '@/assets/test-img/icon_menu_service.svg'
 
 const normalRouter = [
+  {
+    path: '/service',
+    name: 'service',
+    component: Layout,
+    redirect: '/service/serviceType',
+    meta: {
+      title: '服务管理',
+      icon: serviceIcon
+    },
+    children: [
+      {
+        path: 'serviceType',
+        name: 'serviceType',
+        component: () => import('@/pages/service/serviceType/index.vue'),
+        meta: {
+          title: '服务类型管理',
+          // 用来修改当出现子菜单在active状态不会激活父元素的active状态
+          singles: true
+        },
+      },
+      {
+        path: 'ServiceList',
+        name: 'ServiceList',
+        component: () => import('@/pages/service/service/index.vue'),
+        meta: {
+          title: '服务管理',
+          singles: true
+        },
+        children: [
+          {
+            path: 'addService',
+            name: 'addService',
+            component: () => import('@/pages/service/service/addService.vue'),
+            meta: {
+              title: '新增服务'
+            }
+          },
+          {
+            path: 'editService',
+            name: 'editService',
+            component: () => import('@/pages/service/service/addService.vue'),
+            meta: {
+              title: '编辑服务'
+            }
+          },
+        ]
+      },
+      {
+        path: 'region',
+        name: 'region',
+        component: () => import('@/pages/service/region/index.vue'),
+        meta: {
+          title: '区域管理',
+          singles: true
+        },
+        children: [
+          {
+            path: 'editRegion',
+            name: 'editRegion',
+            component: () => import('@/pages/service/region/editRegion.vue'),
+            meta: {
+              title: '新增服务'
+            }
+          },
+  
+        ]
+      }
+    ]
+  },
   {
     path: '/list',
     name: 'list',

@@ -491,13 +491,13 @@ li.t-menu__item {
     vertical-align: middle;
   }
 }
-
+// 状态0
 .status-dot-0 {
   &::before {
-    background-color: #bfbfbf;
+    background-color: var(--color-bk4);
   }
 }
-
+// 状态1
 .status-dot-1 {
   &::before {
     background-color: var(--color-main);
@@ -1117,7 +1117,7 @@ button {
   }
   .t-icon{
     path{
-      fill: var(--color-main);
+      stroke: var(--color-main);
     }
   }
 }
@@ -1140,7 +1140,13 @@ button {
   background-color: #FFF6F6 !important;
   svg{
     path{
-      fill: var(--color-main);
+      stroke: var(--color-main);
+    }
+  }
+  .t-fake-arrow{
+    path{
+      color: var(--color-main);
+      fill: none;
     }
   }
 }
@@ -1168,7 +1174,7 @@ button {
   color: var(--color-main);
   .t-icon{
     path{
-      fill: var(--color-main);
+      stroke: var(--color-main);
     }
   }
 }

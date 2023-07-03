@@ -26,7 +26,9 @@
       <t-table
         :columns="columns"
         :data="data"
-        :pagination="pagination"
+        :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
         :hover="true"
         row-key="index"
         @sort-change="sortChange"

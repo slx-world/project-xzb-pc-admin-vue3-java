@@ -3,7 +3,9 @@
   <div class="base-no-data bgTable">
     <div class="baseList MH-716">
       <searchFormBox
-        :pagination="pagination"
+        :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
         @handleSearch="handleSearch"
         @handleReset="handleReset"
       ></searchFormBox>

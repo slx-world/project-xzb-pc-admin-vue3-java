@@ -10,7 +10,9 @@
     <!-- 表格 -->
     <tableList
       :list-data="listData"
-      :pagination="pagination"
+      :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
       @handleSetupContract="handleSetupContract"
       @handleBulid="handleBulid"
       @handleClickDelete="handleClickDelete"

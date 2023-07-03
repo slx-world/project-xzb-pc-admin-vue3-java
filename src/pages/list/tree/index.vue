@@ -12,7 +12,9 @@
         <div class="baseList">
           <!-- 搜索表单 -->
           <searchFormBox
-            :pagination="pagination"
+            :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
             @handleSearch="handleSearch"
             @handleReset="handleReset"
           ></searchFormBox>
@@ -20,7 +22,9 @@
           <!-- 表格 -->
           <tableList
             :list-data="treeData"
-            :pagination="pagination"
+            :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
             @handleSetupContract="handleSetupContract"
             @handleBulid="handleBulid"
             @handleClickDelete="handleClickDelete"

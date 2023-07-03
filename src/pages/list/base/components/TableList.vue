@@ -11,7 +11,9 @@
         :row-key="rowKey"
         vertical-align="middle"
         :hover="true"
-        :pagination="pagination"
+        :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
         :disable-data-page="pagination.total <= 10"
         :selected-row-keys="selectedRowKeys"
         :loading="dataLoading"

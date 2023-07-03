@@ -5,7 +5,9 @@
     <CardList
       v-if="pagination.total > 0 && !dataLoading"
       :product-list="productList"
-      :pagination="pagination"
+      :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
       :on-page-size-change="onPageSizeChange"
       :on-current-change="onCurrentChange"
       @handleSetupContract="handleSetupContract"

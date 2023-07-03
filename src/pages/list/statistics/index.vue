@@ -9,7 +9,9 @@
     <div class="bg-wt">
       <!-- 搜索 -->
       <SearchFrom
-        :pagination="pagination"
+        :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
         @handleSearch="handleSearch"
         @handleReset="handleReset"
       ></SearchFrom>
@@ -24,7 +26,9 @@
       <!-- 列表 -->
       <List
         :list-data="listData"
-        :pagination="pagination"
+        :pagination="
+          pagination.total <= 10 || !pagination.total ? null : pagination
+        "
         :data-loading="dataLoading"
         @handle-open-delete="handleOpenDelete"
         @get-status="getStatus"
