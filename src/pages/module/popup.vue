@@ -47,9 +47,7 @@
           <ListDialog
             :dialog-visible="dialogVisible"
             :dialog-data="dialogData"
-            :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
+            :pagination="pagination"
             :maxi-num="maxiNum"
             :select-data="selectData"
             @handle-close-dialog="handleCloseDialog"
@@ -62,9 +60,7 @@
           <ListScrollDialog
             :dialog-visible="dialogScrollVisible"
             :dialog-data="dialogData"
-            :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
+            :pagination="pagination"
             :pages="pages"
             :maxi-num="maxiNum"
             :select-data="selectData"
@@ -98,9 +94,7 @@
           <TabDialog
             :dialog-tab-visible="dialogTabVisible"
             :dialog-data="dialogData"
-            :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
+            :pagination="pagination"
             :maxi-num="maxiNum"
             :select-data="selectData"
             @handle-closetab-dialog="handleClosetabDialog"

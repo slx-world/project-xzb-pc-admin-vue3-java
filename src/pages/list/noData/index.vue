@@ -14,7 +14,7 @@
         :list-data="listData"
         :pagination="null"
         @handleSetupContract="handleSetupContract"
-        @handleBulid="handleBulid"
+        @handleBuild="handleBuild"
         @handleClickDelete="handleClickDelete"
         @fetchData="fetchData"
       ></tableList>
@@ -101,7 +101,7 @@ const handleClose = () => {
   fetchData(pagination.value)
 }
 // 点击新建
-const handleBulid = (params) => {
+const handleBuild = (params) => {
   // // 显示新建弹窗
   // visible.value = true
   // // 将弹窗的标题改为新建

@@ -4,7 +4,7 @@
     <t-form ref="form" :data="formData" :label-width="70">
       <t-row>
         <t-col>
-          <t-form-item label="服务名称：" name="name">
+          <t-form-item label="规则编号：" name="name">
             <t-input
               v-model="formData.index"
               class="form-item-content"
@@ -15,7 +15,7 @@
           </t-form-item>
         </t-col>
         <t-col>
-          <t-form-item label="服务类型：" name="status">
+          <t-form-item label="状态：" name="status">
             <t-select
               v-model="formData.status"
               class="form-item-content"
@@ -25,7 +25,7 @@
             />
           </t-form-item>
         </t-col>
-        <!-- <t-col>
+        <t-col>
           <t-form-item label="规则：" name="serviceCallNumber">
             <t-input
               v-model="formData.serviceCallNumber"
@@ -34,9 +34,9 @@
               clearable
             />
           </t-form-item>
-        </t-col> -->
+        </t-col>
         <!-- 选择日期区间-->
-        <!-- <t-col>
+        <t-col>
           <t-form-item label="创建时间：" name="type">
             <t-date-range-picker
               v-model="formData.updateTime"
@@ -45,7 +45,7 @@
               clearable
             />
           </t-form-item>
-        </t-col> -->
+        </t-col>
         <t-col class="searchBtn">
           <button class="bt-grey wt-60" @click="handleReset()">重置</button>
           <button class="bt wt-60" @click="handleSearch()">搜索</button>
@@ -56,14 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { STATUS } from '@/constants'
-const props = defineProps({
-  initSearch:{
-    type: Number,
-    default:0
-  }
-})
 // 表单数据
 const formData = ref({
   index: '',
@@ -100,11 +94,6 @@ const presets = ref({
   ],
   近一天: [new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000), new Date()]
 }) // 时间选择器tag
-watchEffect(()=>{
-  if(props.initSearch){
-    formData.value.index = props.initSearch.toString()
-  }
-})
 </script>
 
 <style lang="less" scoped></style>

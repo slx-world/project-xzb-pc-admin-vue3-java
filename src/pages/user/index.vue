@@ -309,4 +309,10 @@ const rules = ref({
     color: var(--color-bk5);
   }
 }
+:deep(.t-upload__card-content, .t-upload__card-container) {
+  width: 144px;
+  height: 144px;
+  // 圆
+  border-radius: 50%;
+}
 </style>

@@ -15,7 +15,7 @@
           pagination.total <= 10 || !pagination.total ? null : pagination
         "
       @handleSetupContract="handleSetupContract"
-      @handleBulid="handleBulid"
+      @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
     ></tableList>
@@ -24,6 +24,7 @@
     <DialogForm
       :visible="visible"
       :title="title"
+      :cityList="cityList"
       :data="DialogFormdata"
       :form-data="formData"
       @handleClose="handleClose"
@@ -53,6 +54,7 @@ import { ref, onMounted, watchEffect } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { useRoute } from 'vue-router'
 import { getList } from '@/api/list'
+import { cityList } from './city';
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
 import Delete from '@/components/Delete/index.vue' // 删除弹层
@@ -63,7 +65,7 @@ const visible = ref(false) // 新增，编辑弹窗
 const listData = ref([]) // 列表数据
 const dataLoading = ref(false) // 列表数据加载loading
 const DialogFormdata = ref({}) // 弹窗表单内容
-const title = ref('新建') // 弹窗标题
+const title = ref('新增区域') // 弹窗标题
 const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
 const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
 const url = ref('') // 当前路由
@@ -118,11 +120,11 @@ const handleClose = () => {
   dialogDeleteVisible.value = false // 关闭删除弹层
 }
 // 点击新建
-const handleBulid = () => {
+const handleBuild = () => {
   // 显示新建弹窗
   visible.value = true
   // 将弹窗的标题改为新建
-  title.value = '新建'
+  title.value = '新增区域'
 }
 // 点击编辑
 const handleSetupContract = (val) => {

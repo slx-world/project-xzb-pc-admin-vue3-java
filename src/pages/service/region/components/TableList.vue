@@ -3,8 +3,9 @@
   <div class="baseList bg-wt">
     <div class="tableBoxs">
       <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBulid()">新建</button>
+        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
       </div>
+      <t-config-provider :global-config="globalLocale">
       <t-table
         :data="data"
         :columns="COLUMNS"
@@ -67,6 +68,7 @@
         </template>
         <!-- end -->
       </t-table>
+    </t-config-provider>
     </div>
   </div>
 </template>
@@ -80,6 +82,7 @@ export default {
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { CaretDownSmallIcon } from 'tdesign-icons-vue-next';
 // import { isNumber } from 'lodash'
 import { COLUMNS } from '../constants'
 // 接收父组件传递的值
@@ -101,7 +104,7 @@ const props = defineProps({
 const emit = defineEmits([
   'fetchData',
   'handleSetupContract',
-  'handleBulid',
+  'handleBuild',
   'handleClickDelete'
 ])
 // 监听器赋值
@@ -117,6 +120,11 @@ const sort = ref({
   // 按照服务调用次数进行排序
   sortBy: 'serviceCallNumber'
 }) // 排序
+const globalLocale = ref({
+  table: {
+    sortIcon: (h) => h && h(CaretDownSmallIcon),
+  },
+}) // 排序图标
 const data: any = ref([])
 // 选中的行
 const pagination: any = ref({
@@ -142,21 +150,6 @@ const sortChange = (val) => {
 // 模拟异步请求进行排序
 const onFilterChange = (val) => {
   emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   if (val) {
-  //     data.value = data.value
-  //       .concat()
-  //       .sort((a, b) =>
-  //         val.descending
-  //           ? b[val.sortBy] - a[val.sortBy]
-  //           : a[val.sortBy] - b[val.sortBy]
-  //       )
-  //   } else {
-  //     // 如果没有排序，就按照原来的顺序进行排序
-  //     data.value = data.value.concat().sort((a, b) => a.index - b.index)
-  //   }
-  //   clearTimeout(timer)
-  // }, 100)
 }
 // 筛选
 const FilterChange = (val) => {
@@ -165,16 +158,6 @@ const FilterChange = (val) => {
 // 模拟异步请求进行筛选
 const ONFilterChange = (val) => {
   emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   data.value = data.value.filter((timer) => {
-  //     let result = true
-  //     if (isNumber(val.status)) {
-  //       result = timer.status === val.status
-  //     }
-  //     return result
-  //   })
-  //   clearTimeout(timer)
-  // }, 150)
 }
 
 // 选中的行
@@ -202,8 +185,8 @@ const onPageChange = (val) => {
 }
 
 // 点击新建
-const handleBulid = () => {
-  emit('handleBulid')
+const handleBuild = () => {
+  emit('handleBuild')
 }
 </script>
 <style lang="less" scoped src="../../index.less"></style>
@@ -213,4 +196,5 @@ const handleBulid = () => {
     height: 64px !important;
   }
 }
+
 </style>

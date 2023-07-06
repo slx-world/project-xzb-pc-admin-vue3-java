@@ -5,7 +5,7 @@
       <!-- 新建按钮区域 -->
       <div class="newBox">
         <switchBar :data="tableBar" @changeId="changeId"></switchBar>
-        <button class="bt newBoxbutton" @click="handleBulid()">新建</button>
+        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
       </div>
       <!-- 表格区域 -->
       <t-table
@@ -124,7 +124,7 @@ const props = defineProps({
 const emit = defineEmits([
   'fetchData',
   'handleSetupContract',
-  'handleBulid',
+  'handleBuild',
   'handleClickDelete'
 ])
 // 全部数据条数
@@ -221,8 +221,8 @@ const onPageChange = (val) => {
 }
 
 // 点击新建
-const handleBulid = () => {
-  emit('handleBulid')
+const handleBuild = () => {
+  emit('handleBuild')
 }
 
 // 控制弹窗

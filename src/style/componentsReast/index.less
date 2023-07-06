@@ -396,7 +396,7 @@ li.t-menu__item {
 // 表格顶部
 .t-table th {
   font-family: PingFangSC;
-  color: var(--color-bk2);
+  color: var(--color-bk1);
   font-weight: 500;
   background-color: var(--color-tableHeader-bg) !important;
   padding-left: var(--space-main);
@@ -491,12 +491,14 @@ li.t-menu__item {
     vertical-align: middle;
   }
 }
+
 // 状态0
 .status-dot-0 {
   &::before {
     background-color: var(--color-bk4);
   }
 }
+
 // 状态1
 .status-dot-1 {
   &::before {
@@ -533,96 +535,76 @@ li.t-menu__item {
 // 排序箭头
 
 // 上箭头
-.t-table__double-icons .t-table-sort-asc {
-  background-image: url(@/assets/test-img/Shape.svg);
-  width: 11px;
-  height: 11px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-  // 背景旋转180度
-  transform: rotate(0deg);
+// .t-table__double-icons .t-table-sort-asc {
+//   background-image: url(@/assets/test-img/Shape.svg);
+//   width: 11px;
+//   height: 11px;
+//   background-repeat: no-repeat;
+//   background-position: center;
+//   background-size: 100% 100%;
+//   // 背景旋转180度
+//   transform: rotate(0deg);
 
-  .t-icon {
-    display: none;
-  }
+//   .t-icon {
+//     display: none;
+//   }
 
-  &:hover {
-    background-image: url(@/assets/test-img/Shapehover.svg);
-  }
+//   &:hover {
+//     background-image: url(@/assets/test-img/Shapehover.svg);
+//   }
 
-  // 点击后改变颜色
-  &:active {
-    background-image: url(@/assets/test-img/Shapehover.svg);
-  }
+//   // 点击后改变颜色
+//   &:active {
+//     background-image: url(@/assets/test-img/Shapehover.svg);
+//   }
 
-  &:focus {
-    background-image: url(@/assets/test-img/Shapehover.svg);
-  }
-}
+//   &:focus {
+//     background-image: url(@/assets/test-img/Shapehover.svg);
+//   }
+// }
 
 // 选中状态颜色
-.t-table__sort-icon--active {
-  background-image: url(@/assets/test-img/Shapehover.svg) !important;
-}
+// .t-table__sort-icon--active {
+//   background-image: url(@/assets/test-img/Shapehover.svg) !important;
+// }
 
 // 下箭头
-.t-table__double-icons .t-table-sort-desc {
-  background-image: url(@/assets/test-img/Shape.svg);
-  width: 11px;
-  height: 11px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-  // 背景旋转180度
-  transform: rotate(180deg);
+// .t-table__double-icons .t-table-sort-desc {
+//   background-image: url(@/assets/test-img/Shape.svg);
+//   width: 11px;
+//   height: 11px;
+//   background-repeat: no-repeat;
+//   background-position: center;
+//   background-size: 100% 100%;
+//   // 背景旋转180度
+//   transform: rotate(180deg);
 
-  .t-icon {
-    display: none;
-  }
+//   .t-icon {
+//     display: none;
+//   }
 
-  &:hover {
-    background-image: url(@/assets/test-img/Shapehover.svg);
-  }
+//   &:hover {
+//     background-image: url(@/assets/test-img/Shapehover.svg);
+//   }
 
-  // 点击后改变颜色
-  &:active {
-    background-image: url(@/assets/test-img/Shapehover.svg) !important;
-  }
+//   // 点击后改变颜色
+//   &:active {
+//     background-image: url(@/assets/test-img/Shapehover.svg) !important;
+//   }
 
-  &:focus {
-    background-image: url(@/assets/test-img/Shapehover.svg);
-  }
-}
+//   &:focus {
+//     background-image: url(@/assets/test-img/Shapehover.svg);
+//   }
+// }
 
 
 // 筛选按钮
 .t-table__filter-icon {
 
-  // 替换图标
-  .t-icon {
-    display: none;
-  }
-
-  // 替换为一个svg图标
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background-image: url(@/assets/icon-ztsx.svg);
-    background-size: 100%;
-    // 居中
-    vertical-align: middle;
-  }
-
   // hover时改变颜色
   &:hover,
   &.active {
-    &::before {
-      background-image: url(@/assets/icon-ztsx-hover.svg);
-      color: var(--color-main);
-    }
+    color: var(--color-main);
   }
 }
 
@@ -893,10 +875,8 @@ button {
 // 上传图片框
 .t-upload__card-content,
 .t-upload__card-container {
-  width: 144px;
-  height: 144px;
-  // 圆
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
 }
 
 .t-upload__card-content {
@@ -918,7 +898,14 @@ button {
 .t-textarea__inner::-webkit-input-placeholder {
   color: var(--color-bk4);
 }
-
+.t-textarea .t-resize-none{
+  // 禁止左右拖拽，允许上下拖拽
+  resize: vertical;
+}
+.t-textarea__limit{
+  bottom: auto;
+  right: 0;
+}
 
 // 上传图片按钮样式
 .upbtn {
@@ -1075,6 +1062,7 @@ button {
   width: 24px;
   height: 24px;
 }
+
 // 侧边栏选中状态
 .t-default-menu .t-menu__item.t-is-opened.t-is-active {
   color: var(--color-black);
@@ -1115,8 +1103,9 @@ button {
     font-weight: 500;
     color: var(--color-main) !important;
   }
-  .t-icon{
-    path{
+
+  .t-icon {
+    path {
       stroke: var(--color-main);
     }
   }
@@ -1138,13 +1127,15 @@ button {
 
 .t-default-menu .t-menu__item:hover:not(.t-is-active):not(.t-is-disabled) {
   background-color: #FFF6F6 !important;
-  svg{
-    path{
+
+  svg {
+    path {
       stroke: var(--color-main);
     }
   }
-  .t-fake-arrow{
-    path{
+
+  .t-fake-arrow {
+    path {
       color: var(--color-main);
       fill: none;
     }
@@ -1172,8 +1163,13 @@ button {
 .t-menu__item.t-menu__item-spacer.t-menu__item-spacer--right.t-is-active {
   background-color: #FFF6F6 !important;
   color: var(--color-main);
-  .t-icon{
-    path{
+
+  .t-menu__content {
+    color: var(--color-main);
+  }
+
+  .t-icon {
+    path {
       stroke: var(--color-main);
     }
   }
@@ -1207,9 +1203,11 @@ button {
 .t-default-menu .t-menu__item:first-child {
   margin-top: 4px;
 }
-.t-default-menu .t-menu__item{
+
+.t-default-menu .t-menu__item {
   padding-left: 22px;
 }
+
 // 表格操作栏最小宽
 .t-table--column-fixed .t-table__cell--fixed-right {
   min-width: 157px;
@@ -1247,7 +1245,7 @@ button {
 .t-tooltip--default .t-popup__content {
   width: 334px;
   font-size: 12px;
-  color: #332929;
+  color: var(--color-bk1);
   padding: 14px 16px;
   line-height: 17px;
   background: var(--color-white);
@@ -1691,23 +1689,25 @@ button {
 
   .t-button--variant-base.t-button--theme-primary:not(.t-is-disabled):not(.t-button--ghost) {
     background: var(--color-main);
+    border-color: var(--color-main);
 
     div {
       display: none !important;
     }
 
     &:hover {
-      background-color: #3280FD;
+      background-color: var(--color-error1);;
     }
 
     &:active {
-      background-color: #1C55CF;
+      background-color: var(--color-error2);;
     }
   }
 }
 
 .t-default-menu .t-menu__sub .t-menu__item {
   padding-left: 50px;
+
   div {
     display: none;
   }
@@ -1846,6 +1846,7 @@ button {
 
 .t-textarea__inner:focus {
   border-color: var(--color-main);
+  box-shadow: none;
 }
 
 .t-message.t-is-success>.t-icon,
@@ -1887,29 +1888,63 @@ button {
 // 次级联选框的样式
 .t-cascader__item.t-is-expanded {
   color: var(--color-main);
+  background-color: #FFF6F6;
 }
 
 .t-cascader__item.t-is-expanded .t-icon-chevron-right {
   color: var(--color-main);
 }
-.t-select .t-fake-arrow--active{
+
+.t-select .t-fake-arrow--active {
   color: var(--color-main);
 }
+
 .t-input:focus {
   border-color: var(--color-main);
   box-shadow: none;
 }
-.t-input--focused{
+
+.t-input--focused {
   box-shadow: none;
 }
+
 .t-range-input-popup--visible .t-range-input {
   border-color: var(--color-main);
   box-shadow: none;
 }
-.t-range-input-popup--visible .t-range-input .t-icon-time, .t-range-input-popup--visible .t-range-input .t-icon-calendar{
+
+.t-range-input-popup--visible .t-range-input .t-icon-time,
+.t-range-input-popup--visible .t-range-input .t-icon-calendar {
   color: var(--color-main);
 }
-.t-menu__popup-wrapper{
+
+.t-menu__popup-wrapper {
   padding-left: 0;
   overflow-y: auto;
+}
+
+.t-menu__content {
+  color: var(--color-bk3);
+}
+.t-table__filter-icon-wrap{
+  .t-is-focus{
+    path{
+      fill: var(--color-main);
+    }
+  }
+}
+.t-table__sort-icon--active{
+  color: var(--color-main);
+}
+.t-table__sort-icon .t-is-focus, .t-table__sort-icon.t-is-focus, .t-table__sort-icon:hover{
+  color: var(--color-main);
+}
+.t-cascader__item:hover:not(.t-is-expanded):not(.t-is-disabled){
+  background-color: #FFF6F6;
+}
+.t-select__wrap{
+  height: 32px;
+}
+.t-upload__card-container:hover{
+  border-color: var(--color-main);
 }

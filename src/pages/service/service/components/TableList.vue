@@ -3,8 +3,9 @@
   <div class="baseList bg-wt">
     <div class="tableBoxs">
       <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBulid()">新建</button>
+        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
       </div>
+      <t-config-provider :global-config="globalLocale">
       <t-table
         :data="data"
         :columns="COLUMNS"
@@ -53,7 +54,9 @@
                   <div
                     class="tdesign-demo-image-viewer__ui-image--hover"
                     @click="open"
-                  ></div>
+                  >
+                  <span><ZoomInIcon size="1.8em"/></span>
+                </div>
                 </div>
               </template>
             </t-image-viewer>
@@ -99,6 +102,7 @@
         </template>
         <!-- end -->
       </t-table>
+    </t-config-provider>
     </div>
   </div>
 </template>
@@ -112,7 +116,7 @@ export default {
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-// import { isNumber } from 'lodash'
+import { CaretDownSmallIcon, ZoomInIcon } from 'tdesign-icons-vue-next';
 import { COLUMNS } from '../constants'
 // 接收父组件传递的值
 const props = defineProps({
@@ -133,7 +137,7 @@ const props = defineProps({
 const emit = defineEmits([
   'fetchData',
   'handleSetupContract',
-  'handleBulid',
+  'handleBuild',
   'handleClickDelete'
 ])
 // 监听器赋值
@@ -149,6 +153,11 @@ const sort = ref({
   // 按照服务调用次数进行排序
   sortBy: 'serviceCallNumber'
 }) // 排序
+const globalLocale = ref({
+  table: {
+    sortIcon: (h) => h && h(CaretDownSmallIcon),
+  },
+}) // 排序图标
 const data: any = ref([])
 // 选中的行
 const pagination: any = ref({
@@ -238,8 +247,8 @@ const onPageChange = (val) => {
 }
 
 // 点击新建
-const handleBulid = () => {
-  emit('handleBulid')
+const handleBuild = () => {
+  emit('handleBuild')
 }
 </script>
 <style lang="less" scoped src="../../index.less"></style>
@@ -252,5 +261,8 @@ const handleBulid = () => {
 .headPortrait {
   display: flex;
   align-items: center;
+}
+:deep(.t-table__filter-icon){
+  display: none;
 }
 </style>

@@ -3,7 +3,7 @@
   <t-dialog
     v-model:visible="formVisible"
     :header="title"
-    :width="680"
+    :width="628"
     :footer="false"
     :on-close="onClickCloseBtn"
   >

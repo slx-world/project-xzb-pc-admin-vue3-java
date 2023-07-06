@@ -3,26 +3,25 @@
   <div class="baseList bg-wt">
     <div class="tableBoxs">
       <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
+        <button class="bt newBoxbutton" @click="handleBuild()">添加服务</button>
       </div>
       <t-config-provider :global-config="globalLocale">
         <t-table
           :data="data"
-          :columns="COLUMNS"
+          :columns="regionCOLUMN"
           :row-key="rowKey"
           vertical-align="middle"
           :hover="true"
+          bordered
           :pagination="
-            pagination.total <= 10 || !pagination.total ? null : pagination
+            pagination.total <= 8 || !pagination.total ? null : pagination
           "
-          :disable-data-page="pagination.total <= 10"
+          :disable-data-page="pagination.total <= 8"
           :selected-row-keys="selectedRowKeys"
           :loading="dataLoading"
           :sort="sort"
           :filter-value="filterValue"
           :hide-sort-tips="true"
-          :multiple-sort="true"
-          filterRow="true"
           :show-sort-column-bg-color="true"
           table-layout="fixed"
           table-content-width="100%"
@@ -31,39 +30,6 @@
           @sort-change="sortChange"
           @select-change="rehandleSelectChange"
         >
-          <!-- 服务类型图标 -->
-          <template #headPortrait="{ row }">
-            <div class="headPortrait">
-              <img
-                :src="row.headPortrait"
-                alt=""
-                class="tdesign-demo-image-viewer__ui-image--img"
-              />
-            </div>
-          </template>
-          <!-- end -->
-          <!-- 服务类型图片 -->
-          <template #pictureArray="{ row }">
-            <div class="headPortrait">
-              <t-image-viewer :images="[row.headPortrait]">
-                <template #trigger="{ open }">
-                  <div class="tdesign-demo-image-viewer__ui-image">
-                    <img
-                      alt="test"
-                      :src="row.headPortrait"
-                      class="tdesign-demo-image-viewer__ui-image--img"
-                    />
-                    <div
-                      class="tdesign-demo-image-viewer__ui-image--hover"
-                      @click="open"
-                    >
-                      <span><ZoomInIcon size="1.8em" /></span>
-                    </div>
-                  </div>
-                </template>
-              </t-image-viewer>
-            </div>
-          </template>
           <!-- 描述 -->
           <template #description="{ row }">
             <div class="description">
@@ -97,14 +63,8 @@
             <a class="btn-dl btn-split-right" @click="handleClickDelete(row)"
               >删除</a
             >
-            <a
-              class="font-bt btn-split-right line"
-              @click="handleViewServices(row)"
-              >查看服务项</a
-            >
-            <a class="font-bt line" @click="handleSetupContract(row)">编辑</a>
-            <a class="font-bt btn-split-left" @click="handleDisable(row)"
-              >禁用</a
+            <a class="font-bt btn-split-left" @click="handleClickSetHot(row)"
+              >设为热门</a
             >
           </template>
           <!-- end -->
@@ -123,9 +83,8 @@ export default {
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { CaretDownSmallIcon, ZoomInIcon } from 'tdesign-icons-vue-next'
-// import { isNumber } from 'lodash'
-import { COLUMNS } from '../constants'
+import { CaretDownSmallIcon } from 'tdesign-icons-vue-next'
+import { regionCOLUMN } from '../constants'
 // 接收父组件传递的值
 const props = defineProps({
   listData: {
@@ -144,10 +103,9 @@ const props = defineProps({
 // 发送事件给父组件
 const emit = defineEmits([
   'fetchData',
-  'handleSetupContract',
+  'handleClickSetHot',
   'handleBuild',
-  'handleClickDelete',
-  'handleDisable'
+  'handleClickDelete'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -155,33 +113,31 @@ watch(props, () => {
   pagination.value = props.pagination
   dataLoading.value = false
 })
-const filterValue = ref({})
 // 路由
 const router = useRouter()
 // 排序
-const sort = ref([
-  {
-    // 按照服务调用次数进行排序
-    sortBy: 'serviceCallNumber'
-  },
-  {
-    sortBy: 'updateTime'
-  }
-]) // 排序
-const data: any = ref([])
-// 选中的行
-const pagination: any = ref({
-  defaultPageSize: 10,
-  total: 0,
-  defaultCurrent: 1 // 默认当前页
-})
-// 索引
-const rowKey = 'index' // 行的key
+const sort = ref({
+  // 按照服务调用次数进行排序
+  sortBy: 'serviceCallNumber'
+}) // 排序
 const globalLocale = ref({
   table: {
     sortIcon: (h) => h && h(CaretDownSmallIcon)
   }
+}) // 排序图标
+const data: any = ref([])
+// 选中的行
+const pagination: any = ref({
+  defaultPageSize: 8,
+  total: 0,
+  defaultCurrent: 1, // 默认当前页
+  pageSizeOptions: [8, 16, 24, 32],
 })
+// 索引
+const rowKey = 'index' // 行的key
+const filterValue = ref({
+  status: ''
+}) // 过滤
 // 加载状态
 const dataLoading = ref(true)
 
@@ -198,23 +154,11 @@ const onFilterChange = (val) => {
 }
 // 筛选
 const FilterChange = (val) => {
-  console.log(val)
-  filterValue.value = val
   ONFilterChange(val)
 }
 // 模拟异步请求进行筛选
 const ONFilterChange = (val) => {
   emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   data.value = data.value.filter((timer) => {
-  //     let result = true
-  //     if (isNumber(val.status)) {
-  //       result = timer.status === val.status
-  //     }
-  //     return result
-  //   })
-  //   clearTimeout(timer)
-  // }, 150)
 }
 
 // 选中的行
@@ -223,13 +167,8 @@ const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
 // 点击查看详情
-const handleDisable = (val) => {
-  console.log(val)
-  emit('handleDisable', val)
-}
-// 打开编辑弹窗
-const handleSetupContract = (val) => {
-  emit('handleSetupContract', val)
+const handleClickSetHot = (val) => {
+  emit('handleClickSetHot', val)
 }
 // 点击删除
 const deleteIdx = ref(-1) // 删除的索引
@@ -250,30 +189,25 @@ const onPageChange = (val) => {
 const handleBuild = () => {
   emit('handleBuild')
 }
-
-// 点击查看服务项
-const handleViewServices = (val) => {
-  router.push({
-    path: 'ServiceList',
-    query: {
-      id: val.id
-    }
-  })
-}
 </script>
 <style lang="less" scoped src="../../index.less"></style>
 <style lang="less" scoped>
 .baseList {
+  padding-top: 0 !important;
   :deep(.t-table td) {
     height: 64px !important;
   }
 }
-.headPortrait {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tableBoxs {
+  margin: 12px 0 0 0;
 }
-:deep(.t-table__filter-icon) {
-  display: none;
+.newBoxbutton {
+  margin-left: 0 !important;
+}
+:deep(
+    .t-table--bordered.t-table__content--scrollable-to-right
+      .t-table__cell--fixed-right-first::after
+  ) {
+  border: none;
 }
 </style>

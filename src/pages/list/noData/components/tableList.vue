@@ -88,7 +88,7 @@ const props = defineProps({
 const emit = defineEmits([
   'fetchData',
   'handleSetupContract',
-  'handleBulid',
+  'handleBuild',
   'handleClickDelete'
 ])
 // 监听器赋值

@@ -1,31 +1,25 @@
-<!-- 基础列表页 -->
+<!-- 基础列表页（带图） -->
 <template>
-  <!-- 详情页 -->
-  <router-view v-if="url === '/list/base/detail'"></router-view>
-  <div v-else class="base-wapper bgTable">
-    <!-- 筛选区域 -->
-    <searchFormBox
-      :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
+  <div class="base-up-wapper bgTable">
+    <!-- 搜索表单区域 -->
+    <!-- <searchFormBox
       @handleSearch="handleSearch"
       @handleReset="handleReset"
-    ></searchFormBox>
+    ></searchFormBox> -->
     <!-- end -->
     <!-- 表格 -->
     <tableList
       :list-data="listData"
-      :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
+      :pagination="pagination"
       @handleSetupContract="handleSetupContract"
       @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
+      @handleDisable="handleDisable"
     ></tableList>
     <!-- end -->
     <!-- 新增，编辑弹窗 -->
-    <dialog-form
+    <DialogForm
       :visible="visible"
       :title="title"
       :data="DialogFormdata"
@@ -34,19 +28,22 @@
       @fetchData="fetchData"
     />
     <!-- end -->
-    <!-- 生产环境禁用操作弹窗 -->
-    <ProdDisabled
-      :confirm-visible="prodDisabledVisible"
-      @handleClose="handleClose"
-    ></ProdDisabled>
-    <!-- end -->
-    <!-- 删除弹层 -->
+    <!-- 删除弹窗 -->
     <Delete
       :dialog-delete-visible="dialogDeleteVisible"
       :delete-text="deleteText"
       @handle-delete="handleDelete"
       @handle-close="handleClose"
     ></Delete>
+    <!-- end -->
+    <!-- 禁用/启用弹窗 -->
+    <Confirm
+      :title="confirmTitle"
+      :dialog-confirm-visible="dialogConfirmVisible"
+      :confirm-text="confirmText"
+      @handle-confirm="handleConfirm"
+      @handle-close="handleClose"
+    ></Confirm>
     <!-- end -->
   </div>
 </template>
@@ -59,27 +56,25 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { getList } from '@/api/list'
+import Confirm from '@/components/Confirm/index.vue' // 确认弹层
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
-import ProdDisabled from '@/components/Message/ProdDisabled.vue' // 删除弹窗
-import Delete from '@/components/Delete/index.vue' // 删除弹层
 import tableList from './components/TableList.vue' // 表格
+import Delete from '@/components/Delete/index.vue' // 删除弹层
 import searchFormBox from './components/SearchForm.vue' // 搜索框表单
 
 const visible = ref(false) // 新增，编辑弹窗
 const listData = ref([]) // 列表数据
-const dataLoading = ref(false)
+const confirmTitle = ref('确认禁用')
+const dataLoading = ref(false) // 列表数据加载loading
 const DialogFormdata = ref({}) // 弹窗表单内容
-const title = ref('新建') // 弹窗标题
+const title = ref('新建服务类型') // 弹窗标题
 const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
-const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
-const prodDisabledVisible = ref(false) // 生产环境禁用操作弹窗
-const route = useRoute()
-const url = ref('')
-
+const dialogConfirmVisible = ref(false) // 控制禁用弹层的显示隐藏
+const deleteText = ref('确定删除该分类吗？') // 删除的内容
+const confirmText = ref('禁用该服务分类会导致分类下服务全部下架，确定禁用该分类吗？')
 // 分页
 const pagination = ref({
   defaultPageSize: 10,
@@ -93,14 +88,7 @@ const searchForm = {
   serviceCallNumber: undefined,
   updateTime: []
 }
-// 监听路由变化
-watch(
-  () => route.path,
-  (newValue) => {
-    url.value = newValue
-    // fetchData(pagination.value)
-  }
-)
+// 表单内容
 const formData = ref({ ...searchForm }) // 表单内容
 // 生命周期
 onMounted(() => {
@@ -111,12 +99,15 @@ const handleSearch = (val) => {
   // 根据搜索框的内容进行搜索
   fetchData(val)
 }
+// 分页
+
 // 重置，清空搜索框
 const handleReset = () => {
   // 清空搜索框的全部内容并且重新获取数据
   // 重置页码
   pagination.value.defaultCurrent = 1
   fetchData(pagination.value)
+  // 重新渲染table
 }
 // 获取列表数据
 const fetchData = async (val) => {
@@ -133,16 +124,16 @@ const fetchData = async (val) => {
 const handleClose = () => {
   visible.value = false // 关闭新增弹窗
   dialogDeleteVisible.value = false // 关闭删除弹层
-  prodDisabledVisible.value = false
 }
 // 点击新建
 const handleBuild = () => {
-  // // 显示新建弹窗
+  // 显示新建弹窗
   visible.value = true
+  // 将弹窗的标题改为新建
+  title.value = '新建服务类型'
 }
 // 点击编辑
 const handleSetupContract = (val) => {
-  // 深拷贝
   DialogFormdata.value = JSON.parse(JSON.stringify(val))
   // 显示新建弹窗
   visible.value = true
@@ -154,10 +145,18 @@ const handleDelete = () => {
   dialogDeleteVisible.value = false
   MessagePlugin.success('删除成功')
   fetchData(pagination.value)
-  fetchData(pagination.value)
 }
 // 点击删除
 const handleClickDelete = (row: { rowIndex: any }) => {
   dialogDeleteVisible.value = true
+}
+// 禁用
+const handleDisable = (row: { rowIndex: any }) => {
+  dialogConfirmVisible.value = true
+}
+// 确认禁用
+const handleConfirm = () => {
+  dialogConfirmVisible.value = false
+  MessagePlugin.success('禁用成功')
 }
 </script>

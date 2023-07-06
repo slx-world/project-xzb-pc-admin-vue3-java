@@ -3,7 +3,7 @@
   <t-dialog
     v-model:visible="formVisible"
     :header="title"
-    :width="680"
+    :width="628"
     :footer="false"
     :on-close="onClickCloseBtn"
   >
@@ -13,62 +13,44 @@
         ref="form"
         :data="formData"
         :rules="rules"
-        :label-width="80"
         on-cancel="onClickCloseBtn"
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="手机号：" name="phoneNumber">
-          <t-input
-            v-model="formData.phoneNumber"
+        <t-form-item label="区域选择：" name="phoneNumber">
+          <t-select
+            placeholder="请选择"
+            filterable
+            :options="options"
+            :scroll="{ type: 'virtual' }"
             class="wt-400"
-            placeholder="请输入"
-            clearable
+            :popup-props="{ overlayInnerStyle: { height: '300px' },bufferSize:'100' }"
           />
         </t-form-item>
-        <t-form-item label="调用次数：" name="serviceCallNumber">
+        <t-form-item label="区域负责人：" name="serviceCallNumber">
           <t-input
             v-model="formData.serviceCallNumber"
             class="wt-400"
             placeholder="请输入"
             clearable
           >
-            <template #suffix>
-              <span class="company">次</span>
-            </template>
           </t-input>
         </t-form-item>
-        <t-form-item label="昵称：" name="name">
+        <t-form-item label="联系电话：" name="name">
           <t-input
             v-model="formData.name"
             class="wt-400"
             placeholder="请输入"
             clearable
-            @change="Wordlimit(10)"
           >
-            <template #suffix>
-              <span class="nickname">
-                <span>{{ formData.name ? formData.name.length : 0 }}</span
-                >/10</span
-              >
-            </template>
           </t-input>
-        </t-form-item>
-        <t-form-item label="产品描述：" name="description"
-          ><t-textarea
-            v-model="formData.description"
-            class="wt-400"
-            placeholder="请输入至少5个字符"
-            :maxlength="50"
-          >
-          </t-textarea>
         </t-form-item>
         <t-form-item style="float: right">
           <div class="bt bt-grey btn-submit" @click="onClickCloseBtn">
             <span>取消</span>
           </div>
           <button theme="primary" type="submit" class="bt btn-submit">
-            <span>确定</span>
+            <span>保存</span>
           </button>
         </t-form-item>
       </t-form>
@@ -85,7 +67,6 @@ import {
   validateText10,
   validatePhone
 } from '@/utils/validate'
-
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -100,6 +81,12 @@ const props = defineProps({
   title: {
     type: String,
     default: '新建产品'
+  },
+  cityList:{
+    type:Array,
+    default:()=>{
+      return []
+    }
   }
 })
 // 重置表单
@@ -117,22 +104,12 @@ const formData = ref({
   name: '',
   description: ''
 })
+const options = ref([])
 // 弹窗标题
 const title = ref()
 // 提交表单
 const onSubmit = (result: ValidateResultContext<FormData>) => {
   if (result.validateResult === true) {
-    // 判断内容时否发生改变
-    // if (
-    //   formData.value.serviceCallNumber === props.data.serviceCallNumber &&
-    //   formData.value.description === props.data.description &&
-    //   formData.value.phoneNumber === props.data.phoneNumber &&
-    //   formData.value.name === props.data.name
-    // ) {
-    //   MessagePlugin.warning('内容未发生改变')
-    //   console.log(formData.value)
-    //   console.log(props.data)
-    // } else {
     MessagePlugin.success('提交成功')
     emit('fetchData')
     onClickCloseBtn()
@@ -152,8 +129,11 @@ watch(
   () => {
     formVisible.value = props.visible
     title.value = props.title
+    // 一次100条数据，分多次添加
+    options.value = props.cityList
   }
 )
+
 // 监听器，监听父级传递的data值，控制表单数据
 watch(
   () => props.data,
@@ -162,12 +142,6 @@ watch(
   }
 )
 
-// 字数限制
-const Wordlimit: Function = (num: number) => {
-  if (formData.value.name.length > num) {
-    formData.value.name = formData.value.name.slice(0, num)
-  }
-}
 // 表单校验
 const rules = {
   phoneNumber: [
@@ -259,3 +233,4 @@ const rules = {
   right: 10px;
 }
 </style>
+../city

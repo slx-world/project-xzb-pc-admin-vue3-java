@@ -3,7 +3,7 @@
   <div class="baseList bg-wt">
     <div class="tableBoxs">
       <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBulid()">新建</button>
+        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
       </div>
       <!-- 表格 -->
       <t-table
@@ -95,7 +95,7 @@ const props = defineProps({
 const emit = defineEmits([
   'getTreeData',
   'handleSetupContract',
-  'handleBulid',
+  'handleBuild',
   'handleClickDelete'
 ])
 // 监听器赋值
@@ -172,8 +172,8 @@ const onPageChange = (val) => {
 }
 
 // 点击新建
-const handleBulid = () => {
-  emit('handleBulid')
+const handleBuild = () => {
+  emit('handleBuild')
 }
 </script>
 <style lang="less" scoped src="../../index.less"></style>

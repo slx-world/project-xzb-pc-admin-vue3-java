@@ -3,7 +3,7 @@
   <t-dialog
     v-model:visible="formVisible"
     :header="title"
-    :width="680"
+    :width="628"
     :footer="false"
     :on-close="onClickCloseBtn"
   >
@@ -233,6 +233,6 @@ const rules = {
   .t-dialog
   .t-form:not(.t-form-inline)
   .t-form__item:last-of-type {
-  right: -191px;
+  right: -155px;
 }
 </style>

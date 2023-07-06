@@ -8,7 +8,7 @@
           pagination.total <= 10 || !pagination.total ? null : pagination
         "
       @handleSetupContract="handleSetupContract"
-      @handleBulid="handleBulid"
+      @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
     ></tableList>
@@ -93,7 +93,7 @@ const handleClose = () => {
   dialogDeleteVisible.value = false // 关闭删除弹层
 }
 // 点击新建
-const handleBulid = () => {
+const handleBuild = () => {
   // 显示新建弹窗
   visible.value = true
   // 将弹窗的标题改为新建

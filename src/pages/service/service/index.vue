@@ -16,7 +16,7 @@
         pagination.total <= 10 || !pagination.total ? null : pagination
       "
       @handleSetupContract="handleSetupContract"
-      @handleBulid="handleBulid"
+      @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
     ></tableList>
@@ -128,7 +128,7 @@ const handleClose = () => {
   dialogDeleteVisible.value = false // 关闭删除弹层
 }
 // 点击新建
-const handleBulid = () => {
+const handleBuild = () => {
   router.push('/service/ServiceList/addService')
 }
 // 上下架

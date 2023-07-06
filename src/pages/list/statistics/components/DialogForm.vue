@@ -2,7 +2,7 @@
 <template>
   <t-dialog
     v-model:visible="formVisible"
-    :width="680"
+    :width="628"
     :footer="false"
     :on-close="onClickCloseBtn"
     class="dialog-form"

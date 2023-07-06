@@ -189,8 +189,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           isJoinPrefix: true,
           // 接口前缀
           // 例如: https://www.baidu.com/api
-          urlPrefix: '/api',
-          // urlPrefix: '',
+          // urlPrefix: '/api',
+          urlPrefix: '',
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理

@@ -3,7 +3,7 @@
   <div class="baseList">
     <div class="tableBox1">
       <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBulid()">新建</button>
+        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
       </div>
       <!-- 树状列表 -->
       <t-enhanced-table
@@ -115,7 +115,7 @@ const props = defineProps({
 const emit = defineEmits([
   'fetchData',
   'handleSetupContract',
-  'handleBulid',
+  'handleBuild',
   'handleClickDelete'
 ])
 // 全部数据条数
@@ -205,8 +205,8 @@ const onPageChange = (val) => {
 }
 
 // 点击新建
-const handleBulid = () => {
-  emit('handleBulid')
+const handleBuild = () => {
+  emit('handleBuild')
 }
 // 展开懒加载,修改展开内容的样式
 const onTreeExpandChange = (context) => {

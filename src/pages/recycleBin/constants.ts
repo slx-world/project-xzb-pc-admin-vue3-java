@@ -54,6 +54,7 @@ export const COLUMNS = [
           value: 3
         }
       ],
+      showConfirmAndReset: true
     },
     cell: (h, { row }) => {
       const statusList = {

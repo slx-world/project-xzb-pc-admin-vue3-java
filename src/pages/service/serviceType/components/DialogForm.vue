@@ -3,7 +3,7 @@
   <t-dialog
     v-model:visible="formVisible"
     :header="title"
-    :width="680"
+    :width="628"
     :footer="false"
     :on-close="onClickCloseBtn"
   >
@@ -13,13 +13,13 @@
         ref="form"
         :data="formData"
         :rules="rules"
-        :label-width="80"
+        label-width="110px"
         on-cancel="onClickCloseBtn"
         :reset-type="resetType"
         @submit="onSubmit"
       >
         <t-form-item label="服务类型：" name="phoneNumber">
-          <t-input
+          <t-select
             v-model="formData.phoneNumber"
             class="wt-400"
             placeholder="请输入"
@@ -27,39 +27,37 @@
           />
         </t-form-item>
         <t-form-item label="排序：" name="serviceCallNumber">
-          <t-input
-            v-model="formData.serviceCallNumber"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-          >
-          </t-input>
+          <t-input-number theme="column" :min="0" class="wt-400"></t-input-number>
         </t-form-item>
-        <t-form-item label="昵称：" name="name">
-          <t-input
-            v-model="formData.name"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-            @change="Wordlimit(10)"
-          >
-            <template #suffix>
-              <span class="nickname">
-                <span>{{ formData.name ? formData.name.length : 0 }}</span
-                >/10</span
+        <t-form-item label="服务类型图标：" name="picture">
+              <t-upload
+                v-model="formData.picture"
+                ref="uploadRef1"
+                :action="actions"
+                :is-batch-upload="true"
+                :auto-upload="false"
+                tips="请上传jpg/png文件，在200K以内"
+                theme="image"
+                accept="image/*"
+                class="wt-400"
+                :allow-upload-duplicate-file="true"
               >
-            </template>
-          </t-input>
-        </t-form-item>
-        <t-form-item label="产品描述：" name="description"
-          ><t-textarea
-            v-model="formData.description"
-            class="wt-400"
-            placeholder="请输入至少5个字符"
-            :maxlength="50"
-          >
-          </t-textarea>
-        </t-form-item>
+              </t-upload>
+            </t-form-item>
+            <t-form-item label="服务类型图片：" name="picture">
+              <t-upload
+                ref="uploadRef1"
+                :action="actions"
+                :is-batch-upload="true"
+                :auto-upload="false"
+                class="wt-400"
+                tips="请上传jpg/png文件，在5M以内"
+                theme="image"
+                accept="image/*"
+                :allow-upload-duplicate-file="true"
+              >
+              </t-upload>
+            </t-form-item>
         <t-form-item style="float: right">
           <div class="bt bt-grey btn-submit" @click="onClickCloseBtn">
             <span>取消</span>
@@ -112,7 +110,8 @@ const formData = ref({
   phoneNumber: '',
   serviceCallNumber: '',
   name: '',
-  description: ''
+  description: '',
+  picture: ''
 })
 // 弹窗标题
 const title = ref()
@@ -237,6 +236,14 @@ const rules = {
       type: 'error',
       trigger: 'blur'
     }
+  ],
+  picture: [
+    {
+      required: true,
+      message: '请上传图片',
+      type: 'error',
+      trigger: 'blur'
+    }
   ]
 }
 </script>
@@ -254,5 +261,8 @@ const rules = {
 :deep(.t-textarea__limit) {
   color: var(--color-bk4);
   right: 10px;
+}
+.wt-400 {
+  width: 400px;
 }
 </style>
