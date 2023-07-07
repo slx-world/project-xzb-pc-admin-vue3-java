@@ -17,28 +17,31 @@
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="区域选择：" name="phoneNumber">
+        <t-form-item label="区域选择：" name="cityCode">
           <t-select
             placeholder="请选择"
             filterable
+            :disabled="edit"
+            v-model="formData.cityCode"
             :options="options"
             :scroll="{ type: 'virtual' }"
             class="wt-400"
+            @change="(e)=>onChangeCity(e)"
             :popup-props="{ overlayInnerStyle: { height: '300px' },bufferSize:'100' }"
           />
         </t-form-item>
-        <t-form-item label="区域负责人：" name="serviceCallNumber">
+        <t-form-item label="区域负责人：" name="managerName">
           <t-input
-            v-model="formData.serviceCallNumber"
+            v-model="formData.managerName"
             class="wt-400"
             placeholder="请输入"
             clearable
           >
           </t-input>
         </t-form-item>
-        <t-form-item label="联系电话：" name="name">
+        <t-form-item label="联系电话：" name="managerPhone">
           <t-input
-            v-model="formData.name"
+            v-model="formData.managerPhone"
             class="wt-400"
             placeholder="请输入"
             clearable
@@ -60,7 +63,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
+import {  ValidateResultContext } from 'tdesign-vue-next'
 import {
   validateNum,
   validateText,
@@ -72,11 +75,15 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  data: {
+  formData: {
     type: Object,
     default: () => {
       return {}
     }
+  },
+  edit: {
+    type: Boolean,
+    default: false
   },
   title: {
     type: String,
@@ -94,15 +101,15 @@ const resetType = ref('empty')
 // 表单
 const form = ref()
 // 触发父级事件
-const emit: Function = defineEmits(['handleClose', 'fetchData'])
+const emit: Function = defineEmits(['handleClose', 'confirmEdit'])
 // 弹窗
 const formVisible = ref(false)
 // 表单数据
 const formData = ref({
-  phoneNumber: '',
-  serviceCallNumber: '',
+  cityCode: '',
   name: '',
-  description: ''
+  managerPhone: '',
+  managerName: ''
 })
 const options = ref([])
 // 弹窗标题
@@ -110,9 +117,7 @@ const title = ref()
 // 提交表单
 const onSubmit = (result: ValidateResultContext<FormData>) => {
   if (result.validateResult === true) {
-    MessagePlugin.success('提交成功')
-    emit('fetchData')
-    onClickCloseBtn()
+    emit('confirmEdit', formData.value)
   }
 }
 // 点击取消关闭
@@ -122,11 +127,21 @@ const onClickCloseBtn = () => {
   formVisible.value = false
   emit('handleClose')
 }
+const onChangeCity = (e) => {
+  formData.value.cityCode = e
+  formData.value.name = options.value.find((item) => item.value === e).label
+  console.log(formData.value);
+}
 // 点击叉号关闭
 // 监听器，监听父级传递的visible值，控制弹窗显示隐藏
 watch(
   () => props.visible,
   () => {
+    if(props.edit){
+      formData.value = JSON.parse(JSON.stringify(props.formData))
+    }else{
+      form.value.reset()
+    }
     formVisible.value = props.visible
     title.value = props.title
     // 一次100条数据，分多次添加
@@ -135,17 +150,20 @@ watch(
 )
 
 // 监听器，监听父级传递的data值，控制表单数据
-watch(
-  () => props.data,
-  (val) => {
-    formData.value = JSON.parse(JSON.stringify(val))
-  }
-)
 
 // 表单校验
 const rules = {
-  phoneNumber: [
+  cityCode: [
     // 手机号校验
+    {
+      required: true,
+      message: '请选择区域',
+      type: 'error',
+      trigger: 'change'
+    },
+  ],
+  managerPhone: [
+    // 调用次数校验
     {
       required: true,
       message: '请输入手机号',
@@ -156,35 +174,20 @@ const rules = {
       validator: validatePhone,
       message: '请输入正确格式的手机号',
       type: 'error',
-      trigger: 'blur'
-    }
-  ],
-  serviceCallNumber: [
-    // 调用次数校验
-    {
-      required: true,
-      message: '请输入调用次数',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
-      type: 'error',
       trigger: 'change'
     },
     {
-      validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
+      validator: validatePhone,
+      message: '请输入正确格式的手机号',
       type: 'error',
       trigger: 'blur'
     }
   ],
-  name: [
+  managerName: [
     // 昵称校验
     {
       required: true,
-      message: '请输入昵称',
+      message: '请输入姓名',
       type: 'error',
       trigger: 'blur'
     },
@@ -195,27 +198,11 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  description: [
-    {
-      required: true,
-      message: '请输入产品描述',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validateText,
-      message: '请输入至少5个字符,至多50个字符',
-      type: 'error',
-      trigger: 'change'
-    },
-    {
-      validator: validateText,
-      message: '请输入至少5个字符,至多50个字符',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ]
 }
+// 暴露给父级的方法
+defineExpose({
+  onClickCloseBtn
+})
 </script>
 <style lang="less" scoped>
 .btn-submit {

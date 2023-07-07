@@ -11,9 +11,9 @@
   >
     <!-- 密码登录 -->
     <template v-if="type == 2">
-      <t-form-item name="account">
+      <t-form-item name="username">
         <t-input
-          v-model="formData.account"
+          v-model="formData.username"
           size="large"
           placeholder="账户"
           autocomplete="both"
@@ -70,40 +70,13 @@ const userStore = useUserStore()
 const loadSt = ref(false)
 
 const INITIAL_DATA = {
-  phone: '',
-  account: 'admin',
-  password: 'admin',
-  verifyCode: '',
-  checked: false
+  username: 'lisi',
+  password: '123456',
 }
 
 const FORM_RULES: Record<string, FormRule[]> = {
-  phone: [
-    // 手机号校验
-    {
-      required: true,
-      message: '请输入手机号',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validatePhone,
-      message: '请输入正确格式的手机号',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
   account: [{ required: true, message: '账号必填', type: 'error' }],
   password: [{ required: true, message: '密码必填', type: 'error' }],
-  verifyCode: [
-    { required: true, message: '验证码必填', type: 'error' },
-    {
-      validator: validateCode,
-      message: '请输入正确格式的验证码',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ]
 }
 
 const type = ref(2)
@@ -119,13 +92,12 @@ const onSubmit = async ({ validateResult }) => {
   if (validateResult === true) {
     loadSt.value = true
     // 登录相关
-    userLogins(formData.value).then(async (res) => {
-      if (res.code === 200) {
-        // 用户token写入 pinia
-        await userStore.login(res.data)
+    userLogins(formData.value).then(async (res : any) => {
+      if (res.data.code === 0) {
+        await userStore.login(res.data.data.token)
         // 获取用户信息 并存入pinia
-        const { data } = await getUserInfo()
-        userStore.setUserInfo(data)
+        // const { data } = await getUserInfo()
+        // userStore.setUserInfo(data)
         loadSt.value = false
         // 登录成功， 转入首页
         MessagePlugin.success('登录成功')

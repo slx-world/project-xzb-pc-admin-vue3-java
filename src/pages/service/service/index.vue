@@ -5,6 +5,7 @@
     <!-- 搜索表单区域 -->
     <searchFormBox
       :initSearch="initSearch"
+      :typeSelect="typeSelect"
       @handleSearch="handleSearch"
       @handleReset="handleReset"
     ></searchFormBox>
@@ -12,13 +13,12 @@
     <!-- 表格 -->
     <tableList
       :list-data="listData"
-      :pagination="
-        pagination.total <= 10 || !pagination.total ? null : pagination
-      "
+      :pagination="pagination"
       @handleSetupContract="handleSetupContract"
       @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
+      @handleSortChange="handleSortChange"
     ></tableList>
     <!-- end -->
     <!-- 新增，编辑弹窗 -->
@@ -26,7 +26,6 @@
       :visible="visible"
       :title="title"
       :data="DialogFormdata"
-      :form-data="formData"
       @handleClose="handleClose"
       @fetchData="fetchData"
     />
@@ -51,12 +50,17 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { useRoute, useRouter } from 'vue-router'
-import { getList } from '@/api/list'
+import {
+  serviceTypeSimpleList,
+  serviceItemList,
+  serviceItemStatus,
+  serviceItemDelete
+} from '@/api/service'
+import { forEach } from 'lodash'
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
 import Delete from '@/components/Delete/index.vue' // 删除弹层
@@ -76,30 +80,39 @@ const dialogConfirmVisible = ref(false) // 控制确认弹层显示隐藏
 const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
 const confirmText = ref('此操作将永久下架这条信息，是否继续？') // 确认的内容
 const url = ref('') // 当前路由
-const initSearch = ref()
+const initSearch = ref() // 条转过来的携带数据
+const typeSelect = ref([]) // 服务类型下拉框数据
+const deleteId = ref('') // 删除的id
 // 分页
 const pagination = ref({
   defaultPageSize: 10,
   total: 0,
   defaultCurrent: 1 // 默认当前页
 })
-// 搜索框表单
-const searchForm = {
-  index: '',
-  status: undefined,
-  serviceCallNumber: undefined,
-  updateTime: []
-}
-// 表单内容
-const formData = ref({ ...searchForm }) // 表单内容
+const requestData = ref({
+  isAsc1: true,
+  isAsc2: false,
+  orderBy1: 'sortNum',
+  orderBy2: 'updateTime',
+  pageNo: 1,
+  pageSize: 10,
+  name: '',
+  serveTypeId: ''
+}) // 请求参数
+// 上下架数据
+const setupContractData = ref({
+  id: '',
+  flag: 0
+})
 // 生命周期
 onMounted(() => {
-  fetchData(pagination.value)
+  fetchData(requestData.value)
 })
 // 搜索功能
 const handleSearch = (val) => {
-  // 根据搜索框的内容进行搜索
-  fetchData(val)
+  requestData.value.name = val.name
+  requestData.value.serveTypeId = val.serveTypeId
+  fetchData(requestData.value)
 }
 // 分页
 
@@ -108,19 +121,23 @@ const handleReset = () => {
   // 清空搜索框的全部内容并且重新获取数据
   // 重置页码
   pagination.value.defaultCurrent = 1
-  fetchData(pagination.value)
+  fetchData(requestData.value)
   // 重新渲染table
+}
+// 获取服务类型下拉框数据
+const getServiceTypeSimpleList = async () => {
+  await serviceTypeSimpleList().then((res) => {
+    typeSelect.value = res.data.data
+  })
 }
 // 获取列表数据
 const fetchData = async (val) => {
   dataLoading.value = true
-  try {
-    const res: any = await getList() // 获取列表数据,当前为mock接口，后续会替换为真实接口，并接受真实数据传值
-    listData.value = res.data.list
-    pagination.value.total = res.data.list.length
-  } finally {
+  await serviceItemList(val).then((res) => {
+    listData.value = res.data.data.list
+    pagination.value.total = res.data.data.total
     dataLoading.value = false
-  }
+  })
 }
 // 关闭弹窗
 const handleClose = () => {
@@ -132,41 +149,78 @@ const handleBuild = () => {
   router.push('/service/ServiceList/addService')
 }
 // 上下架
-const handleSetupContract = (val) => {
+const handleSetupContract = (val, id) => {
   dialogConfirmVisible.value = true
-  console.log(val)
+  setupContractData.value.id = val.id
+  if (id === 1) {
+    confirmTitle.value = '确认上架'
+    confirmText.value = '确定上架该服务吗？'
+    setupContractData.value.flag = 2
+  } else {
+    confirmTitle.value = '确认下架'
+    confirmText.value = '确定下架该服务吗？'
+    setupContractData.value.flag = 1
+  }
 }
 // 确认上下架
-const handleConfirm = () => {
-  dialogConfirmVisible.value = false
-  MessagePlugin.success('操作成功')
-  fetchData(pagination.value)
+const handleConfirm = async () => {
+  await serviceItemStatus(setupContractData.value).then((res) => {
+    dialogConfirmVisible.value = false
+    MessagePlugin.success('操作成功')
+    fetchData(requestData.value)
+  })
 }
 // 确认删除
-const handleDelete = () => {
-  dialogDeleteVisible.value = false
-  MessagePlugin.success('删除成功')
-  fetchData(pagination.value)
+const handleDelete = async () => {
+  await serviceItemDelete(deleteId.value).then((res) => {
+    console.log(res);
+    dialogDeleteVisible.value = false
+    MessagePlugin.success('删除成功')
+    fetchData(requestData.value)
+  })
 }
 // 点击删除
-const handleClickDelete = (row: { rowIndex: any }) => {
+const handleClickDelete = (row) => {
+  deleteId.value = row.id
   dialogDeleteVisible.value = true
 }
+// 排序
+const handleSortChange = (val) => {
+  forEach(val, (item) => {
+    if(item.sortBy ==='sortNum'){
+      if(item.descending === true){
+        requestData.value.isAsc1 = false
+      }else{
+        requestData.value.isAsc1 = true
+      }
+    }else{
+      if(item.descending === true){
+        requestData.value.isAsc2 = false
+      }else{
+        requestData.value.isAsc2 = true
+      }
+    }
+  })
+  fetchData(requestData.value)
+}
 watchEffect(() => {
-  if(route.path === 'service/ServiceList'){
+  if (route.path === 'service/ServiceList') {
     url.value = 'service/ServiceList'
-    fetchData(pagination.value)
-  } else{
+    getServiceTypeSimpleList()
+    fetchData(requestData.value)
+  } else {
     url.value = route.path
-    fetchData(pagination.value)
+    getServiceTypeSimpleList()
+    fetchData(requestData.value)
   }
   if (!initSearch.value && route.query.id) {
     initSearch.value = route.query.id
-    pagination.value.total = Number(route.query.id)
+    requestData.value.serveTypeId = initSearch.value
     router.replace({
       path: route.path,
       query: {}
     })
+    fetchData(requestData.value)
   }
 })
 </script>

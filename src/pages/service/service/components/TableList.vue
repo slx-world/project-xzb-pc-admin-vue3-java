@@ -23,45 +23,45 @@
         :hide-sort-tips="true"
         :show-sort-column-bg-color="true"
         table-layout="fixed"
+        :multiple-sort="true"
         table-content-width="100%"
         @page-change="onPageChange"
-        @filter-change="FilterChange"
         @sort-change="sortChange"
         @select-change="rehandleSelectChange"
       >
        <!-- 服务类型图标 -->
-       <template #headPortrait="{ row }">
-          <div class="headPortrait">
-            <img
-              :src="row.headPortrait"
-              alt=""
-              class="tdesign-demo-image-viewer__ui-image--img"
-            />
-          </div>
-        </template>
-        <!-- end -->
-        <!-- 服务类型图片 -->
-        <template #pictureArray="{ row }">
-          <div class="headPortrait">
-            <t-image-viewer :images="[row.headPortrait]">
-              <template #trigger="{ open }">
-                <div class="tdesign-demo-image-viewer__ui-image">
-                  <img
-                    alt="test"
-                    :src="row.headPortrait"
-                    class="tdesign-demo-image-viewer__ui-image--img"
-                  />
-                  <div
-                    class="tdesign-demo-image-viewer__ui-image--hover"
-                    @click="open"
-                  >
-                  <span><ZoomInIcon size="1.8em"/></span>
-                </div>
-                </div>
-              </template>
-            </t-image-viewer>
-          </div>
-        </template>
+       <template #serveTypeIcon="{ row }">
+            <div class="headPortrait">
+              <img
+                :src="row.serveTypeIcon"
+                alt=""
+                class="tdesign-demo-image-viewer__ui-image--img"
+              />
+            </div>
+          </template>
+          <!-- end -->
+          <!-- 服务类型图片 -->
+          <template #img="{ row }">
+            <div class="headPortrait">
+              <t-image-viewer :images="[row.img]">
+                <template #trigger="{ open }">
+                  <div class="tdesign-demo-image-viewer__ui-image">
+                    <img
+                      alt="test"
+                      :src="row.img"
+                      class="tdesign-demo-image-viewer__ui-image--img"
+                    />
+                    <div
+                      class="tdesign-demo-image-viewer__ui-image--hover"
+                      @click="open"
+                    >
+                      <span><ZoomInIcon size="1.8em" /></span>
+                    </div>
+                  </div>
+                </template>
+              </t-image-viewer>
+            </div>
+          </template>
         <!-- 描述 -->
         <template #description="{ row }">
           <div class="description">
@@ -95,9 +95,9 @@
           <a class="btn-dl btn-split-right" @click="handleClickDelete(row)"
             >删除</a
           >
-          <a class="font-bt line" @click="handleClickDetail()">编辑</a>
-          <a class="font-bt btn-split-left" @click="handleSetupContract(row)"
-            >下架</a
+          <a class="font-bt line" @click="handleClickEdit(row)">编辑</a>
+          <a class="font-bt btn-split-left" @click="handleSetupContract(row ,row.saleStatus)"
+            >{{row.saleStatus === 1 ? '上架' : '下架'}}</a
           >
         </template>
         <!-- end -->
@@ -138,21 +138,29 @@ const emit = defineEmits([
   'fetchData',
   'handleSetupContract',
   'handleBuild',
-  'handleClickDelete'
+  'handleClickDelete',
+  'handleSortChange'
 ])
 // 监听器赋值
 watch(props, () => {
   data.value = props.listData
+  console.log('data', data.value);
+  
   pagination.value = props.pagination
   dataLoading.value = false
 })
 // 路由
 const router = useRouter()
 // 排序
-const sort = ref({
-  // 按照服务调用次数进行排序
-  sortBy: 'serviceCallNumber'
-}) // 排序
+const sort = ref([
+  {
+    // 按照服务调用次数进行排序
+    sortBy: 'sortNum'
+  },
+  {
+    sortBy: 'updateTime'
+  }
+]) // 排序
 const globalLocale = ref({
   table: {
     sortIcon: (h) => h && h(CaretDownSmallIcon),
@@ -175,47 +183,8 @@ const dataLoading = ref(true)
 
 // 排序
 const sortChange = (val) => {
-  // 将排序的结果赋值给sort
   sort.value = val
-  // 调用onFilterChange方法进行排序
-  onFilterChange(val)
-}
-// 模拟异步请求进行排序
-const onFilterChange = (val) => {
-  emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   if (val) {
-  //     data.value = data.value
-  //       .concat()
-  //       .sort((a, b) =>
-  //         val.descending
-  //           ? b[val.sortBy] - a[val.sortBy]
-  //           : a[val.sortBy] - b[val.sortBy]
-  //       )
-  //   } else {
-  //     // 如果没有排序，就按照原来的顺序进行排序
-  //     data.value = data.value.concat().sort((a, b) => a.index - b.index)
-  //   }
-  //   clearTimeout(timer)
-  // }, 100)
-}
-// 筛选
-const FilterChange = (val) => {
-  ONFilterChange(val)
-}
-// 模拟异步请求进行筛选
-const ONFilterChange = (val) => {
-  emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   data.value = data.value.filter((timer) => {
-  //     let result = true
-  //     if (isNumber(val.status)) {
-  //       result = timer.status === val.status
-  //     }
-  //     return result
-  //   })
-  //   clearTimeout(timer)
-  // }, 150)
+  emit('handleSortChange', val)
 }
 
 // 选中的行
@@ -223,19 +192,18 @@ const selectedRowKeys = ref([1, 2])
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
-// 点击查看详情
-const handleClickDetail = () => {
-  router.push('/service/ServiceList/editService')
+// 点击跳转到编辑页
+const handleClickEdit = (val) => {
+  router.push('/service/ServiceList/editService/' + val.id)
 }
+
 // 打开上下架弹窗
-const handleSetupContract = (val) => {
-  emit('handleSetupContract', val)
+const handleSetupContract = (val ,id) => {
+  emit('handleSetupContract', val ,id)
 }
 // 点击删除
-const deleteIdx = ref(-1) // 删除的索引
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
-  deleteIdx.value = row.rowIndex
 }
 // 点击翻页
 const onPageChange = (val) => {

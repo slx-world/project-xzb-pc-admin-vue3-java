@@ -150,6 +150,7 @@ const onClickCloseBtn = () => {
 watch(
   () => props.visible,
   () => {
+
     formVisible.value = props.visible
     title.value = props.title
   }
@@ -168,6 +169,7 @@ const Wordlimit: Function = (num: number) => {
     formData.value.name = formData.value.name.slice(0, num)
   }
 }
+
 // 表单校验
 const rules = {
   phoneNumber: [

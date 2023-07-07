@@ -19,6 +19,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(token: string) {
       this.token = token
+      localStorage.setItem(TOKEN_NAME, token)
     },
     async setUserInfo(data: any) {
       this.userInfo = data

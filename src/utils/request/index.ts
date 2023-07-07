@@ -126,6 +126,7 @@ const transform: AxiosTransform = {
   requestInterceptors: (config, options) => {
     // 请求之前处理config
     const token = localStorage.getItem(TOKEN_NAME)
+    
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       ;(config as Recordable).headers.Authorization =
@@ -189,8 +190,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           isJoinPrefix: true,
           // 接口前缀
           // 例如: https://www.baidu.com/api
-          // urlPrefix: '/api',
-          urlPrefix: '',
+          urlPrefix: '/api/operation',
+          // urlPrefix: '',
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理

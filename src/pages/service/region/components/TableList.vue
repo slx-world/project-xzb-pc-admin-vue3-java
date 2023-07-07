@@ -25,7 +25,6 @@
         table-layout="fixed"
         table-content-width="100%"
         @page-change="onPageChange"
-        @filter-change="FilterChange"
         @sort-change="sortChange"
         @select-change="rehandleSelectChange"
       >
@@ -62,8 +61,9 @@
           <a class="btn-dl btn-split-right" @click="handleClickDelete(row)"
             >删除</a
           >
-          <a class="font-bt btn-split-left" @click="handleClickDetail()"
-            >调整区域</a
+          <a class="font-bt line" @click="handleClickEdit(row)">编辑</a>
+          <a class="font-bt btn-split-left" @click="handleClickDetail(row)"
+            >设置服务</a
           >
         </template>
         <!-- end -->
@@ -103,9 +103,10 @@ const props = defineProps({
 // 发送事件给父组件
 const emit = defineEmits([
   'fetchData',
-  'handleSetupContract',
+  'handleClickEdit',
   'handleBuild',
-  'handleClickDelete'
+  'handleClickDelete',
+  'handleSort'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -144,36 +145,26 @@ const dataLoading = ref(true)
 const sortChange = (val) => {
   // 将排序的结果赋值给sort
   sort.value = val
-  // 调用onFilterChange方法进行排序
-  onFilterChange(val)
+  emit('handleSort', val)
 }
-// 模拟异步请求进行排序
-const onFilterChange = (val) => {
-  emit('fetchData', val)
-}
-// 筛选
-const FilterChange = (val) => {
-  ONFilterChange(val)
-}
-// 模拟异步请求进行筛选
-const ONFilterChange = (val) => {
-  emit('fetchData', val)
-}
+
 
 // 选中的行
 const selectedRowKeys = ref([1, 2])
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
-// 点击查看详情
-const handleClickDetail = () => {
-  router.push('region/editRegion')
+// 点击查看详情,调整区域
+const handleClickDetail = (val) => {
+  router.push('region/editRegion/' + val.id)
+}
+// 点击编辑
+const handleClickEdit = (row: { rowIndex: any }) => {
+  emit('handleClickEdit', row)
 }
 // 点击删除
-const deleteIdx = ref(-1) // 删除的索引
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
-  deleteIdx.value = row.rowIndex
 }
 // 点击翻页
 const onPageChange = (val) => {

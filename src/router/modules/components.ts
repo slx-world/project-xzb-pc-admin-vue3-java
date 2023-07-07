@@ -12,7 +12,7 @@ const normalRouter = [
     component: Layout,
     redirect: '/service/serviceType',
     meta: {
-      title: '服务管理',
+      title: '服务项管理',
       icon: serviceIcon
     },
     children: [
@@ -31,7 +31,7 @@ const normalRouter = [
         name: 'ServiceList',
         component: () => import('@/pages/service/service/index.vue'),
         meta: {
-          title: '服务管理',
+          title: '服务项管理',
           singles: true
         },
         children: [
@@ -44,7 +44,7 @@ const normalRouter = [
             }
           },
           {
-            path: 'editService',
+            path: 'editService/:id',
             name: 'editService',
             component: () => import('@/pages/service/service/addService.vue'),
             meta: {
@@ -63,11 +63,11 @@ const normalRouter = [
         },
         children: [
           {
-            path: 'editRegion',
+            path: 'editRegion/:id',
             name: 'editRegion',
             component: () => import('@/pages/service/region/editRegion.vue'),
             meta: {
-              title: '新增服务'
+              title: '设置服务'
             }
           },
   

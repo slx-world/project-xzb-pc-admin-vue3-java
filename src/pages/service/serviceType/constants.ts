@@ -2,86 +2,74 @@ export const COLUMNS = [
   {
     title: '服务类型编号',
     align: 'left',
-    width: 160,
-    minWidth: '70px',
-    colKey: 'index'
+    width: 200,
+    minWidth: '200px',
+    colKey: 'code'
   },
   { title: '服务类型', width: 150, minWidth: '150px', colKey: 'name' },
   {
     title: '服务类型图标',
-    colKey: 'headPortrait',
-    width: 125,
-    minWidth: '125px',
+    colKey: 'serveTypeIcon',
+    width: 175,
+    minWidth: '175px',
     cell: { col: 'status' }
   },
   {
     title: '服务类型图片',
-    colKey: 'pictureArray',
-    width: 125,
-    minWidth: '125px',
+    colKey: 'img',
+    width: 175,
+    minWidth: '175px',
     cell: { col: 'status' }
   },
   {
     title: '排序',
     minWidth: '150px',
+    width: 150,
     sorter: (a, b) => a.status - b.status,
     sortType: 'all',
-    colKey: 'serviceCallNumber'
+    colKey: 'sortNum'
   },
   {
     title: '状态',
-    colKey: 'status',
-    width: 120,
-    minWidth: '120px',
+    colKey: 'isActive',
+    width: 175,
+    minWidth: '175px',
     // 添加筛选
     filter: {
       type: 'single',
       list: [
         {
-          label: '上架',
+          label: '禁用',
           value: 0
         },
         {
-          label: '下架',
+          label: '启用',
           value: 1
         },
-        {
-          label: '已上线',
-          value: 2
-        },
-        {
-          label: '异常',
-          value: 3
-        }
       ],
     },
     cell: (h, { row }) => {
       const statusList = {
         0: {
-          label: '上架'
+          label: '禁用'
         },
         1: {
-          label: '下架'
+          label: '启用'
         },
-        2: {
-          label: '已上线'
-        },
-        3: {
-          label: '异常'
-        }
       }
       return h(
         'span',
         {
-          class: `status-dot status-dot-${row.status}`
+          class: `status-dot status-dot-${row.isActive}`
         },
-        statusList[row.status].label
+        statusList[row.isActive].label
       )
     }
   },
   {
     title: '更新时间',
-    minWidth: '180px',
+    minWidth: '200px',
+    width: 200,
     colKey: 'updateTime',
     sorter: true,
     sortType: 'all'

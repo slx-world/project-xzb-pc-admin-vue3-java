@@ -53,7 +53,7 @@
             >
               {{ item.name }}
             </t-checkbox>
-            <span>￥44</span>
+            <span>￥{{item.referencePrice}}</span>
           </li>
         </ul>
       </div>
@@ -76,7 +76,7 @@
       <div class="bt bt-grey btn-submit" @click="onClickCloseBtn">
         <span>取消</span>
       </div>
-      <div type="submit" class="bt btn-submit">
+      <div type="submit" class="bt btn-submit" @click="handleSubmit">
         <span>添加</span>
       </div>
     </template>
@@ -84,8 +84,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
-import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
+import { ref, watch} from 'vue'
+import { MessagePlugin } from 'tdesign-vue-next'
 import { SearchIcon } from 'tdesign-icons-vue-next'
 import NoData from '@/components/noData/index.vue'
 import { forEach } from 'lodash'
@@ -94,88 +94,18 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  data: {
-    type: Object,
-    default: () => {
-      return {}
-    }
-  },
-  title: {
-    type: String,
-    default: '添加服务'
-  },
-  cityList: {
+  serviceTypeData: {
     type: Array,
-    default: () => {
-      return []
-    }
-  }
+    default: () => []
+  },
+  serviceItemData: {
+    type: Array,
+    default: () => []
+  },
 })
-const typeItems = [
-  { name: '保洁', id: 1 },
-  { name: '维修', id: 2 },
-  { name: '保洁', id: 3 },
-  { name: '维修', id: 4 },
-  { name: '保洁', id: 5 },
-  { name: '维修', id: 6 },
-  { name: '保洁', id: 7 },
-  { name: '维修', id: 8 },
-  { name: '保洁', id: 9 },
-  { name: '维修', id: 10 },
-  { name: '保洁', id: 11 },
-  { name: '维修', id: 12 },
-  { name: '保洁', id: 13 },
-  { name: '维修', id: 14 },
-  { name: '保洁', id: 15 },
-  { name: '维修', id: 16 },
-  { name: '保洁', id: 17 },
-  { name: '维修', id: 18 },
-  { name: '保洁', id: 19 },
-  { name: '维修', id: 20 }
-]
-const typeItem = ref(typeItems.slice(0, 9))
-const items = ref({
-  1: [
-    { id: 1, name: 'Apple', checked: false },
-    { id: 2, name: 'Banana', checked: false },
-    { id: 3, name: 'Orange', checked: false },
-    { id: 4, name: 'Mango' },
-    { id: 5, name: 'Pear' },
-    { id: 6, name: 'Cherry' },
-    { id: 7, name: 'Strawberry' },
-    { id: 8, name: 'Nectarine' },
-    { id: 9, name: 'Grape' },
-    { id: 10, name: 'Blueberry' },
-    { id: 11, name: 'Pomegranate' },
-    { id: 12, name: 'Carambola' },
-    { id: 13, name: 'Plum' },
-    { id: 14, name: 'Banana' },
-    { id: 15, name: 'Orange' },
-    { id: 16, name: 'Mango' },
-    { id: 17, name: 'Pear' },
-    { id: 18, name: 'Cherry' },
-    { id: 19, name: 'Strawberry' },
-    { id: 20, name: 'Nectarine' },
-    { id: 21, name: 'Grape' },
-    { id: 22, name: 'Blueberry' },
-    { id: 23, name: 'Pomegranate' },
-    { id: 24, name: 'Carambola' },
-    { id: 25, name: 'Plum' },
-    { id: 26, name: 'Banana' },
-    { id: 27, name: 'Orange' },
-    { id: 28, name: 'Mango' },
-    { id: 29, name: 'Pear' },
-    { id: 30, name: 'Cherry' },
-    { id: 31, name: 'Strawberry' },
-    { id: 32, name: 'Nectarine' },
-    { id: 33, name: 'Grape' },
-    { id: 34, name: 'Blueberry' },
-    { id: 35, name: 'Pomegranate' },
-    { id: 36, name: 'Carambola' },
-    { id: 37, name: 'Plum' },
-    { id: 38, name: 'Banana' }
-  ]
-})
+let typeItems = []
+const typeItem = ref([])
+const items = ref({})
 // 服务类型当前页
 const currentPage = ref(1)
 // 选中的类型Id
@@ -183,15 +113,14 @@ const activeId = ref(1)
 const searchKeyword = ref('') // 搜索关键字
 
 const activeItems = ref([])
-const filteredItems = ref(items.value[activeId.value])
+const filteredItems = ref([])
 
 // 触发父级事件
-const emit: Function = defineEmits(['handleClose', 'fetchData'])
+const emit: Function = defineEmits(['handleClose', 'handleServiceTypeChange','handleSubmit'])
 // 弹窗
 const formVisible = ref(false)
-const options = ref([])
 // 弹窗标题
-const title = ref()
+const title = ref('新增服务')
 
 // 点击取消关闭
 const onClickCloseBtn = () => {
@@ -208,17 +137,7 @@ const onClickCloseBtn = () => {
 // 切换选中类型
 const handleSwitchTab = (id) => {
   activeId.value = id
-  if (id === 2) {
-    // filteredItems为空数组
-    filteredItems.value = []
-  }else {
-    if(!items.value[activeId.value]){
-      items.value[activeId.value] = []
-      filteredItems.value = items.value[activeId.value]
-    }else{
-      filteredItems.value = items.value[activeId.value]
-    }
-  }
+  emit('handleServiceTypeChange', id)
 }
 // 选择服务，把内容添加到activeItems，已选择的服务
 const onChange = (e, val) => {
@@ -228,17 +147,12 @@ const onChange = (e, val) => {
     activeItems.value = activeItems.value.filter((item) => item.id !== val.id)
   }
 }
-// items.value[activeId.value] = items.value[activeId.value].forEach((item) => {
-//   item.checked = false;
-// });
 // 输入字符模糊搜索
-const handleSearch = computed(() => {
-  if (filteredItems.value.length) {
+const handleSearch = () => {
     filteredItems.value = items.value[activeId.value].filter((item) => {
-      return item.name.includes(searchKeyword.value)
+      return item.name.includes(searchKeyword.value);
     })
-  }
-})
+}
 // 清除已选服务
 const removeCard = (item) => {
   activeItems.value = activeItems.value.filter((i) => i.id !== item.id)
@@ -270,14 +184,30 @@ const scollBottom = ()=>{
     typeItem.value = typeItems.slice((currentPage.value-1)*9,currentPage.value*9)
   }
 }
+// 提交
+const handleSubmit = () => {
+  if (activeItems.value.length === 0) {
+    MessagePlugin.warning('请选择服务')
+    return
+  }else{
+    emit('handleSubmit', activeItems.value)
+  }
+}
+// 监听获取服务项新的数据
+watch(()=>props.serviceItemData,()=>{
+  items.value[activeId.value] = props.serviceItemData
+  filteredItems.value = items.value[activeId.value]
+})
 // 监听器，监听父级传递的visible值，控制弹窗显示隐藏
 watch(
   () => props.visible,
   () => {
+    typeItems = props.serviceTypeData
+    activeId.value = typeItems[0].id
+    items[activeId.value] = props.serviceItemData
+    filteredItems.value = items[activeId.value]
+    typeItem.value = typeItems.slice(0,9) 
     formVisible.value = props.visible
-    title.value = props.title
-    // 一次100条数据，分多次添加
-    options.value = props.cityList
   }
 )
 </script>

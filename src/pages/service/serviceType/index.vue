@@ -10,24 +10,24 @@
     <!-- 表格 -->
     <tableList
       :list-data="listData"
-      :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
-      @handleSetupContract="handleSetupContract"
+      :pagination="pagination"
+      @handleEdit="handleEdit"
       @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
       @handleDisable="handleDisable"
+      :handleSortChange="handleSortChange"
     ></tableList>
     <!-- end -->
     <!-- 新增，编辑弹窗 -->
     <DialogForm
+      ref="dialogForm"
       :visible="visible"
       :title="title"
-      :data="DialogFormdata"
-      :form-data="formData"
+      :data="formData"
       @handleClose="handleClose"
       @fetchData="fetchData"
+      @handleSubmit="handleSubmit"
     />
     <!-- end -->
     <!-- 删除弹窗 -->
@@ -50,115 +50,186 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'ListBase',
-  components: { tableList, searchFormBox }
-}
-</script>
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { getList } from '@/api/list'
+import {
+  getServiceTypeList,
+  serviceTypeStatus,
+  serviceTypeAdd,
+  serviceTypeEdit,
+  serviceTypeDelete
+} from '@/api/service'
 import Confirm from '@/components/Confirm/index.vue' // 确认弹层
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
 import Delete from '@/components/Delete/index.vue' // 删除弹层
-import searchFormBox from './components/SearchForm.vue' // 搜索框表单
+import { forEach } from 'lodash'
 
 const visible = ref(false) // 新增，编辑弹窗
 const listData = ref([]) // 列表数据
 const confirmTitle = ref('确认禁用')
-const dataLoading = ref(false) // 列表数据加载loading
-const DialogFormdata = ref({}) // 弹窗表单内容
+const dialogForm = ref(null)
 const title = ref('新建服务类型') // 弹窗标题
 const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
 const dialogConfirmVisible = ref(false) // 控制禁用弹层的显示隐藏
 const deleteText = ref('确定删除该分类吗？') // 删除的内容
-const confirmText = ref('禁用该服务分类会导致分类下服务全部下架，确定禁用该分类吗？')
+const confirmText = ref(
+  '禁用该服务分类会导致分类下服务全部下架，确定禁用该分类吗？'
+)
+const edit = ref(false) // 是否是编辑
+const editId = ref('') // 编辑的id
+const deleteId = ref('') // 删除的id
 // 分页
 const pagination = ref({
   defaultPageSize: 10,
   total: 0,
   defaultCurrent: 1 // 默认当前页
 })
+// 请求数据
+const requestData = ref({
+  isAsc1: 'true',
+  isAsc2: 'false',
+  orderBy1: 'sortNum',
+  orderBy2: 'updateTime',
+  pageNo: 1,
+  pageSize: 10
+})
+// 禁用数据
+const disableData = ref({
+  flag: 0,
+  id: ''
+})
 // 搜索框表单
-const searchForm = {
-  index: '',
-  status: undefined,
-  serviceCallNumber: undefined,
-  updateTime: []
-}
 // 表单内容
-const formData = ref({ ...searchForm }) // 表单内容
+const formData = ref({
+  img: '',
+  name: '',
+  sortNum: '',
+  serveTypeIcon: ''
+}) // 表单内容
 // 生命周期
 onMounted(() => {
-  fetchData(pagination.value)
+  fetchData(requestData.value)
 })
-// 搜索功能
-const handleSearch = (val) => {
-  // 根据搜索框的内容进行搜索
-  fetchData(val)
-}
-// 分页
-
-// 重置，清空搜索框
-const handleReset = () => {
-  // 清空搜索框的全部内容并且重新获取数据
-  // 重置页码
-  pagination.value.defaultCurrent = 1
-  fetchData(pagination.value)
-  // 重新渲染table
-}
 // 获取列表数据
 const fetchData = async (val) => {
-  dataLoading.value = true
-  try {
-    const res: any = await getList() // 获取列表数据,当前为mock接口，后续会替换为真实接口，并接受真实数据传值
-    listData.value = res.data.list
-    pagination.value.total = res.data.list.length
-  } finally {
-    dataLoading.value = false
-  }
+  await getServiceTypeList(val).then((res) => {
+    listData.value = res.data.data.list
+    pagination.value.total = res.data.data.total
+  })
 }
 // 关闭弹窗
 const handleClose = () => {
   visible.value = false // 关闭新增弹窗
   dialogDeleteVisible.value = false // 关闭删除弹层
+  dialogConfirmVisible.value = false // 关闭禁用弹层
+  // 清空表单内容
+  formData.value.img = ''
+  formData.value.name = ''
+  formData.value.sortNum = ''
+  formData.value.serveTypeIcon = ''
 }
 // 点击新建
 const handleBuild = () => {
+  edit.value = false
   // 显示新建弹窗
   visible.value = true
   // 将弹窗的标题改为新建
   title.value = '新建服务类型'
 }
 // 点击编辑
-const handleSetupContract = (val) => {
-  DialogFormdata.value = JSON.parse(JSON.stringify(val))
+const handleEdit = (val) => {
+  edit.value = true
+  formData.value.img = val.img
+  formData.value.name = val.name
+  formData.value.sortNum = val.sortNum
+  formData.value.serveTypeIcon = val.serveTypeIcon
+  editId.value = val.id
   // 显示新建弹窗
   visible.value = true
   // 将弹窗的标题改为新建
   title.value = '编辑'
 }
 // 确认删除
-const handleDelete = () => {
-  dialogDeleteVisible.value = false
-  MessagePlugin.success('删除成功')
-  fetchData(pagination.value)
+const handleDelete = async () => {
+  await serviceTypeDelete(deleteId.value).then((res) => {
+      dialogDeleteVisible.value = false
+      MessagePlugin.success('删除成功')
+      fetchData(requestData.value)
+  })
 }
 // 点击删除
-const handleClickDelete = (row: { rowIndex: any }) => {
+const handleClickDelete = (row) => {
+  deleteId.value = row.id
   dialogDeleteVisible.value = true
 }
-// 禁用
-const handleDisable = (row: { rowIndex: any }) => {
+// 点击禁用
+const handleDisable = (val) => {
+  console.log(val)
+  disableData.value.id = val.id
+  if (val.isActive === 1) {
+    confirmTitle.value = '确认禁用'
+    confirmText.value =
+      '禁用该服务分类会导致分类下服务全部下架，确定禁用该分类吗？'
+    disableData.value.flag = 0
+  } else {
+    confirmTitle.value = '确认启用'
+    confirmText.value = '确定启用该分类吗？'
+    disableData.value.flag = 1
+  }
   dialogConfirmVisible.value = true
 }
 // 确认禁用
-const handleConfirm = () => {
+const handleConfirm = async () => {
   dialogConfirmVisible.value = false
-  MessagePlugin.success('禁用成功')
+  await serviceTypeStatus(disableData.value).then((res) => {
+    fetchData(requestData.value)
+  })
+  MessagePlugin.success('操作成功')
+}
+// 新增，编辑弹窗提交
+const handleSubmit = async (val) => {
+  console.log(val);
+  
+  // 提交的数据
+  const data = {
+    img: val.img[0].url,
+    name: val.name,
+    sortNum: val.sortNum,
+    serveTypeIcon: val.serveTypeIcon[0].url
+  }
+  if (edit.value) {
+    await serviceTypeEdit(data, editId.value).then((res) => {
+      fetchData(requestData.value)
+      MessagePlugin.success('编辑成功')
+      dialogForm.value.onClickCloseBtn()
+    })
+  } else {
+    await serviceTypeAdd(data).then((res) => {
+      fetchData(requestData.value)
+      MessagePlugin.success('新增成功')
+      dialogForm.value.onClickCloseBtn()
+    })
+  }
+}
+// 排序
+const handleSortChange = (val) => {
+  forEach(val, (item) => {
+    if(item.sortBy ==='sortNum'){
+      if(item.descending === true){
+        requestData.value.isAsc1 = 'false'
+      }else{
+        requestData.value.isAsc1 = 'true'
+      }
+    }else{
+      if(item.descending === true){
+        requestData.value.isAsc2 = 'false'
+      }else{
+        requestData.value.isAsc2 = 'true'
+      }
+    }
+  })
+  fetchData(requestData.value)
 }
 </script>

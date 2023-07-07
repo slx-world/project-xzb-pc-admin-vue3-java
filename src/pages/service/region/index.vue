@@ -11,24 +11,24 @@
     <!-- 表格 -->
     <tableList
       :list-data="listData"
-      :pagination="
-          pagination.total <= 10 || !pagination.total ? null : pagination
-        "
-      @handleSetupContract="handleSetupContract"
+      :pagination="pagination"
       @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
+      @handleClickEdit="handleClickEdit"
       @fetchData="fetchData"
+      @handleSort="handleSort"
     ></tableList>
     <!-- end -->
     <!-- 新增，编辑弹窗 -->
     <DialogForm
+      ref="dialogForm"
       :visible="visible"
       :title="title"
       :cityList="cityList"
-      :data="DialogFormdata"
-      :form-data="formData"
+      :edit="edit"
+      :formData="formData"
       @handleClose="handleClose"
-      @fetchData="fetchData"
+      @confirmEdit="confirmEdit"
     />
     <!-- end -->
     <!-- 删除弹窗 -->
@@ -42,77 +42,60 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'ListBase',
-  components: { tableList, searchFormBox }
-}
-</script>
-
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { useRoute } from 'vue-router'
-import { getList } from '@/api/list'
-import { cityList } from './city';
+import { regionList, regionAdd, regionEdit, regionDelete } from '@/api/service'
+import { cityList } from './city'
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
 import Delete from '@/components/Delete/index.vue' // 删除弹层
-import searchFormBox from './components/SearchForm.vue' // 搜索框表单
 
 const route = useRoute()
 const visible = ref(false) // 新增，编辑弹窗
 const listData = ref([]) // 列表数据
-const dataLoading = ref(false) // 列表数据加载loading
-const DialogFormdata = ref({}) // 弹窗表单内容
+const dialogForm = ref(null) // 弹窗
 const title = ref('新增区域') // 弹窗标题
 const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
 const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
 const url = ref('') // 当前路由
+const edit = ref(false) // 是否是编辑
+const editId = ref('') // 编辑的id
 // 分页
 const pagination = ref({
   defaultPageSize: 10,
   total: 0,
   defaultCurrent: 1 // 默认当前页
 })
-// 搜索框表单
-const searchForm = {
-  index: '',
-  status: undefined,
-  serviceCallNumber: undefined,
-  updateTime: []
-}
+// 请求数据参数
+const requestData = ref({
+  isAsc1: 'false',
+  isAsc2: '',
+  orderBy1: 'updateTime',
+  orderBy2: '',
+  pageNo: 1,
+  pageSize: 10
+})
 // 表单内容
-const formData = ref({ ...searchForm }) // 表单内容
+const formData = ref({
+  cityCode: '',
+  name: '',
+  managerPhone: '',
+  managerName: ''
+}) // 表单内容
+const deleteId = ref('') // 删除的id
 // 生命周期
 onMounted(() => {
-  fetchData(pagination.value)
+  fetchData(requestData.value)
 })
-// 搜索功能
-const handleSearch = (val) => {
-  // 根据搜索框的内容进行搜索
-  fetchData(val)
-}
 // 分页
-
-// 重置，清空搜索框
-const handleReset = () => {
-  // 清空搜索框的全部内容并且重新获取数据
-  // 重置页码
-  pagination.value.defaultCurrent = 1
-  fetchData(pagination.value)
-  // 重新渲染table
-}
 // 获取列表数据
 const fetchData = async (val) => {
-  dataLoading.value = true
-  try {
-    const res: any = await getList() // 获取列表数据,当前为mock接口，后续会替换为真实接口，并接受真实数据传值
-    listData.value = res.data.list
-    pagination.value.total = res.data.list.length
-  } finally {
-    dataLoading.value = false
-  }
+  await regionList(val).then((res) => {
+    listData.value = res.data.data.list
+    pagination.value.total = res.data.data.total
+  })
 }
 // 关闭弹窗
 const handleClose = () => {
@@ -121,37 +104,72 @@ const handleClose = () => {
 }
 // 点击新建
 const handleBuild = () => {
+  edit.value = false
   // 显示新建弹窗
   visible.value = true
   // 将弹窗的标题改为新建
   title.value = '新增区域'
 }
 // 点击编辑
-const handleSetupContract = (val) => {
-  DialogFormdata.value = JSON.parse(JSON.stringify(val))
-  // 显示新建弹窗
+const handleClickEdit = (val) => {
+  editId.value = val.id
+  formData.value.cityCode = val.cityCode
+  formData.value.name = val.name
+  formData.value.managerPhone = val.managerPhone
+  formData.value.managerName = val.managerName
   visible.value = true
   // 将弹窗的标题改为新建
-  title.value = '编辑'
+  edit.value = true
+  title.value = '编辑区域'
 }
-// 确认删除
-const handleDelete = () => {
-  dialogDeleteVisible.value = false
-  MessagePlugin.success('删除成功')
-  fetchData(pagination.value)
+// 确认新增或编辑
+const confirmEdit = async (val) =>{
+  if (title.value === '新增区域') {
+    // 新增
+    await regionAdd(val).then((res) => {
+      dialogForm.value.onClickCloseBtn()
+      fetchData(requestData.value)
+    })
+  } else {
+    // 编辑
+    await regionEdit({managerName:val.managerName,managerPhone:val.managerPhone}, editId.value).then((res) => {
+      dialogForm.value.onClickCloseBtn()
+      fetchData(requestData.value)
+    })
+  }
 }
 // 点击删除
-const handleClickDelete = (row: { rowIndex: any }) => {
+const handleClickDelete = (row) => {
   dialogDeleteVisible.value = true
+  deleteId.value = row.id
 }
+// 确认删除
+const handleDelete = async () => {
+  await regionDelete(deleteId.value).then((res) => {
+    dialogDeleteVisible.value = false
+    MessagePlugin.success('删除成功')
+    fetchData(requestData.value)
+  })
+}
+// 点击排序
+const handleSort = (val) => {
+  if(val.descending === true){
+    requestData.value.isAsc1 = 'false'
+    fetchData(requestData.value)
+  }else{
+    requestData.value.isAsc1 = 'true'
+    fetchData(requestData.value)
+  }
+}
+
 // 监听
 watchEffect(() => {
-  if(route.path === '/service/region') {
+  if (route.path === '/service/region') {
     url.value = route.path
-    fetchData(pagination.value)
-  }else{
+    fetchData(requestData.value)
+  } else {
     url.value = route.path
-    fetchData(pagination.value)
+    fetchData(requestData.value)
   }
 })
 </script>

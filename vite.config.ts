@@ -59,7 +59,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       hmr: true,
       proxy: {
         '/api': {
-          target: 'http://172.17.2.58:11300/operation',
+          target: 'http://172.17.2.58/api',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }

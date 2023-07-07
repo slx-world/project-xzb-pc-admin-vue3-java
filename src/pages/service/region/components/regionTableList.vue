@@ -2,11 +2,9 @@
 <template>
   <div class="baseList bg-wt">
     <div class="tableBoxs">
-      <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBuild()">添加服务</button>
-      </div>
       <t-config-provider :global-config="globalLocale">
         <t-table
+          ref="tableRef"
           :data="data"
           :columns="regionCOLUMN"
           :row-key="rowKey"
@@ -14,21 +12,15 @@
           :hover="true"
           bordered
           :pagination="
-            pagination.total <= 8 || !pagination.total ? null : pagination
+            pagination.total <= 10 || !pagination.total ? null : pagination
           "
-          :disable-data-page="pagination.total <= 8"
-          :selected-row-keys="selectedRowKeys"
+          :disable-data-page="pagination.total <= 10"
           :loading="dataLoading"
           :sort="sort"
-          :filter-value="filterValue"
           :hide-sort-tips="true"
           :show-sort-column-bg-color="true"
           table-layout="fixed"
           table-content-width="100%"
-          @page-change="onPageChange"
-          @filter-change="FilterChange"
-          @sort-change="sortChange"
-          @select-change="rehandleSelectChange"
         >
           <!-- 描述 -->
           <template #description="{ row }">
@@ -40,15 +32,10 @@
             </div>
           </template>
           <!-- end -->
-          <!-- 手机号 -->
-          <template #phoneNumber="{ row }">
-            <div class="phoneNumber">
-              <!-- 手机号做脱敏处理 -->
-              <span>
-                {{ row.phoneNumber.toString().substring(0, 3) }}
-                ****
-                {{ row.phoneNumber.toString().substring(7, 4) }}
-              </span>
+          <!-- 是否热门 -->
+          <template #isHot="{ row }">
+            <div class="isHot">
+              <span>{{ row.isHot === 1 ? '是' : '否' }}</span>
             </div>
           </template>
           <!-- 在表格中添加自定义列 -->
@@ -64,7 +51,7 @@
               >删除</a
             >
             <a class="font-bt btn-split-left" @click="handleClickSetHot(row)"
-              >设为热门</a
+              >{{ row.isHot === 0 ? '设置热门' : '取消热门' }}</a
             >
           </template>
           <!-- end -->
@@ -81,10 +68,10 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch, computed } from 'vue'
+import { validateNumber } from '@/utils/validate'
 import { CaretDownSmallIcon } from 'tdesign-icons-vue-next'
-import { regionCOLUMN } from '../constants'
+import { Input, MessagePlugin } from 'tdesign-vue-next'
 // 接收父组件传递的值
 const props = defineProps({
   listData: {
@@ -104,8 +91,8 @@ const props = defineProps({
 const emit = defineEmits([
   'fetchData',
   'handleClickSetHot',
-  'handleBuild',
-  'handleClickDelete'
+  'handleClickDelete',
+  'handleEditPrice'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -113,8 +100,6 @@ watch(props, () => {
   pagination.value = props.pagination
   dataLoading.value = false
 })
-// 路由
-const router = useRouter()
 // 排序
 const sort = ref({
   // 按照服务调用次数进行排序
@@ -131,64 +116,74 @@ const pagination: any = ref({
   defaultPageSize: 8,
   total: 0,
   defaultCurrent: 1, // 默认当前页
-  pageSizeOptions: [8, 16, 24, 32],
 })
 // 索引
 const rowKey = 'index' // 行的key
-const filterValue = ref({
-  status: ''
-}) // 过滤
 // 加载状态
 const dataLoading = ref(true)
 
-// 排序
-const sortChange = (val) => {
-  // 将排序的结果赋值给sort
-  sort.value = val
-  // 调用onFilterChange方法进行排序
-  onFilterChange(val)
-}
-// 模拟异步请求进行排序
-const onFilterChange = (val) => {
-  emit('fetchData', val)
-}
-// 筛选
-const FilterChange = (val) => {
-  ONFilterChange(val)
-}
-// 模拟异步请求进行筛选
-const ONFilterChange = (val) => {
-  emit('fetchData', val)
-}
-
-// 选中的行
-const selectedRowKeys = ref([1, 2])
-const rehandleSelectChange = (val: number[]) => {
-  selectedRowKeys.value = val
-}
-// 点击查看详情
+// 点击查设为热门
 const handleClickSetHot = (val) => {
   emit('handleClickSetHot', val)
 }
 // 点击删除
-const deleteIdx = ref(-1) // 删除的索引
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
-  deleteIdx.value = row.rowIndex
 }
-// 点击翻页
-const onPageChange = (val) => {
-  pagination.value.defaultCurrent = val.current
-  emit('fetchData', {
-    defaultCurrent: val.current,
-    defaultPageSize: val.pageSize
-  })
-}
+// 列表配置
+const regionCOLUMN = computed(() => [
+  {
+    title: '服务名称',
+    align: 'left',
+    width: 160,
+    minWidth: '70px',
+    colKey: 'serveItemName'
+  },
+  { title: '类型', width: 150, minWidth: '150px', colKey: 'serveTypeName' },
+  {
+    title: '参考价格',
+    width: 150,
+    minWidth: '150px',
+    colKey: 'referencePrice'
+  },
+  {
+    title: '区域价格',
+    width: 300,
+    colKey: 'price',
+    edit: {
+      component: Input,
+      props: {
+        clearable: true,
+        autofocus: true,
 
-// 点击新建
-const handleBuild = () => {
-  emit('handleBuild')
-}
+      },
+      validateTrigger: 'change',
+      abortEditOnEvent: ['onEnter' , 'onBlur'],
+      // 编辑完成，退出编辑态后触发
+      onEdited: (context) => {
+        emit('handleEditPrice', context.newRowData)
+      },
+      rules: [
+        { required: true, message: '不能为空' },
+        { max: 5, message: '必须为大于0,小于999的数字，且保留两位小数', validator: validateNumber },
+      ],
+    },
+  },
+  {
+    title: '是否热门',
+    width: 300,
+    minWidth: '180px',
+    colKey: 'isHot'
+  },
+  {
+    align: 'left',
+    fixed: 'right',
+    width: 157,
+    minWidth: '157px',
+    colKey: 'op',
+    title: '操作'
+  }
+])
 </script>
 <style lang="less" scoped src="../../index.less"></style>
 <style lang="less" scoped>
@@ -199,10 +194,7 @@ const handleBuild = () => {
   }
 }
 .tableBoxs {
-  margin: 12px 0 0 0;
-}
-.newBoxbutton {
-  margin-left: 0 !important;
+  margin: 20px 0 0 0;
 }
 :deep(
     .t-table--bordered.t-table__content--scrollable-to-right

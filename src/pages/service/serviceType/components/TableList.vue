@@ -27,15 +27,14 @@
           table-layout="fixed"
           table-content-width="100%"
           @page-change="onPageChange"
-          @filter-change="FilterChange"
           @sort-change="sortChange"
           @select-change="rehandleSelectChange"
         >
           <!-- 服务类型图标 -->
-          <template #headPortrait="{ row }">
+          <template #serveTypeIcon="{ row }">
             <div class="headPortrait">
               <img
-                :src="row.headPortrait"
+                :src="row.serveTypeIcon"
                 alt=""
                 class="tdesign-demo-image-viewer__ui-image--img"
               />
@@ -43,14 +42,14 @@
           </template>
           <!-- end -->
           <!-- 服务类型图片 -->
-          <template #pictureArray="{ row }">
+          <template #img="{ row }">
             <div class="headPortrait">
-              <t-image-viewer :images="[row.headPortrait]">
+              <t-image-viewer :images="[row.img]">
                 <template #trigger="{ open }">
                   <div class="tdesign-demo-image-viewer__ui-image">
                     <img
                       alt="test"
-                      :src="row.headPortrait"
+                      :src="row.img"
                       class="tdesign-demo-image-viewer__ui-image--img"
                     />
                     <div
@@ -64,27 +63,7 @@
               </t-image-viewer>
             </div>
           </template>
-          <!-- 描述 -->
-          <template #description="{ row }">
-            <div class="description">
-              <span>{{ row.description }}</span>
-              <span v-if="row.description.length > 36" class="hover">{{
-                row.description
-              }}</span>
-            </div>
-          </template>
           <!-- end -->
-          <!-- 手机号 -->
-          <template #phoneNumber="{ row }">
-            <div class="phoneNumber">
-              <!-- 手机号做脱敏处理 -->
-              <span>
-                {{ row.phoneNumber.toString().substring(0, 3) }}
-                ****
-                {{ row.phoneNumber.toString().substring(7, 4) }}
-              </span>
-            </div>
-          </template>
           <!-- 在表格中添加自定义列 -->
           <template #updateTime="{ row }">
             <div class="updateTime">
@@ -94,17 +73,17 @@
           <!-- end -->
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
-            <a class="btn-dl btn-split-right" @click="handleClickDelete(row)"
+            <a :class="row.isActive === 1 ?'text-forbidden btn-dl btn-split-right' : 'btn-dl btn-split-right'" @click="handleClickDelete(row)"
               >删除</a
             >
             <a
-              class="font-bt btn-split-right line"
+            :class="row.isActive !== 1 ?'text-forbidden font-bt btn-split-right line' : 'font-bt btn-split-right line'"
               @click="handleViewServices(row)"
               >查看服务项</a
             >
-            <a class="font-bt line" @click="handleSetupContract(row)">编辑</a>
+            <a class="font-bt line" @click="handleEdit(row)">编辑</a>
             <a class="font-bt btn-split-left" @click="handleDisable(row)"
-              >禁用</a
+              >{{row.isActive === 1 ? '禁用' : '启用'}}</a
             >
           </template>
           <!-- end -->
@@ -144,10 +123,11 @@ const props = defineProps({
 // 发送事件给父组件
 const emit = defineEmits([
   'fetchData',
-  'handleSetupContract',
+  'handleEdit',
   'handleBuild',
   'handleClickDelete',
-  'handleDisable'
+  'handleDisable',
+  'handleSortChange'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -162,7 +142,7 @@ const router = useRouter()
 const sort = ref([
   {
     // 按照服务调用次数进行排序
-    sortBy: 'serviceCallNumber'
+    sortBy: 'sortNum'
   },
   {
     sortBy: 'updateTime'
@@ -187,36 +167,9 @@ const dataLoading = ref(true)
 
 // 排序
 const sortChange = (val) => {
-  // 将排序的结果赋值给sort
   sort.value = val
-  // 调用onFilterChange方法进行排序
-  onFilterChange(val)
+  emit('handleSortChange', val)
 }
-// 模拟异步请求进行排序
-const onFilterChange = (val) => {
-  emit('fetchData', val)
-}
-// 筛选
-const FilterChange = (val) => {
-  console.log(val)
-  filterValue.value = val
-  ONFilterChange(val)
-}
-// 模拟异步请求进行筛选
-const ONFilterChange = (val) => {
-  emit('fetchData', val)
-  // const timer = setTimeout(() => {
-  //   data.value = data.value.filter((timer) => {
-  //     let result = true
-  //     if (isNumber(val.status)) {
-  //       result = timer.status === val.status
-  //     }
-  //     return result
-  //   })
-  //   clearTimeout(timer)
-  // }, 150)
-}
-
 // 选中的行
 const selectedRowKeys = ref([1, 2])
 const rehandleSelectChange = (val: number[]) => {
@@ -224,12 +177,11 @@ const rehandleSelectChange = (val: number[]) => {
 }
 // 点击查看详情
 const handleDisable = (val) => {
-  console.log(val)
   emit('handleDisable', val)
 }
 // 打开编辑弹窗
-const handleSetupContract = (val) => {
-  emit('handleSetupContract', val)
+const handleEdit = (val) => {
+  emit('handleEdit', val)
 }
 // 点击删除
 const deleteIdx = ref(-1) // 删除的索引
@@ -271,7 +223,6 @@ const handleViewServices = (val) => {
 .headPortrait {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 :deep(.t-table__filter-icon) {
   display: none;

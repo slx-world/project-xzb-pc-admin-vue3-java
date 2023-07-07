@@ -44,6 +44,13 @@ export const validateText = (val) => {
   }
   return false
 }
+// 限制字符2-5
+export const validateText5 = (val) => {
+  if (val && val.length >= 2 && val.length <= 5) {
+    return true
+  }
+  return false
+}
 // 限制字符2-10
 export const validateText10 = (val) => {
   if (val && val.length >= 2 && val.length <= 10) {
@@ -63,6 +70,14 @@ export const validatePhone = (val) => {
 // 验证码
 export const validateCode = (val) => {
   const reg = /^\d{6}$/
+  if (reg.test(val)) {
+    return true
+  }
+  return false
+}
+// 必须是数字，且最多两位小数，且大于0小于999
+export const validateNumber = (val) => {
+  const reg = /^([1-9][0-9]{0,2}|0)(\.[0-9]{1,2})?$/
   if (reg.test(val)) {
     return true
   }

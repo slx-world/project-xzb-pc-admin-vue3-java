@@ -42,8 +42,16 @@ export const NOTIFICATION_TYPES = {
 }
 // 状态
 export const STATUS = [
-  { value: 0, label: '关闭' },
-  { value: 1, label: '运行中' },
-  { value: 2, label: '已上线' },
-  { value: 3, label: '异常' }
+  { value: 0, label: '禁用' },
+  { value: 1, label: '启用' },
+]
+// 单位
+export const UNIT = [
+  { value: 1, label: '小时' },
+  { value: 2, label: '天' },
+  { value: 3, label: '次' },
+  { value: 4, label: '台' },
+  { value: 5, label: '个' },
+  { value: 6, label: '㎡' },
+  { value: 7, label: '米' },
 ]

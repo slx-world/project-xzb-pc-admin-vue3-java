@@ -6,7 +6,7 @@
         <t-col>
           <t-form-item label="服务名称：" name="name">
             <t-input
-              v-model="formData.index"
+              v-model="formData.name"
               class="form-item-content"
               type="search"
               placeholder="请输入"
@@ -17,7 +17,18 @@
         <t-col>
           <t-form-item label="服务类型：" name="status">
             <t-select
-              v-model="formData.status"
+              v-model="formData.id"
+              class="form-item-content"
+              :options="typeSelectList"
+              placeholder="请选择"
+              clearable
+            />
+          </t-form-item>
+        </t-col>
+        <t-col>
+        <t-form-item label="状态：" name="status">
+            <t-select
+              v-model="formData.isActive"
               class="form-item-content"
               :options="STATUS"
               placeholder="请选择"
@@ -25,27 +36,6 @@
             />
           </t-form-item>
         </t-col>
-        <!-- <t-col>
-          <t-form-item label="规则：" name="serviceCallNumber">
-            <t-input
-              v-model="formData.serviceCallNumber"
-              class="form-item-content"
-              placeholder="请输入"
-              clearable
-            />
-          </t-form-item>
-        </t-col> -->
-        <!-- 选择日期区间-->
-        <!-- <t-col>
-          <t-form-item label="创建时间：" name="type">
-            <t-date-range-picker
-              v-model="formData.updateTime"
-              placeholder="日期"
-              :presets="presets"
-              clearable
-            />
-          </t-form-item>
-        </t-col> -->
         <t-col class="searchBtn">
           <button class="bt-grey wt-60" @click="handleReset()">重置</button>
           <button class="bt wt-60" @click="handleSearch()">搜索</button>
@@ -58,27 +48,36 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { STATUS } from '@/constants'
+import { forEach } from 'lodash'
 const props = defineProps({
   initSearch:{
     type: Number,
     default:0
+  },
+  typeSelect: {
+    type: Array<{
+      id: string
+      name: string
+    }>,
+    default: () => {
+      return []
+    }
   }
 })
+const typeSelectList = ref([])
 // 表单数据
 const formData = ref({
-  index: '',
-  status: '',
-  serviceCallNumber: '',
-  updateTime: []
+  id: '',
+  name: '',
+  isActive: ''
 })
 // 触发父组件的方法
 const emit: Function = defineEmits(['handleSearch', 'handleReset'])
 // 表单数据
 const searchForm = {
-  index: '',
-  status: undefined,
-  serviceCallNumber: undefined,
-  updateTime: []
+  id: '',
+  name: '',
+  isActive: ''
 }
 // 重置表单
 const handleReset = () => {
@@ -88,22 +87,17 @@ const handleReset = () => {
 const handleSearch = () => {
   emit('handleSearch', formData.value)
 }
-// 时间选择器tag
-const presets = ref({
-  近一周: [
-    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
-    new Date()
-  ],
-  近三天: [
-    new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000),
-    new Date()
-  ],
-  近一天: [new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000), new Date()]
-}) // 时间选择器tag
 watchEffect(()=>{
   if(props.initSearch){
-    formData.value.index = props.initSearch.toString()
+    console.log(props.initSearch,'props.initSearch');
+    formData.value.id = props.initSearch.toString()
   }
+  typeSelectList.value = props.typeSelect.map((item) => {
+    return {
+      label: item.name,
+      value: item.id
+    }
+  })
 })
 </script>
 
