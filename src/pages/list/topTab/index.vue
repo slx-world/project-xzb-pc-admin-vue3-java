@@ -161,12 +161,12 @@ const changeId = (val: number) => {
 </script>
 <style lang="less" scoped>
 .headBox {
-  background-color: #fafafa;
+  background-color: var(--color-bk10);
 }
 .division {
   height: 23.5px;
   width: 100%;
-  background-color: #fafafa;
+  background-color: var(--color-bk10);
   display: inline-block;
   // 独占一行
   vertical-align: top;

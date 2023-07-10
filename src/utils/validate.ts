@@ -75,6 +75,13 @@ export const validateCode = (val) => {
   }
   return false
 }
+// 限制字符1-500
+export const validateText500 = (val) => {
+  if (val && val.length >= 1 && val.length <= 500) {
+    return true
+  }
+  return false
+}
 // 必须是数字，且最多两位小数，且大于0小于999
 export const validateNumber = (val) => {
   const reg = /^([1-9][0-9]{0,2}|0)(\.[0-9]{1,2})?$/

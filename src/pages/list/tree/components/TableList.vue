@@ -165,6 +165,7 @@ const handleClickDelete = (row: { rowIndex: any }) => {
 // 点击翻页
 const onPageChange = (val) => {
   pagination.value.defaultCurrent = val.current
+  pagination.value.defaultPageSize = val.pageSize
   emit('getTreeData', {
     defaultCurrent: val.current,
     defaultPageSize: val.pageSize

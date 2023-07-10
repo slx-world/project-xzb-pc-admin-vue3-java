@@ -45,9 +45,10 @@ export function serviceTypeDelete(id :string) {
   })
 }
 // 服务类型简略列表，用于下拉框
-export function serviceTypeSimpleList() {
+export function serviceTypeSimpleList(val?) {
   return request.get({
-    url: '/serve-type/listActive'
+    url: '/serve-type/simpleList',
+    params: val
   })
 }
 // 分页查询服务项

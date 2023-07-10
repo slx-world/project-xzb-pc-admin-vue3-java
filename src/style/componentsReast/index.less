@@ -59,7 +59,7 @@ li.t-menu__item {
 
 //底部公司标识部分
 .companyFooter {
-  background-color: #fafafa;
+  background-color: var(--color-bk10);
   color: var(--color-bk4);
   text-align: center;
   padding-bottom: 16px;
@@ -95,7 +95,7 @@ li.t-menu__item {
   }
 
   &-content-layout {
-    background-color: #fafafa;
+    background-color: var(--color-bk10);
     padding: 24px;
     padding-bottom: 52px;
   }
@@ -119,7 +119,7 @@ li.t-menu__item {
     // 滚动条样式
     &::-webkit-scrollbar {
       width: 8px;
-      background: #fafafa;
+      background: var(--color-bk10);
     }
 
     &::-webkit-scrollbar-thumb {
@@ -777,7 +777,7 @@ button {
 // 弹窗头部
 .t-dialog__header {
   height: 60px;
-  background: #fafafa;
+  background: var(--color-bk10);
   border-radius: 8px 8px 0 0;
   padding: 19.5px 25px 19.5px 24px;
 
@@ -984,13 +984,21 @@ button {
 // 输入框focus
 .t-input--focused {
   border-color: var(--color-main);
+  box-shadow: 0 0 0 2px #FFD8D2;
+  &:hover{
+    border-color: #F54247;
+  }
 }
 
 // 下拉选择器
 // 下拉选择器选中状态
 .t-select-option.t-is-selected {
-  background: var(--color-bk9);
+  background: #FFEFEC;
   color: var(--color-main);
+}
+// 下拉选择器hover状态
+.t-select-option:not(.t-is-disabled):not(.t-is-selected):hover {
+  background: #f3f3f3;
 }
 
 // 组件iconfont颜色
@@ -1904,9 +1912,6 @@ button {
   box-shadow: none;
 }
 
-.t-input--focused {
-  box-shadow: none;
-}
 
 .t-range-input-popup--visible .t-range-input {
   border-color: var(--color-main);
@@ -1947,4 +1952,8 @@ button {
 }
 .t-upload__card-container:hover{
   border-color: var(--color-main);
+}
+// 去除底部数据数量
+.t-pagination__total{
+  display: none;
 }

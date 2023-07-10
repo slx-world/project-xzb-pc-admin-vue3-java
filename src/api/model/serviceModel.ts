@@ -30,7 +30,7 @@ export interface serviceItemTypeAdd {
   serveTypeId: string
   img: string
   description: string
-  referencePrice: number
+  referencePrice: string
   unit: string
   serveItemIcon: string
   detailImg: string

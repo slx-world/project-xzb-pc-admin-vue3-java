@@ -16,6 +16,7 @@
         @handleBuild="handleBuild"
         @handleClickDelete="handleClickDelete"
         @fetchData="fetchData"
+        @onPageChange="onPageChange"
         @handleEditPrice="handleEditPrice"
       ></regionTableList>
       <!-- end -->
@@ -108,23 +109,40 @@ const pagination = ref({
 // 获取接口数据
 const fetchData = async (val) => {
   await serviceList(val).then((res) => {
-    console.log(res.data.data)
-    listData.value = res.data.data.list
-    pagination.value.total = res.data.data.total
+    if(res.code === 200){
+      listData.value = res.data.list
+      pagination.value.total = Number(res.data.total)
+    }else{
+      MessagePlugin.error(res.msg)
+    }
+  }).catch((err) => {
+    console.log(err);
   })
 }
 // 获取城市数据
 const fetchRegionData = async () => {
   await regionById(id).then((res) => {
-    regionData.value = res.data.data
+    if(res.code === 200){
+      regionData.value = res.data
+    }else{
+      console.log(res.msg);
+    }
+  }).catch((err)=>{
+    console.log(err);
   })
 }
 // 获取服务类型数据
 const fetchServiceTypeData = async () => {
   await serviceTypeSimpleList().then((res) => {
-    serviceTypeData.value = res.data.data
-    serviceItemRequestData.value.serveTypeId = res.data.data[0].id
-    fetchServiceItemData()
+    if(res.code === 200){
+      serviceTypeData.value = res.data
+      serviceItemRequestData.value.serveTypeId = res.data[0].id
+      fetchServiceItemData()
+    }else{
+      console.log(res.msg);
+    }
+  }).catch((err)=>{
+    console.log(err);
   })
 }
 // 切换服务类型
@@ -143,7 +161,6 @@ const handleBuild = () => {
 }
 // 设为热门
 const handleClickSetHot = (val) => {
-  console.log(val)
   hotId.value = val.id
   if(val.isHot === 0){
     flag.value = 1
@@ -162,18 +179,19 @@ const handleClickDelete = (val) => {
 }
 // 确认设为热门
 const handleConfirm = async () => {
-  console.log(hotId.value,flag.value);
-  
   const data = {
     id: hotId.value,
     flag: flag.value
   }
   await serviceHot(data).then((res) => {
-    console.log(res)
     if (res.data.code === 200) {
       MessagePlugin.success('操作成功')
       fetchData(requestData.value)
+    }else{
+      console.log(res.msg);
     }
+  }).catch((err)=>{
+    console.log(err)
   })
   dialogConfirmVisible.value = false
   fetchData(requestData.value)
@@ -181,11 +199,14 @@ const handleConfirm = async () => {
 // 确认删除
 const handleDelete = async() => {
   await serviceDelete (deleteId.value).then((res) => {
-    console.log(res)
     if (res.data.code === 200) {
       MessagePlugin.success('删除成功')
       fetchData(requestData.value)
+    }else{
+      console.log(res.msg);
     }
+  }).catch((err)=>{
+    console.log(err)
   })
   dialogDeleteVisible.value = false
   MessagePlugin.success('删除成功')
@@ -194,8 +215,15 @@ const handleDelete = async() => {
 // 获取服务项数据
 const fetchServiceItemData = async () => {
   await serviceItemList(serviceItemRequestData.value).then((res) => {
-    serviceItemData.value = []
-    serviceItemData.value = res.data.data.list
+    console.log(res);
+    if(res.code === 200){
+      serviceItemData.value = []
+      serviceItemData.value = res.data.list
+    }else{
+      console.log(res.msg);
+    }
+  }).catch((err)=>{
+    console.log(err);
   })
 }
 // 编辑价格
@@ -209,13 +237,16 @@ const handleEditPrice = async(val) => {
     if (res.data.code === 200) {
       MessagePlugin.success('修改成功')
       fetchData(requestData.value)
+    }else{
+      console.log(res.data.msg);
     }
     fetchData(requestData.value)
+  }).catch((err)=>{
+    console.log(err)
   })
 }
 // 新增内容提交
 const handleSubmit = async (val) => {
-  console.log(val)
   const data = []
   val.forEach((item) => {
     data.push({
@@ -226,13 +257,23 @@ const handleSubmit = async (val) => {
   })
   await serviceAdd(data).then((res) => {
     console.log(res)
-    if (res.data.code === 200) {
+    if (res.code === 200) {
       MessagePlugin.success('添加成功')
       visible.value = false
       fetchData(requestData.value)
+    }else{
+      console.log(res.msg);
     }
     visible.value = false
+  }).catch((err)=>{
+    console.log(err)
   })
+}
+// 点击翻页
+const onPageChange = (val) => {
+  requestData.value.pageNo = val.defaultCurrent
+  requestData.value.pageSize = val.defaultPageSize
+  fetchData(requestData.value)
 }
 // 生命周期
 onMounted(() => {

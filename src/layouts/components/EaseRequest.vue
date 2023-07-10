@@ -416,7 +416,7 @@ const closeModal = () => {
   }
   .t-dialog::-webkit-scrollbar {
     width: 8px;
-    background: #fafafa;
+    background: var(--color-bk10);
     border-radius: 0 12px 12px 12px;
   }
   .t-dialog::-webkit-scrollbar-thumb {

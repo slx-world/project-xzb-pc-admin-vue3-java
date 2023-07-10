@@ -52,7 +52,10 @@ const transform: AxiosTransform = {
     if (res && !code) {
       return res
     }
-    throw new Error(`请求接口错误, 错误码: ${code}`)
+    if(code === 604 ) {
+      return res
+    }
+    // throw new Error(`请求接口错误, 错误码: ${code}`)
   },
 
   // 请求前处理配置

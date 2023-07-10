@@ -48,6 +48,9 @@
                 :headers="{
                   Authorization: token
                 }"
+                @validate="onValidate"
+                @fail="handleFail"
+                :size-limit="200"
                 :allow-upload-duplicate-file="true"
                 @success="(e) => handleSuccess(e, 1)"
               >
@@ -82,6 +85,9 @@
                 tips="请上传png格式图片，尺寸：750px*620px，在5M以内"
                 theme="image"
                 accept="image/*"
+                @validate="onValidate"
+                @fail="handleFail"
+                :size-limit="5120"
                 :headers="{
                   Authorization: token
                 }"
@@ -110,9 +116,12 @@
               tips="请上传png格式图片，尺寸：宽750px，高度不限，在20M以内"
               theme="image"
               accept="image/*"
+              :size-limit="20480"
               :headers="{
                 Authorization: token
               }"
+              @validate="onValidate"
+              @fail="handleFail"
               :allow-upload-duplicate-file="true"
               @success="(e) => handleSuccess(e, 3)"
             >
@@ -148,7 +157,8 @@ import {
 import { useRouter, useRoute } from 'vue-router'
 import { UNIT } from '@/constants'
 // 引用正则
-import { validatePhone } from '@/utils/validate'
+import { validateText5, validateText500 } from '@/utils/validate'
+import { MessagePlugin } from 'tdesign-vue-next'
 
 const formData = ref({
   serveTypeId: '',
@@ -181,28 +191,31 @@ onMounted(() => {
 // 获取接口数据
 const getData = async (val) => {
   await serviceItemById(val).then((res) => {
-    console.log(res.data.data)
-    formData.value.serveTypeId = res.data.data.serveTypeId
-    formData.value.img = [
-      {
-        url: res.data.data.img
-      }
-    ]
-    formData.value.description = res.data.data.description
-    formData.value.referencePrice = res.data.data.referencePrice
-    formData.value.unit = res.data.data.unit
-    formData.value.serveItemIcon = [
-      {
-        url: res.data.data.serveItemIcon
-      }
-    ]
-    formData.value.detailImg = [
-      {
-        url: res.data.data.detailImg
-      }
-    ]
-    formData.value.name = res.data.data.name
-    formData.value.sortNum = res.data.data.sortNum
+    if (res.code == 200) {
+      formData.value.serveTypeId = res.data.serveTypeId
+      formData.value.img = [
+        {
+          url: res.data.img
+        }
+      ]
+      formData.value.description = res.data.description
+      formData.value.referencePrice = res.data.referencePrice
+      formData.value.unit = res.data.unit
+      formData.value.serveItemIcon = [
+        {
+          url: res.data.serveItemIcon
+        }
+      ]
+      formData.value.detailImg = [
+        {
+          url: res.data.detailImg
+        }
+      ]
+      formData.value.name = res.data.name
+      formData.value.sortNum = res.data.sortNum
+    }else{
+      MessagePlugin.error(res.msg)
+    }
   })
 }
 // 更新信息
@@ -221,11 +234,27 @@ const onSubmit = async (result: any) => {
     })
     if (id) {
       await serviceItemEdit(data.value, id).then((res) => {
-        handleBack()
+        console.log(res);
+        if(res.data.code === 200){
+          MessagePlugin.success('修改成功')
+          handleBack()
+        }else{
+          MessagePlugin.error(res.data.msg)
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     } else {
       await serviceItemAdd(data.value).then((res) => {
-        handleBack()
+        console.log(res);
+        if(res.code === 200){
+          MessagePlugin.success('添加成功')
+          handleBack()
+        }else{
+          MessagePlugin.error(res.msg)
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     }
   }
@@ -233,14 +262,41 @@ const onSubmit = async (result: any) => {
 
 // 获取服务类型下拉框数据
 const getServiceTypeSimpleList = async () => {
-  await serviceTypeSimpleList().then((res) => {
-    typeSelect.value = res.data.data.map((item) => {
+  await serviceTypeSimpleList({
+    isActive: 1
+  }).then((res) => {
+    if (res.code == 200) {
+      typeSelect.value = res.data.map((item) => {
       return {
         label: item.name,
         value: item.id
       }
     })
+    }else{
+      MessagePlugin.error(res.msg)
+    }
+  }).catch((err) => {
+    console.log(err)
   })
+}
+// 上传图片失败
+const handleFail = (file) => {
+  console.log(file)
+  MessagePlugin.error(`文件上传失败`)
+}
+// 超过大小或者文件格式错误报错提示
+const onValidate = (params) => {
+  const { files, type } = params
+  console.log('onValidate', type, files)
+  const messageMap = {
+    FILE_OVER_SIZE_LIMIT: files[0].response.error,
+    FILES_OVER_LENGTH_LIMIT: '文件数量超出限制，仅上传未超出数量的文件',
+    // if you need same name files, setting allowUploadDuplicateFile={true} please
+    FILTER_FILE_SAME_NAME: '不允许上传同名文件',
+    BEFORE_ALL_FILES_UPLOAD: 'beforeAllFilesUpload 方法拦截了文件',
+    CUSTOM_BEFORE_UPLOAD: 'beforeUpload 方法拦截了文件'
+  }
+  messageMap[type] && MessagePlugin.warning(messageMap[type])
 }
 // 返回
 const handleBack = () => {
@@ -262,7 +318,12 @@ const rules = ref({
   name: [
     {
       required: true,
-      message: '请输入账号',
+      message: '请输入服务名称',
+      trigger: 'blur'
+    },
+    {
+      validator: validateText5,
+      message: '服务名称格式错误，请输入2-5个汉字，请重新输入服务名称',
       trigger: 'blur'
     }
   ],
@@ -271,12 +332,71 @@ const rules = ref({
       required: true,
       message: '请输入价格',
       trigger: 'blur'
+    },
+    {
+      pattern: /^[0-9]*$/,
+      message: '请输入数字',
+      trigger: 'blur'
+    }
+  ],
+  sortNum: [
+    {
+      required: true,
+      message: '请输入排序',
+      trigger: 'blur'
+    },
+    {
+      pattern: /^[0-9]*$/,
+      message: '请输入数字',
+      trigger: 'blur'
+    }
+  ],
+  img: [
+    {
+      required: true,
+      message: '请上传图片',
+      trigger: 'blur'
+    }
+  ],
+  serveItemIcon: [
+    {
+      required: true,
+      message: '请上传图片',
+      trigger: 'blur'
+    }
+  ],
+  serveTypeId: [
+    {
+      required: true,
+      message: '请选择服务类型',
+      trigger: 'blur'
+    }
+  ],
+  unit: [
+    {
+      required: true,
+      message: '请选择单位',
+      trigger: 'blur'
     }
   ],
   description: [
     {
       required: true,
-      message: '请输入个人简介',
+      message: '请输入服务描述',
+      trigger: 'blur'
+    },
+    {
+      min: 1,
+      max: 500,
+      validator: validateText500,
+      message: '服务描述格式错误，请输入1-500个汉字，请重新输入服务描述',
+      trigger: 'blur'
+    }
+  ],
+  detailImg: [
+    {
+      required: true,
+      message: '请上传图片',
       trigger: 'blur'
     }
   ]

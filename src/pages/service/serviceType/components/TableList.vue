@@ -30,6 +30,10 @@
           @sort-change="sortChange"
           @select-change="rehandleSelectChange"
         >
+          <!-- 空页面 -->
+          <template #empty>
+            <NoData></NoData>
+          </template>
           <!-- 服务类型图标 -->
           <template #serveTypeIcon="{ row }">
             <div class="headPortrait">
@@ -73,18 +77,28 @@
           <!-- end -->
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
-            <a :class="row.isActive === 1 ?'text-forbidden btn-dl btn-split-right' : 'btn-dl btn-split-right'" @click="handleClickDelete(row)"
+            <a
+              :class="
+                row.isActive === 1
+                  ? 'text-forbidden btn-dl btn-split-right'
+                  : 'btn-dl btn-split-right'
+              "
+              @click="handleClickDelete(row)"
               >删除</a
             >
             <a
-            :class="row.isActive !== 1 ?'text-forbidden font-bt btn-split-right line' : 'font-bt btn-split-right line'"
+              :class="
+                row.isActive !== 1
+                  ? 'text-forbidden font-bt btn-split-right line'
+                  : 'font-bt btn-split-right line'
+              "
               @click="handleViewServices(row)"
               >查看服务项</a
             >
             <a class="font-bt line" @click="handleEdit(row)">编辑</a>
-            <a class="font-bt btn-split-left" @click="handleDisable(row)"
-              >{{row.isActive === 1 ? '禁用' : '启用'}}</a
-            >
+            <a class="font-bt btn-split-left" @click="handleDisable(row)">{{
+              row.isActive === 1 ? '禁用' : '启用'
+            }}</a>
           </template>
           <!-- end -->
         </t-table>
@@ -105,6 +119,7 @@ import { useRouter } from 'vue-router'
 import { CaretDownSmallIcon, ZoomInIcon } from 'tdesign-icons-vue-next'
 // import { isNumber } from 'lodash'
 import { COLUMNS } from '../constants'
+import NoData from '@/components/noData/index.vue'
 // 接收父组件传递的值
 const props = defineProps({
   listData: {
@@ -127,7 +142,8 @@ const emit = defineEmits([
   'handleBuild',
   'handleClickDelete',
   'handleDisable',
-  'handleSortChange'
+  'handleSortChange',
+  'onPageChange'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -192,7 +208,8 @@ const handleClickDelete = (row: { rowIndex: any }) => {
 // 点击翻页
 const onPageChange = (val) => {
   pagination.value.defaultCurrent = val.current
-  emit('fetchData', {
+  pagination.value.defaultPageSize = val.pageSize
+  emit('onPageChange', {
     defaultCurrent: val.current,
     defaultPageSize: val.pageSize
   })

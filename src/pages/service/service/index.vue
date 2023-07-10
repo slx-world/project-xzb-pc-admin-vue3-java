@@ -18,6 +18,7 @@
       @handleBuild="handleBuild"
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
+      @onPageChange="onPageChange"
       @handleSortChange="handleSortChange"
     ></tableList>
     <!-- end -->
@@ -127,22 +128,33 @@ const handleReset = () => {
 // 获取服务类型下拉框数据
 const getServiceTypeSimpleList = async () => {
   await serviceTypeSimpleList().then((res) => {
-    typeSelect.value = res.data.data
+    if (res.code === 200) {
+      typeSelect.value = res.data
+    }else{
+      MessagePlugin.error(res.message)
+    }
+  }).catch((err) => {
+    console.log(err)
   })
 }
 // 获取列表数据
 const fetchData = async (val) => {
   dataLoading.value = true
   await serviceItemList(val).then((res) => {
-    listData.value = res.data.data.list
-    pagination.value.total = res.data.data.total
+    if (res.code === 200) {
+      listData.value = res.data.list
+    pagination.value.total = Number(res.data.total)
     dataLoading.value = false
+    }
+  }).catch((err) => {
+    console.log(err)
   })
 }
 // 关闭弹窗
 const handleClose = () => {
   visible.value = false // 关闭新增弹窗
   dialogDeleteVisible.value = false // 关闭删除弹层
+  dialogConfirmVisible.value = false // 关闭确认弹层
 }
 // 点击新建
 const handleBuild = () => {
@@ -152,7 +164,7 @@ const handleBuild = () => {
 const handleSetupContract = (val, id) => {
   dialogConfirmVisible.value = true
   setupContractData.value.id = val.id
-  if (id === 1) {
+  if (id !== 2) {
     confirmTitle.value = '确认上架'
     confirmText.value = '确定上架该服务吗？'
     setupContractData.value.flag = 2
@@ -165,18 +177,27 @@ const handleSetupContract = (val, id) => {
 // 确认上下架
 const handleConfirm = async () => {
   await serviceItemStatus(setupContractData.value).then((res) => {
-    dialogConfirmVisible.value = false
-    MessagePlugin.success('操作成功')
-    fetchData(requestData.value)
+    if(res.data.code === 200){
+      dialogConfirmVisible.value = false
+      MessagePlugin.success('操作成功')
+      fetchData(requestData.value)
+    }else{
+      MessagePlugin.error(res.data.msg)
+    }
+  }).catch((err) => {
+    console.log(err);
   })
 }
 // 确认删除
 const handleDelete = async () => {
   await serviceItemDelete(deleteId.value).then((res) => {
-    console.log(res);
-    dialogDeleteVisible.value = false
-    MessagePlugin.success('删除成功')
-    fetchData(requestData.value)
+    if(res.code === 200){
+      dialogDeleteVisible.value = false
+      MessagePlugin.success('删除成功')
+      fetchData(requestData.value)
+    }else{
+      MessagePlugin.error(res.msg)
+    }
   })
 }
 // 点击删除
@@ -201,6 +222,12 @@ const handleSortChange = (val) => {
       }
     }
   })
+  fetchData(requestData.value)
+}
+// 翻页
+const onPageChange = (val) => {
+  requestData.value.pageNo = val.defaultCurrent
+  requestData.value.pageSize = val.defaultPageSize
   fetchData(requestData.value)
 }
 watchEffect(() => {

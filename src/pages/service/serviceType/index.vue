@@ -17,6 +17,7 @@
       @fetchData="fetchData"
       @handleDisable="handleDisable"
       :handleSortChange="handleSortChange"
+      @onPageChange="onPageChange"
     ></tableList>
     <!-- end -->
     <!-- 新增，编辑弹窗 -->
@@ -73,7 +74,9 @@ const dialogForm = ref(null)
 const title = ref('新建服务类型') // 弹窗标题
 const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
 const dialogConfirmVisible = ref(false) // 控制禁用弹层的显示隐藏
-const deleteText = ref('确定删除该分类吗？') // 删除的内容
+const deleteText = ref(
+  '确定删除该分类吗？分类下有服务则不可进行删除，需要先删除服务或调整服务分类后才可删除'
+) // 删除的内容
 const confirmText = ref(
   '禁用该服务分类会导致分类下服务全部下架，确定禁用该分类吗？'
 )
@@ -115,8 +118,12 @@ onMounted(() => {
 // 获取列表数据
 const fetchData = async (val) => {
   await getServiceTypeList(val).then((res) => {
-    listData.value = res.data.data.list
-    pagination.value.total = res.data.data.total
+    if (res.code === 200) {
+      listData.value = res.data.list
+      pagination.value.total = Number(res.data.total)
+    } else {
+      MessagePlugin.error(res.msg)
+    }
   })
 }
 // 关闭弹窗
@@ -154,9 +161,16 @@ const handleEdit = (val) => {
 // 确认删除
 const handleDelete = async () => {
   await serviceTypeDelete(deleteId.value).then((res) => {
+    if (res.data.code === 200) {
       dialogDeleteVisible.value = false
       MessagePlugin.success('删除成功')
       fetchData(requestData.value)
+    } else {
+      MessagePlugin.error(res.data.msg)
+      dialogDeleteVisible.value = false
+    }
+  }).catch((err) => {
+    console.log(err);
   })
 }
 // 点击删除
@@ -166,7 +180,6 @@ const handleClickDelete = (row) => {
 }
 // 点击禁用
 const handleDisable = (val) => {
-  console.log(val)
   disableData.value.id = val.id
   if (val.isActive === 1) {
     confirmTitle.value = '确认禁用'
@@ -184,14 +197,16 @@ const handleDisable = (val) => {
 const handleConfirm = async () => {
   dialogConfirmVisible.value = false
   await serviceTypeStatus(disableData.value).then((res) => {
-    fetchData(requestData.value)
+    if (res.data.code === 200) {
+      MessagePlugin.success('操作成功')
+      fetchData(requestData.value)
+    } else {
+      MessagePlugin.error(res.data.msg)
+    }
   })
-  MessagePlugin.success('操作成功')
 }
 // 新增，编辑弹窗提交
 const handleSubmit = async (val) => {
-  console.log(val);
-  
   // 提交的数据
   const data = {
     img: val.img[0].url,
@@ -201,35 +216,48 @@ const handleSubmit = async (val) => {
   }
   if (edit.value) {
     await serviceTypeEdit(data, editId.value).then((res) => {
-      fetchData(requestData.value)
-      MessagePlugin.success('编辑成功')
-      dialogForm.value.onClickCloseBtn()
+      if (res.data.code === 200) {
+        MessagePlugin.success('编辑成功')
+        fetchData(requestData.value)
+        dialogForm.value.onClickCloseBtn()
+      }else{
+        MessagePlugin.error(res.data.msg)
+      }
     })
   } else {
     await serviceTypeAdd(data).then((res) => {
-      fetchData(requestData.value)
-      MessagePlugin.success('新增成功')
-      dialogForm.value.onClickCloseBtn()
+      if (res.code === 200) {
+        fetchData(requestData.value)
+        MessagePlugin.success('新增成功')
+        dialogForm.value.onClickCloseBtn()
+      }else{
+        MessagePlugin.error(res.msg)
+      }
     })
   }
 }
 // 排序
 const handleSortChange = (val) => {
   forEach(val, (item) => {
-    if(item.sortBy ==='sortNum'){
-      if(item.descending === true){
+    if (item.sortBy === 'sortNum') {
+      if (item.descending === true) {
         requestData.value.isAsc1 = 'false'
-      }else{
+      } else {
         requestData.value.isAsc1 = 'true'
       }
-    }else{
-      if(item.descending === true){
+    } else {
+      if (item.descending === true) {
         requestData.value.isAsc2 = 'false'
-      }else{
+      } else {
         requestData.value.isAsc2 = 'true'
       }
     }
   })
+  fetchData(requestData.value)
+}
+const onPageChange = (val) => {
+  requestData.value.pageNo = val.defaultCurrent
+  requestData.value.pageSize = val.defaultPageSize
   fetchData(requestData.value)
 }
 </script>

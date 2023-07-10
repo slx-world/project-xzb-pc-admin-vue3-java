@@ -1,6 +1,5 @@
 <!-- 用户名密码登录 - 风格二 -->
 <template>
-  <div>账号密码登录</div>
   <t-form
     ref="form"
     :class="['item-container', `login-${type}`]"
@@ -42,11 +41,6 @@
           </template>
         </t-input>
       </t-form-item>
-
-      <div class="check-container remember-pwd">
-        <t-checkbox>自动登录</t-checkbox>
-        <span class="font-bt tip">忘记密码</span>
-      </div>
     </template>
 
     <t-form-item class="btn-container">
@@ -93,8 +87,10 @@ const onSubmit = async ({ validateResult }) => {
     loadSt.value = true
     // 登录相关
     userLogins(formData.value).then(async (res : any) => {
-      if (res.data.code === 0) {
-        await userStore.login(res.data.data.token)
+      console.log(res);
+      
+      if (res.code === 200) {
+        await userStore.login(res.data.token)
         // 获取用户信息 并存入pinia
         // const { data } = await getUserInfo()
         // userStore.setUserInfo(data)

@@ -44,8 +44,8 @@
             <search-icon />
           </template>
         </t-input>
-        <NoData v-if="filteredItems.length === 0"></NoData>
-        <ul class="serviceBox" v-if="filteredItems.length > 0">
+        <NoData v-if="filteredItems?.length === 0"></NoData>
+        <ul class="serviceBox" v-if="filteredItems?.length > 0">
           <li v-for="item in filteredItems" :key="item.id" class="serviceTag">
             <t-checkbox
               @change="(e) => onChange(e, item)"
@@ -88,7 +88,6 @@ import { ref, watch} from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { SearchIcon } from 'tdesign-icons-vue-next'
 import NoData from '@/components/noData/index.vue'
-import { forEach } from 'lodash'
 const props = defineProps({
   visible: {
     type: Boolean,

@@ -22,7 +22,7 @@
           <t-input
             v-model="formData.name"
             class="wt-400"
-            placeholder="请输入"
+            placeholder="请输入类型名称"
             clearable
             @change="Wordlimit(5)"
           />
@@ -32,6 +32,7 @@
             theme="column"
             :min="1"
             class="wt-400"
+            placeholder="请输入数字"
             v-model="formData.sortNum"
           ></t-input-number>
         </t-form-item>
@@ -45,9 +46,12 @@
             theme="image"
             accept="image/*"
             class="wt-400"
+            :sizeLimit="200"
             :headers="{
               Authorization: token
             }"
+            @validate="onValidate"
+            @fail="handleFail"
             :allow-upload-duplicate-file="true"
             @success="(e) => handleSuccess(e, 1)"
           >
@@ -63,10 +67,13 @@
             :headers="{
               Authorization: token
             }"
+            :sizeLimit="5000"
             tips="请上传jpg/png文件，在5M以内"
             theme="image"
             accept="image/*"
             @success="(e) => handleSuccess(e, 2)"
+            @validate="onValidate"
+            @fail="handleFail"
             :allow-upload-duplicate-file="true"
           >
           </t-upload>
@@ -86,8 +93,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
+import { ValidateResultContext } from 'tdesign-vue-next'
 import { validateNum, validateText5 } from '@/utils/validate'
+import { MessagePlugin } from 'tdesign-vue-next';
 
 const props = defineProps({
   visible: {
@@ -175,6 +183,26 @@ const Wordlimit: Function = (num: number) => {
     formData.value.name = formData.value.name.slice(0, num)
   }
 }
+// 上传图片失败
+const handleFail = (file) => {
+  console.log(file)
+  MessagePlugin.error(`文件上传失败`)
+}
+// 超过大小或者文件格式错误报错提示
+const onValidate = (params) => {
+  const { files, type } = params
+  console.log('onValidate', type, files)
+  const messageMap = {
+    FILE_OVER_SIZE_LIMIT: files[0].response.error,
+    FILES_OVER_LENGTH_LIMIT: '文件数量超出限制，仅上传未超出数量的文件',
+    // if you need same name files, setting allowUploadDuplicateFile={true} please
+    FILTER_FILE_SAME_NAME: '不允许上传同名文件',
+    BEFORE_ALL_FILES_UPLOAD: 'beforeAllFilesUpload 方法拦截了文件',
+    CUSTOM_BEFORE_UPLOAD: 'beforeUpload 方法拦截了文件'
+  }
+  // you can also set Upload.tips and Upload.status to show warning message.
+  messageMap[type] && MessagePlugin.warning(messageMap[type])
+}
 // 表单校验
 const rules = {
   name: [
@@ -187,28 +215,28 @@ const rules = {
     },
     {
       validator: validateText5,
-      message: '请输入正确格式的名称',
+      message: '分类名称输入不符，请输入2-5个字符',
       type: 'error',
       trigger: 'blur'
     }
   ],
   sortNum: [
-    // 调用次数校验
+    // 序号校验
     {
       required: true,
-      message: '请输入调用次数',
+      message: '请输入序号',
       type: 'error',
       trigger: 'blur'
     },
     {
       validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
+      message: '请输入正确格式的序号，0-999',
       type: 'error',
       trigger: 'change'
     },
     {
       validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
+      message: '请输入正确格式的序号，0-999',
       type: 'error',
       trigger: 'blur'
     }

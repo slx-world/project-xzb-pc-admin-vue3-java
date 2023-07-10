@@ -10,7 +10,6 @@
           :row-key="rowKey"
           vertical-align="middle"
           :hover="true"
-          bordered
           :pagination="
             pagination.total <= 10 || !pagination.total ? null : pagination
           "
@@ -20,8 +19,13 @@
           :hide-sort-tips="true"
           :show-sort-column-bg-color="true"
           table-layout="fixed"
+          @page-change="onPageChange"
           table-content-width="100%"
         >
+          <!-- 空页面 -->
+          <template #empty>
+            <NoData></NoData>
+          </template>
           <!-- 描述 -->
           <template #description="{ row }">
             <div class="description">
@@ -50,9 +54,9 @@
             <a class="btn-dl btn-split-right" @click="handleClickDelete(row)"
               >删除</a
             >
-            <a class="font-bt btn-split-left" @click="handleClickSetHot(row)"
-              >{{ row.isHot === 0 ? '设置热门' : '取消热门' }}</a
-            >
+            <a class="font-bt btn-split-left" @click="handleClickSetHot(row)">{{
+              row.isHot === 0 ? '设置热门' : '取消热门'
+            }}</a>
           </template>
           <!-- end -->
         </t-table>
@@ -72,6 +76,7 @@ import { ref, watch, computed } from 'vue'
 import { validateNumber } from '@/utils/validate'
 import { CaretDownSmallIcon } from 'tdesign-icons-vue-next'
 import { Input, MessagePlugin } from 'tdesign-vue-next'
+import NoData from '@/components/noData/index.vue'
 // 接收父组件传递的值
 const props = defineProps({
   listData: {
@@ -92,10 +97,16 @@ const emit = defineEmits([
   'fetchData',
   'handleClickSetHot',
   'handleClickDelete',
-  'handleEditPrice'
+  'handleEditPrice',
+  'onPageChange'
 ])
 // 监听器赋值
 watch(props, () => {
+  if(!props.listData){
+    data.value = []
+    dataLoading.value = false
+    return
+  }
   data.value = props.listData
   pagination.value = props.pagination
   dataLoading.value = false
@@ -115,7 +126,7 @@ const data: any = ref([])
 const pagination: any = ref({
   defaultPageSize: 8,
   total: 0,
-  defaultCurrent: 1, // 默认当前页
+  defaultCurrent: 1 // 默认当前页
 })
 // 索引
 const rowKey = 'index' // 行的key
@@ -129,6 +140,15 @@ const handleClickSetHot = (val) => {
 // 点击删除
 const handleClickDelete = (row: { rowIndex: any }) => {
   emit('handleClickDelete', row)
+}
+// 点击翻页
+const onPageChange = (val) => {
+  pagination.value.defaultCurrent = val.current
+  pagination.value.defaultPageSize = val.pageSize
+  emit('onPageChange', {
+    defaultCurrent: val.current,
+    defaultPageSize: val.pageSize
+  })
 }
 // 列表配置
 const regionCOLUMN = computed(() => [
@@ -154,20 +174,23 @@ const regionCOLUMN = computed(() => [
       component: Input,
       props: {
         clearable: true,
-        autofocus: true,
-
+        autofocus: true
       },
       validateTrigger: 'change',
-      abortEditOnEvent: ['onEnter' , 'onBlur'],
+      abortEditOnEvent: ['onEnter', 'onBlur'],
       // 编辑完成，退出编辑态后触发
       onEdited: (context) => {
         emit('handleEditPrice', context.newRowData)
       },
       rules: [
         { required: true, message: '不能为空' },
-        { max: 5, message: '必须为大于0,小于999的数字，且保留两位小数', validator: validateNumber },
-      ],
-    },
+        {
+          max: 5,
+          message: '必须为大于0,小于999的数字，且保留两位小数',
+          validator: validateNumber
+        }
+      ]
+    }
   },
   {
     title: '是否热门',
@@ -189,9 +212,6 @@ const regionCOLUMN = computed(() => [
 <style lang="less" scoped>
 .baseList {
   padding-top: 0 !important;
-  :deep(.t-table td) {
-    height: 64px !important;
-  }
 }
 .tableBoxs {
   margin: 20px 0 0 0;
@@ -201,5 +221,10 @@ const regionCOLUMN = computed(() => [
       .t-table__cell--fixed-right-first::after
   ) {
   border: none;
+}
+:deep(.t-table:not(.t-table--row-edit) .t-table__cell--editable .t-icon){
+  margin-left: 10px;
+  font-size: 14px !important;
+  color: var(--color-bk1);
 }
 </style>

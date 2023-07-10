@@ -42,7 +42,7 @@ const type = ref('login')
   .left {
     min-width: 600px;
     height: 100%;
-    background: #f7faff;
+    background: var(--color-bk10);
     // 内容居中
     display: flex;
     flex-direction: column;
@@ -50,13 +50,13 @@ const type = ref('login')
     align-items: center;
   }
   .right {
-    min-width: 766px;
+    min-width: 840px;
     width: 100%;
     height: 100%;
-    background: #f7faff;
-    background-image: url(@/assets/test-img/bj2.png);
+    background: var(--color-bk10);
+    background-image: url(@/assets/img_denglu-bg@2x.png);
     // 撑满父元素
-    background-size: cover;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
   }
 }

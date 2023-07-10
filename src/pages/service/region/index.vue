@@ -17,6 +17,7 @@
       @handleClickEdit="handleClickEdit"
       @fetchData="fetchData"
       @handleSort="handleSort"
+      @onPageChange="onPageChange"
     ></tableList>
     <!-- end -->
     <!-- 新增，编辑弹窗 -->
@@ -93,8 +94,14 @@ onMounted(() => {
 // 获取列表数据
 const fetchData = async (val) => {
   await regionList(val).then((res) => {
-    listData.value = res.data.data.list
-    pagination.value.total = res.data.data.total
+    if(res.code === 200){
+      listData.value = res.data.list
+    pagination.value.total = Number(res.data.total)
+    }else{
+      MessagePlugin.error(res.msg)
+    }
+  }).catch((err) => {
+    console.log(err);
   })
 }
 // 关闭弹窗
@@ -127,15 +134,30 @@ const confirmEdit = async (val) =>{
   if (title.value === '新增区域') {
     // 新增
     await regionAdd(val).then((res) => {
-      dialogForm.value.onClickCloseBtn()
+      if(res.code === 200){
+        MessagePlugin.success('新增成功')
+        dialogForm.value.onClickCloseBtn()
       fetchData(requestData.value)
-    })
+      }else{
+        MessagePlugin.error(res.msg)
+      }
+    }).catch((err) => {
+    console.log(err);
+  })
   } else {
     // 编辑
     await regionEdit({managerName:val.managerName,managerPhone:val.managerPhone}, editId.value).then((res) => {
-      dialogForm.value.onClickCloseBtn()
-      fetchData(requestData.value)
-    })
+      console.log(res);
+      if(res.data.code === 200){
+        MessagePlugin.success('编辑成功')
+        dialogForm.value.onClickCloseBtn()
+        fetchData(requestData.value)
+      }else{
+        MessagePlugin.error(res.data.msg)
+      }
+    }).catch((err) => {
+    console.log(err);
+  })
   }
 }
 // 点击删除
@@ -146,9 +168,16 @@ const handleClickDelete = (row) => {
 // 确认删除
 const handleDelete = async () => {
   await regionDelete(deleteId.value).then((res) => {
-    dialogDeleteVisible.value = false
-    MessagePlugin.success('删除成功')
-    fetchData(requestData.value)
+    console.log(res);
+    if(res.code === 200){
+      MessagePlugin.success('删除成功')
+      dialogDeleteVisible.value = false
+      fetchData(requestData.value)
+    }else{
+      MessagePlugin.error(res.msg)
+    }
+  }).catch((err) => {
+    console.log(err);
   })
 }
 // 点击排序
@@ -161,7 +190,12 @@ const handleSort = (val) => {
     fetchData(requestData.value)
   }
 }
-
+// 点击翻页
+const onPageChange = (val) => {
+  requestData.value.pageNo = val.defaultCurrent
+  requestData.value.pageSize = val.defaultPageSize
+  fetchData(requestData.value)
+}
 // 监听
 watchEffect(() => {
   if (route.path === '/service/region') {

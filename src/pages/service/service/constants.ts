@@ -2,8 +2,8 @@ export const COLUMNS = [
   {
     title: '服务编号',
     align: 'left',
-    width: 160,
-    minWidth: '70px',
+    width: 200,
+    minWidth: '200px',
     colKey: 'code'
   },
   { title: '服务名称', width: 150, minWidth: '150px', colKey: 'name' },
@@ -22,9 +22,8 @@ export const COLUMNS = [
     cell: { col: 'status' }
   },
   {
-    title: '服务单价',
-    minWidth: '150px',
-    sorter: true,
+    title: '服务单价（元）',
+    minWidth: '170px',
     sortType: 'all',
     colKey: 'referencePrice'
   },
@@ -53,6 +52,10 @@ export const COLUMNS = [
       type: 'single',
       list: [
         {
+          label: '草稿',
+          value: 0
+        },
+        {
           label: '下架',
           value: 1
         },
@@ -65,20 +68,23 @@ export const COLUMNS = [
     },
     cell: (h, { row }) => {
       const statusList = {
-        1: {
+        0: {
+          label: '草稿'
+        },
+        2: {
           label: '上架'
         },
-        0: {
+        1: {
           label: '下架'
         },
-      }
-      const status = row.saleStatus === 0 ? 1 : row.saleStatus-1      
+      }  
+      const status = row.saleStatus === 2 ? '1' : 0
       return h(
         'span',
         {
           class: `status-dot status-dot-${status}`
         },
-        statusList[status].label
+        statusList[row.saleStatus].label
       )
     }
   },
