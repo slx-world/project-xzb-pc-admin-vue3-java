@@ -167,8 +167,6 @@ const emit = defineEmits([
 // 监听器赋值
 watch(props, () => {
   data.value = props.listData
-  console.log('data', data.value)
-
   pagination.value = props.pagination
   dataLoading.value = false
 })

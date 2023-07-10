@@ -142,7 +142,7 @@ const fetchData = async (val) => {
   dataLoading.value = true
   await serviceItemList(val).then((res) => {
     if (res.code === 200) {
-      listData.value = res.data.list
+    listData.value = res.data.list
     pagination.value.total = Number(res.data.total)
     dataLoading.value = false
     }
@@ -243,11 +243,11 @@ watchEffect(() => {
   if (!initSearch.value && route.query.id) {
     initSearch.value = route.query.id
     requestData.value.serveTypeId = initSearch.value
+    fetchData(requestData.value)
     router.replace({
       path: route.path,
       query: {}
     })
-    fetchData(requestData.value)
   }
 })
 </script>
