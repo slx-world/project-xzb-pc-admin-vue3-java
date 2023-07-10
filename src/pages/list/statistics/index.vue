@@ -155,7 +155,7 @@ const handleReset = () => {
 // // 当前页
 // const handleCurrentChange = (val) => {
 //   pagination.value.defaultCurrent = val.current
-  pagination.value.defaultPageSize = val.pageSize
+  // pagination.value.defaultPageSize = val.pageSize
 //   // 刷新列表
 //   getBaseList()
 // }
