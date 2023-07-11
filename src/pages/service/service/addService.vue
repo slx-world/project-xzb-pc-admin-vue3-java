@@ -33,6 +33,7 @@
               <t-input-number
                 theme="column"
                 :min="0"
+                :max="999"
                 v-model="formData.sortNum"
               ></t-input-number>
             </t-form-item>
@@ -213,7 +214,7 @@ const getData = async (val) => {
       ]
       formData.value.name = res.data.name
       formData.value.sortNum = res.data.sortNum
-    }else{
+    } else {
       MessagePlugin.error(res.msg)
     }
   })
@@ -233,29 +234,33 @@ const onSubmit = async (result: any) => {
       sortNum: formData.value.sortNum
     })
     if (id) {
-      await serviceItemEdit(data.value, id).then((res) => {
-        console.log(res);
-        if(res.data.code === 200){
-          MessagePlugin.success('修改成功')
-          handleBack()
-        }else{
-          MessagePlugin.error(res.data.msg)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+      await serviceItemEdit(data.value, id)
+        .then((res) => {
+          console.log(res)
+          if (res.data.code === 200) {
+            MessagePlugin.success('修改成功')
+            handleBack()
+          } else {
+            MessagePlugin.error(res.data.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     } else {
-      await serviceItemAdd(data.value).then((res) => {
-        console.log(res);
-        if(res.code === 200){
-          MessagePlugin.success('添加成功')
-          handleBack()
-        }else{
-          MessagePlugin.error(res.msg)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+      await serviceItemAdd(data.value)
+        .then((res) => {
+          console.log(res)
+          if (res.code === 200) {
+            MessagePlugin.success('添加成功')
+            handleBack()
+          } else {
+            MessagePlugin.error(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }
@@ -264,20 +269,22 @@ const onSubmit = async (result: any) => {
 const getServiceTypeSimpleList = async () => {
   await serviceTypeSimpleList({
     isActive: 1
-  }).then((res) => {
-    if (res.code == 200) {
-      typeSelect.value = res.data.map((item) => {
-      return {
-        label: item.name,
-        value: item.id
+  })
+    .then((res) => {
+      if (res.code == 200) {
+        typeSelect.value = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.id
+          }
+        })
+      } else {
+        MessagePlugin.error(res.msg)
       }
     })
-    }else{
-      MessagePlugin.error(res.msg)
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 // 上传图片失败
 const handleFail = (file) => {
@@ -337,6 +344,20 @@ const rules = ref({
       pattern: /^[0-9]*$/,
       message: '请输入数字',
       trigger: 'blur'
+    },
+    {
+      validator: (val) => {
+        // const reg = /^1[3456789]\d{9}$/
+        console.log(val, 'val')
+        if (Number(val) > 10000) {
+          return {
+            result: false,
+            message: '参考服务单价最大不超过10000',
+            type: 'error'
+          }
+        }
+        return true
+      }
     }
   ],
   sortNum: [
@@ -349,6 +370,20 @@ const rules = ref({
       pattern: /^[0-9]*$/,
       message: '请输入数字',
       trigger: 'blur'
+    },
+    {
+      validator: (val) => {
+        // const reg = /^1[3456789]\d{9}$/
+        console.log(val, 'val')
+        if (Number(val) > 999) {
+          return {
+            result: false,
+            message: '排序最大不超过999',
+            type: 'error'
+          }
+        }
+        return true
+      }
     }
   ],
   img: [

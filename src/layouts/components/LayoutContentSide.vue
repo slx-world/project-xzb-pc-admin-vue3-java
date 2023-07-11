@@ -72,9 +72,9 @@
       />
       <l-content />
     </t-content>
-    <div class="companyFooter">
+    <!-- <div class="companyFooter">
       Copyright @ 2019-2020 Tencent. All Rights Reserved
-    </div>
+    </div> -->
   </t-layout>
 </template>
 

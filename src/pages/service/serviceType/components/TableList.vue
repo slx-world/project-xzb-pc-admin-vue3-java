@@ -1,6 +1,6 @@
 <!-- 基础表格组件 -->
 <template>
-  <div class="baseList bg-wt">
+  <div class="baseList bg-wt min-h">
     <div class="tableBoxs">
       <div class="newBox">
         <button class="bt newBoxbutton" @click="handleBuild()">新建</button>

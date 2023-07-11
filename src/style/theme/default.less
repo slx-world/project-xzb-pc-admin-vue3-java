@@ -9,9 +9,9 @@
   --color-success: #27ba9b;
   --color-warning: #FFAB2E;
   --color-error: #e34d59;
-  --color-error1: #E8707A;
-  --color-error2: #cb2633;
-  --color-error3: #f0a5ab;
+  --color-error1: #FF6F72;
+  --color-error2: #DB3235;
+  --color-error3: #FFDBDC;
 
   --color-black: #000000;
   --color-bk1: #191919; // 重要颜色
@@ -20,9 +20,9 @@
   --color-bk4: #999999; // 次要颜色
   --color-bk5: #737373;
   --color-bk6: #bfbfbf;
-  --color-bk7: #e1e6f0;
-  --color-bk8: #cdd3e0;
-  --color-bk9: #ecf2fe;
+  --color-bk7: #E7E7E7;
+  --color-bk8: #DCDCDC;
+  --color-bk9: #ABABAB;
   --color-bk10: #FAFAFA; // 背景色
   --color-bk11:#d9e1eb;
 
@@ -34,7 +34,7 @@
 
   --color-active: #1C55CF;
   --color-hover: #3280FD;
-  --color-disable: #A7C9FF;
+  --color-disable: #F0A5AB;
 
   --color-font1:#737373;
   --color-font2:#727272;
@@ -98,6 +98,9 @@ a {
   &:active {
     background-color: var(--color-error2);
   }
+  &:disabled {
+    background-color: var(--color-error3);
+  }
 }
 
 .bt-grey {
@@ -110,10 +113,10 @@ a {
   }
 
   &:active {
-    background-color: #ababab;
+    background-color: var(--color-bk9);
   }
   &:disabled {
-    background-color: #ababab;
+    background-color: var(--color-bk9);
   }
 }
 
@@ -196,7 +199,7 @@ a {
 
 // 禁用样式
 .text-forbidden {
-  color: var(--color-bk4);
+  color: var(--color-disable);
   cursor: no-drop;
   pointer-events: none;
 
@@ -399,4 +402,8 @@ a {
 // 
 .t-checkbox__label{
   color: var(--color-bk3);
+}
+// 右面白色背景最小高度
+.min-h {
+  min-height: calc(100vh - 90px);
 }

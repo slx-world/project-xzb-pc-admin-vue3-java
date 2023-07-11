@@ -416,7 +416,7 @@ li.t-menu__item {
 
 // 表格行hover
 .t-table--hoverable tbody tr:hover {
-  background-color: var(--color-aux4);
+  background-color: var(--color-bk10);
 }
 
 .tableBoxs .t-table__body tr.t-table__empty-row:hover {
@@ -495,20 +495,20 @@ li.t-menu__item {
 // 状态0
 .status-dot-0 {
   &::before {
-    background-color: var(--color-bk4);
+    background-color: #0698FF;
   }
 }
 
 // 状态1
 .status-dot-1 {
   &::before {
-    background-color: var(--color-main);
+    background-color: var(--color-bk4);
   }
 }
 
 .status-dot-2 {
   &::before {
-    background-color: var(--color-success);
+    background-color: var(--color-error);
   }
 }
 
@@ -1134,7 +1134,7 @@ button {
 }
 
 .t-default-menu .t-menu__item:hover:not(.t-is-active):not(.t-is-disabled) {
-  background-color: #FFF6F6 !important;
+  // background-color: #FFF6F6 !important;
 
   svg {
     path {
@@ -1169,7 +1169,7 @@ button {
 }
 
 .t-menu__item.t-menu__item-spacer.t-menu__item-spacer--right.t-is-active {
-  background-color: #FFF6F6 !important;
+  background-color: var(--color-white)!important;
   color: var(--color-main);
 
   .t-menu__content {
@@ -1201,11 +1201,9 @@ button {
 
 .t-menu__item:hover:not(.t-is-active):not(.t-is-opened):not(.t-is-disabled) {
   background-color: transparent;
-  color: var(--color-main);
-}
-
-.t-menu__item:hover:not(.t-is-active):not(.t-is-opened):not(.t-is-disabled):not(.t-submenu__item) {
-  color: var(--color-main);
+  .t-menu__content{
+    color: var(--color-main);
+  }
 }
 
 .t-default-menu .t-menu__item:first-child {

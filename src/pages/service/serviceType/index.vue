@@ -1,6 +1,6 @@
 <!-- 基础列表页（带图） -->
 <template>
-  <div class="base-up-wapper bgTable">
+  <div class="base-up-wapper bgTable min-h">
     <!-- 搜索表单区域 -->
     <!-- <searchFormBox
       @handleSearch="handleSearch"
@@ -160,18 +160,20 @@ const handleEdit = (val) => {
 }
 // 确认删除
 const handleDelete = async () => {
-  await serviceTypeDelete(deleteId.value).then((res) => {
-    if (res.data.code === 200) {
-      dialogDeleteVisible.value = false
-      MessagePlugin.success('删除成功')
-      fetchData(requestData.value)
-    } else {
-      MessagePlugin.error(res.data.msg)
-      dialogDeleteVisible.value = false
-    }
-  }).catch((err) => {
-    console.log(err);
-  })
+  await serviceTypeDelete(deleteId.value)
+    .then((res) => {
+      if (res.data.code === 200) {
+        dialogDeleteVisible.value = false
+        MessagePlugin.success('删除成功')
+        fetchData(requestData.value)
+      } else {
+        MessagePlugin.error(res.data.msg)
+        dialogDeleteVisible.value = false
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 // 点击删除
 const handleClickDelete = (row) => {
@@ -220,7 +222,7 @@ const handleSubmit = async (val) => {
         MessagePlugin.success('编辑成功')
         fetchData(requestData.value)
         dialogForm.value.onClickCloseBtn()
-      }else{
+      } else {
         MessagePlugin.error(res.data.msg)
       }
     })
@@ -230,7 +232,7 @@ const handleSubmit = async (val) => {
         fetchData(requestData.value)
         MessagePlugin.success('新增成功')
         dialogForm.value.onClickCloseBtn()
-      }else{
+      } else {
         MessagePlugin.error(res.msg)
       }
     })

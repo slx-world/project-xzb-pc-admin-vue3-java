@@ -78,11 +78,11 @@ export const COLUMNS = [
           label: '下架'
         },
       }  
-      const status = row.saleStatus === 2 ? '1' : 0
+      // const status = row.saleStatus === 2 ? '1' : 0
       return h(
         'span',
         {
-          class: `status-dot status-dot-${status}`
+          class: `status-dot status-dot-${row.saleStatus}`
         },
         statusList[row.saleStatus].label
       )

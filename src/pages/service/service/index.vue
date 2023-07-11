@@ -1,7 +1,7 @@
 <!-- 基础列表页（带图） -->
 <template>
   <router-view v-if="url !== '/service/ServiceList'"></router-view>
-  <div v-else class="base-up-wapper bgTable">
+  <div v-else class="base-up-wapper bgTable min-h">
     <!-- 搜索表单区域 -->
     <searchFormBox
       :initSearch="initSearch"
@@ -127,28 +127,32 @@ const handleReset = () => {
 }
 // 获取服务类型下拉框数据
 const getServiceTypeSimpleList = async () => {
-  await serviceTypeSimpleList().then((res) => {
-    if (res.code === 200) {
-      typeSelect.value = res.data
-    }else{
-      MessagePlugin.error(res.message)
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+  await serviceTypeSimpleList()
+    .then((res) => {
+      if (res.code === 200) {
+        typeSelect.value = res.data
+      } else {
+        MessagePlugin.error(res.message)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 // 获取列表数据
 const fetchData = async (val) => {
   dataLoading.value = true
-  await serviceItemList(val).then((res) => {
-    if (res.code === 200) {
-      listData.value = res.data.list
-    pagination.value.total = Number(res.data.total)
-    dataLoading.value = false
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+  await serviceItemList(val)
+    .then((res) => {
+      if (res.code === 200) {
+        listData.value = res.data.list
+        pagination.value.total = Number(res.data.total)
+        dataLoading.value = false
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 // 关闭弹窗
 const handleClose = () => {
@@ -176,26 +180,28 @@ const handleSetupContract = (val, id) => {
 }
 // 确认上下架
 const handleConfirm = async () => {
-  await serviceItemStatus(setupContractData.value).then((res) => {
-    if(res.data.code === 200){
-      dialogConfirmVisible.value = false
-      MessagePlugin.success('操作成功')
-      fetchData(requestData.value)
-    }else{
-      MessagePlugin.error(res.data.msg)
-    }
-  }).catch((err) => {
-    console.log(err);
-  })
+  await serviceItemStatus(setupContractData.value)
+    .then((res) => {
+      if (res.data.code === 200) {
+        dialogConfirmVisible.value = false
+        MessagePlugin.success('操作成功')
+        fetchData(requestData.value)
+      } else {
+        MessagePlugin.error(res.data.msg)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 // 确认删除
 const handleDelete = async () => {
   await serviceItemDelete(deleteId.value).then((res) => {
-    if(res.code === 200){
+    if (res.code === 200) {
       dialogDeleteVisible.value = false
       MessagePlugin.success('删除成功')
       fetchData(requestData.value)
-    }else{
+    } else {
       MessagePlugin.error(res.msg)
     }
   })
@@ -208,16 +214,16 @@ const handleClickDelete = (row) => {
 // 排序
 const handleSortChange = (val) => {
   forEach(val, (item) => {
-    if(item.sortBy ==='sortNum'){
-      if(item.descending === true){
+    if (item.sortBy === 'sortNum') {
+      if (item.descending === true) {
         requestData.value.isAsc1 = false
-      }else{
+      } else {
         requestData.value.isAsc1 = true
       }
-    }else{
-      if(item.descending === true){
+    } else {
+      if (item.descending === true) {
         requestData.value.isAsc2 = false
-      }else{
+      } else {
         requestData.value.isAsc2 = true
       }
     }
