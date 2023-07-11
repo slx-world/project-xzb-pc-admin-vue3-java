@@ -6,7 +6,7 @@ export const COLUMNS = [
     minWidth: '70px',
     colKey: 'cityCode'
   },
-  { title: '区域名称', width: 150, minWidth: '150px', colKey: 'name' },
+  { title: '区域名称', width: 200, minWidth: '200px', colKey: 'name' },
   { title: '区域负责人', width: 150, minWidth: '150px', colKey: 'managerName' },
   { title: '联系电话', width: 300, colKey: 'managerPhone' },
   {

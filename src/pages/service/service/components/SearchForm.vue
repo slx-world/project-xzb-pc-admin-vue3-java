@@ -15,9 +15,9 @@
           </t-form-item>
         </t-col>
         <t-col>
-          <t-form-item label="服务类型：" name="status">
+          <t-form-item label="服务类型：" name="serveTypeId">
             <t-select
-              v-model="formData.id"
+              v-model="formData.serveTypeId"
               class="form-item-content"
               :options="typeSelectList"
               placeholder="请选择"
@@ -67,7 +67,7 @@ const props = defineProps({
 const typeSelectList = ref([])
 // 表单数据
 const formData = ref({
-  id: '',
+  serveTypeId: '',
   name: '',
   isActive: ''
 })
@@ -75,13 +75,14 @@ const formData = ref({
 const emit: Function = defineEmits(['handleSearch', 'handleReset'])
 // 表单数据
 const searchForm = {
-  id: '',
+  serveTypeId: '',
   name: '',
   isActive: ''
 }
 // 重置表单
 const handleReset = () => {
   formData.value = { ...searchForm }
+  emit('handleSearch', formData.value)
 }
 // 搜索表单
 const handleSearch = () => {
@@ -90,7 +91,7 @@ const handleSearch = () => {
 watchEffect(()=>{
   if(props.initSearch){
     console.log(props.initSearch,'props.initSearch');
-    formData.value.id = props.initSearch.toString()
+    formData.value.serveTypeId = props.initSearch.toString()
   }
   typeSelectList.value = props.typeSelect.map((item) => {
     return {

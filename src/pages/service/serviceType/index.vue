@@ -162,7 +162,7 @@ const handleEdit = (val) => {
 const handleDelete = async () => {
   await serviceTypeDelete(deleteId.value)
     .then((res) => {
-      if (res.data.code === 200) {
+      if (res.code === 200) {
         dialogDeleteVisible.value = false
         MessagePlugin.success('删除成功')
         fetchData(requestData.value)

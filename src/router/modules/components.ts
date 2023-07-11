@@ -12,7 +12,7 @@ const normalRouter = [
     component: Layout,
     redirect: '/service/serviceType',
     meta: {
-      title: '服务项管理',
+      title: '服务管理',
       icon: serviceIcon
     },
     children: [

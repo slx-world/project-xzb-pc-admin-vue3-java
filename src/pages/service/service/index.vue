@@ -249,11 +249,11 @@ watchEffect(() => {
   if (!initSearch.value && route.query.id) {
     initSearch.value = route.query.id
     requestData.value.serveTypeId = initSearch.value
+    fetchData(requestData.value)
     router.replace({
       path: route.path,
       query: {}
     })
-    fetchData(requestData.value)
   }
 })
 </script>
