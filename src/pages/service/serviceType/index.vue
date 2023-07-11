@@ -160,8 +160,8 @@ const handleEdit = (val) => {
 }
 // 确认删除
 const handleDelete = async () => {
-  await serviceTypeDelete(deleteId.value).then((res) => {
-    if (res.data.code === 200) {
+  await serviceTypeDelete(deleteId.value).then((res) => { 
+    if (res.code === 200) {
       dialogDeleteVisible.value = false
       MessagePlugin.success('删除成功')
       fetchData(requestData.value)
