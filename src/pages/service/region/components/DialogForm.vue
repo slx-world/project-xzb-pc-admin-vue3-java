@@ -18,17 +18,15 @@
         @submit="onSubmit"
       >
         <t-form-item label="区域选择：" name="cityCode">
-          <t-select
-            placeholder="请选择"
-            filterable
-            :disabled="edit"
-            v-model="formData.cityCode"
-            :options="options"
-            :scroll="{ type: 'virtual' }"
-            class="wt-400"
-            @change="(e)=>onChangeCity(e)"
-            :popup-props="{ overlayInnerStyle: { height: '300px' },bufferSize:'100' }"
-          />
+          <t-cascader
+              v-model="formData.cityCode"
+              class="form-item-content wt-400"
+              placeholder="请选择"
+              :style="{ minWidth: '134px' }"
+              clearable
+              @change="(value,context)=>onChangeCity(value,context)"
+              :options="options"
+            />
         </t-form-item>
         <t-form-item label="区域负责人：" name="managerName">
           <t-input
@@ -127,9 +125,10 @@ const onClickCloseBtn = () => {
   formVisible.value = false
   emit('handleClose')
 }
-const onChangeCity = (e) => {
-  formData.value.cityCode = e
-  formData.value.name = options.value.find((item) => item.value === e).label
+const onChangeCity = (value,context) => {
+  console.log(value,context);
+  formData.value.cityCode = value
+  formData.value.name = context.node.label
   console.log(formData.value);
 }
 // 点击叉号关闭
