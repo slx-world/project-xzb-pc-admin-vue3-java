@@ -33,6 +33,7 @@
         font-size: 14px;
         color: var(--color-bk3);
         display: flex;
+        align-items: center;
         .baseInfo{
           padding: 2px 6px;
             // 头像大小
@@ -54,12 +55,17 @@
           top: 10px;
         }
         .logoutBox {
-          padding: 2px;
-          height: 24px;
-          top: 5px;
-          position: relative;
+          width: 36px;
+          height: 36px;
+          display: flex;
              // 退出
           .header-user-logout{
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
             .icon{
               position: relative;
               bottom: 3px;
@@ -68,15 +74,15 @@
         }
       }
       .header-user-list{
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         text-align: center;
-        line-height: 32px;
+        line-height: 36px;
+        display: flex;
+        justify-content: center;
       }
   
       .header-user-list>span{
-        height: 32px;
-        width: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -96,11 +102,16 @@
       padding: 0;
       .header-user-logout {
         padding: 2px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       div {
         flex-direction: column;
         div {
-          margin-bottom: 7px;
+          margin-bottom: 10px;
           height: 100%;
           line-height: normal;
         }
@@ -121,7 +132,7 @@
 
     .navUserCont{
       margin-left: 0px;
-      height: 102px;
+      // height: 102px;
       border:none;
       padding-top: 5px;
       .fx-sb{

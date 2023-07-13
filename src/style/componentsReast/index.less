@@ -44,7 +44,7 @@ li.t-menu__item {
 
     .t-menu__item.t-is-active,
     .t-menu__item:hover {
-      background-color: #FFF6F6 !important;
+      background-color: var(--color-bk12) !important;
     }
   }
 }
@@ -1074,14 +1074,14 @@ button {
 // 侧边栏选中状态
 .t-default-menu .t-menu__item.t-is-opened.t-is-active {
   color: var(--color-black);
-  background-color: var(--color-bk11);
+  // background-color: var(--color-bk11);
 }
 
 .t-default-menu .t-menu__item.t-is-opened {
   margin-bottom: 0;
 
   &:hover {
-    background-color: transparent !important;
+    // background-color: transparent !important;
     color: var(--color-main);
   }
 }
@@ -1097,15 +1097,32 @@ button {
 
 // 下层被选中状态(二级菜单)
 .t-default-menu .t-menu__item.t-submenu__item.t-is-active:not(.t-is-opened) {
-  background: #FFF6F6;
+  background: var(--color-bk12);
+  color: var(--color-main);
+  border-right: 4px solid var(--color-main) !important;
+}
+.czri-sidebar-compact .t-default-menu .t-menu__item.t-is-active:not(.t-is-opened){
+  border-right: none;
+}
+.t-default-menu .t-menu__item.t-is-active:not(.t-is-opened){
+  background: var(--color-bk12);
   color: var(--color-main);
   border-right: 4px solid var(--color-main);
-}
+  .t-menu__content {
+    font-weight: 500;
+    color: var(--color-main) !important;
+  }
 
+  .t-icon {
+    path {
+      stroke: var(--color-main);
+    }
+  }
+}
 // 下层被选中状态(一级菜单)
-.t-default-menu .t-menu__item.t-is-active:not(.t-is-opened) {
-  background-color: #FFF6F6;
-  border-right: 4px solid var(--color-main);
+.t-default-menu .t-submenu .t-menu__item.t-is-active:not(.t-is-opened) {
+  background-color: var(--color-bk12);
+  border-right: none;
 
   .t-menu__content {
     font-weight: 500;
@@ -1134,7 +1151,7 @@ button {
 }
 
 .t-default-menu .t-menu__item:hover:not(.t-is-active):not(.t-is-disabled) {
-  // background-color: #FFF6F6 !important;
+  // background-color: var(--color-bk12) !important;
 
   svg {
     path {
@@ -1163,13 +1180,16 @@ button {
 
 // 侧边栏选中样式
 .t-menu__popup .t-menu__item.t-is-active {
-  background-color: #FFF6F6;
+  background-color: var(--color-bk12);
   height: 28px;
   color: var(--color-main);
+  .t-menu__content{
+    color: var(--color-main);
+  }
 }
 
 .t-menu__item.t-menu__item-spacer.t-menu__item-spacer--right.t-is-active {
-  background-color: var(--color-white)!important;
+  // background-color: var(--color-white);
   color: var(--color-main);
 
   .t-menu__content {
@@ -1651,12 +1671,12 @@ button {
   cursor: pointer;
 
   &:hover {
-    background: var(--color-border);
+    background: #eaeaea;
     border-radius: 3px;
   }
 
   &:active {
-    background: var(--color-border);
+    background: #eaeaea;
     border-radius: 3px;
   }
 }
@@ -1894,7 +1914,7 @@ button {
 // 次级联选框的样式
 .t-cascader__item.t-is-expanded {
   color: var(--color-main);
-  background-color: #FFF6F6;
+  background-color: var(--color-bk12);
 }
 
 .t-cascader__item.t-is-expanded .t-icon-chevron-right {
@@ -1943,7 +1963,7 @@ button {
   color: var(--color-main);
 }
 .t-cascader__item:hover:not(.t-is-expanded):not(.t-is-disabled){
-  background-color: #FFF6F6;
+  background-color: var(--color-bk12);
 }
 .t-select__wrap{
   height: 32px;

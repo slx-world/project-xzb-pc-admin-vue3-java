@@ -414,20 +414,6 @@ const rules = ref({
       trigger: 'blur'
     }
   ],
-  description: [
-    {
-      required: true,
-      message: '请输入服务描述',
-      trigger: 'blur'
-    },
-    {
-      min: 1,
-      max: 500,
-      validator: validateText500,
-      message: '服务描述格式错误，请输入1-500个汉字，请重新输入服务描述',
-      trigger: 'blur'
-    }
-  ],
   detailImg: [
     {
       required: true,
