@@ -90,6 +90,9 @@ a {
   text-align: center;
   cursor: pointer;
   user-select: none;
+  &:focus{
+    outline:none
+  }
 
   &:hover {
     background-color: var(--color-error1);
@@ -405,5 +408,6 @@ a {
 }
 // 右面白色背景最小高度
 .min-h {
-  min-height: calc(100vh - 90px);
+  // min-height: calc(100vh - 90px);
+  min-height: 720px;
 }
