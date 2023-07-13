@@ -11,7 +11,7 @@
           />
           <span class="header-user-name">Admin</span>
         </div>
-        <!-- <span v-if="setting.layout.value === 'side'" class="splitLine"></span> -->
+        <span v-if="setting.layout.value === 'side'" class="splitLine"></span>
         <div class="logoutBox btn-hover-active" @click="handleLogout">
           <span class="header-user-logout"
             ><svg
