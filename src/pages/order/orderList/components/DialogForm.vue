@@ -18,48 +18,12 @@
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="手机号：" name="phoneNumber">
-          <t-input
-            v-model="formData.phoneNumber"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-          />
-        </t-form-item>
-        <t-form-item label="调用次数：" name="serviceCallNumber">
-          <t-input
-            v-model="formData.serviceCallNumber"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-          >
-            <template #suffix>
-              <span class="company">次</span>
-            </template>
-          </t-input>
-        </t-form-item>
-        <t-form-item label="昵称：" name="name">
-          <t-input
-            v-model="formData.name"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-            @change="Wordlimit(10)"
-          >
-            <template #suffix>
-              <span class="nickname">
-                <span>{{ formData.name ? formData.name.length : 0 }}</span
-                >/10</span
-              >
-            </template>
-          </t-input>
-        </t-form-item>
-        <t-form-item label="产品描述：" name="description"
+        <t-form-item :label="formLabel" name="description"
           ><t-textarea
             v-model="formData.description"
             class="wt-400"
             placeholder="请输入至少5个字符"
-            :maxlength="50"
+            :maxlength="100"
           >
           </t-textarea>
         </t-form-item>
@@ -80,10 +44,7 @@
 import { ref, watch } from 'vue'
 import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
 import {
-  validateNum,
   validateText,
-  validateText10,
-  validatePhone
 } from '@/utils/validate'
 
 const props = defineProps({
@@ -97,6 +58,10 @@ const props = defineProps({
       return {}
     }
   },
+  label:{
+    type: String,
+    default: '退款原因：'
+  },
   title: {
     type: String,
     default: '新建产品'
@@ -104,6 +69,7 @@ const props = defineProps({
 })
 // 重置表单
 const resetType = ref('empty')
+const formLabel = ref('退款原因：')
 // 表单
 const form = ref()
 // 触发父级事件
@@ -122,17 +88,6 @@ const title = ref()
 // 提交表单
 const onSubmit = (result: ValidateResultContext<FormData>) => {
   if (result.validateResult === true) {
-    // 判断内容时否发生改变
-    // if (
-    //   formData.value.serviceCallNumber === props.data.serviceCallNumber &&
-    //   formData.value.description === props.data.description &&
-    //   formData.value.phoneNumber === props.data.phoneNumber &&
-    //   formData.value.name === props.data.name
-    // ) {
-    //   MessagePlugin.warning('内容未发生改变')
-    //   console.log(formData.value)
-    //   console.log(props.data)
-    // } else {
     MessagePlugin.success('提交成功')
     emit('fetchData')
     onClickCloseBtn()
@@ -150,9 +105,9 @@ const onClickCloseBtn = () => {
 watch(
   () => props.visible,
   () => {
-
     formVisible.value = props.visible
     title.value = props.title
+    formLabel.value = props.label
   }
 )
 // 监听器，监听父级传递的data值，控制表单数据
@@ -163,66 +118,9 @@ watch(
   }
 )
 
-// 字数限制
-const Wordlimit: Function = (num: number) => {
-  if (formData.value.name.length > num) {
-    formData.value.name = formData.value.name.slice(0, num)
-  }
-}
 
 // 表单校验
 const rules = {
-  phoneNumber: [
-    // 手机号校验
-    {
-      required: true,
-      message: '请输入手机号',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validatePhone,
-      message: '请输入正确格式的手机号',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
-  serviceCallNumber: [
-    // 调用次数校验
-    {
-      required: true,
-      message: '请输入调用次数',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
-      type: 'error',
-      trigger: 'change'
-    },
-    {
-      validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
-  name: [
-    // 昵称校验
-    {
-      required: true,
-      message: '请输入昵称',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validateText10,
-      message: '请输入至少2个字符,至多10个字符',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
   description: [
     {
       required: true,

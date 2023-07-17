@@ -4,6 +4,8 @@ import FormIcon from '@/assets/test-img/icon_menu_cheliang.svg'
 import GrzxIcon from '@/assets/test-img/icon_menu_grzx.svg'
 import orderIcon from '@/assets/test-img/icon_ddgl_nor.svg'
 import DetailIcon from '@/assets/test-img/icon_xq.svg'
+import personnelIcon from '@/assets/test-img/icon_fwry_nor.svg'
+import institutionIcon from '@/assets/test-img/icon_jggl_nor.svg'
 import serviceIcon from '@/assets/test-img/icon_menu_service.svg'
 
 const normalRouter = [
@@ -71,7 +73,14 @@ const normalRouter = [
               title: '设置服务'
             }
           },
-  
+          {
+            path:'setBusiness/:id',
+            name:'setBusiness',
+            component: () => import('@/pages/service/region/setBusiness.vue'),
+            meta: {
+              title: '业务配置'
+              }
+          }
         ]
       }
     ]
@@ -114,6 +123,70 @@ const normalRouter = [
           title: '任务列表',
           singles: true
         },
+      },
+    ]
+  },
+  {
+    path: '/institution',
+    name: 'institution',
+    component: Layout,
+    redirect: '/institution/information',
+    meta: {
+      title: '服务机构管理',
+      icon: institutionIcon
+    },
+    children: [
+      {
+        path: 'information',
+        name: 'institutionInformation',
+        component: () => import('@/pages/institution/information/index.vue'),
+        meta: {
+          title: '服务机构信息管理',
+          // 用来修改当出现子菜单在active状态不会激活父元素的active状态
+          singles: true
+        },
+        children: [
+          {
+            path: 'informationDetail/:id',
+            name: 'institutionInformationDetail',
+            component: () => import('@/pages/institution/information/informationDetail.vue'),
+            meta: {
+              title: '服务机构详情'
+            }
+          },
+        ]
+      },
+    ]
+  },
+  {
+    path: '/personnel',
+    name: 'personnel',
+    component: Layout,
+    redirect: '/personnel/information',
+    meta: {
+      title: '服务人员管理',
+      icon: personnelIcon
+    },
+    children: [
+      {
+        path: 'information',
+        name: 'personnelInformation',
+        component: () => import('@/pages/personnel/information/index.vue'),
+        meta: {
+          title: '服务人员信息管理',
+          // 用来修改当出现子菜单在active状态不会激活父元素的active状态
+          singles: true
+        },
+        children: [
+          {
+            path: 'informationDetail/:id',
+            name: 'informationDetail',
+            component: () => import('@/pages/personnel/information/informationDetail.vue'),
+            meta: {
+              title: '服务人员详情详情'
+            }
+          },
+        ]
       },
     ]
   },

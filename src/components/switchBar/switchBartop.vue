@@ -21,14 +21,14 @@ import Type from './type'
 // 父组件传值
 const props = defineProps({
   data: {
-    type: Array<Type>,
-    default: []
+    type: Array as () => Type[],
+    default: () => [],
   }
 })
 // 触发父组件事件
 const emit: Function = defineEmits(['changeId'])
 // 当前选中id
-const currentId = ref(2)
+const currentId = ref(props.data[0].id)
 // 点击切换
 const changeId = (id) => {
   currentId.value = id

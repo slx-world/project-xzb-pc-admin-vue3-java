@@ -1,5 +1,5 @@
 export default interface Type {
   id: any
   name: string
-  value?: number
+  value?: any
 }

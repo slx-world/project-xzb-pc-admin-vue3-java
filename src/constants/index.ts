@@ -55,3 +55,11 @@ export const UNIT = [
   { value: 6, label: '㎡' },
   { value: 7, label: '米' },
 ]
+// 冻结时间
+export const FREEZE_TIME = [
+  { value:0, label: '3天' },
+  { value:1, label: '7天' },
+  { value:2, label: '30天' },
+  { value:3, label: '360天' },
+  { value:4, label: '永久' },
+]

@@ -13,46 +13,35 @@
         ref="form"
         :data="formData"
         :rules="rules"
+        :label-width="80"
         on-cancel="onClickCloseBtn"
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="区域选择：" name="cityCode">
-          <t-cascader
-              v-model="formData.cityCode"
-              class="form-item-content wt-400"
-              placeholder="请选择"
-              :disabled="edit"
-              :style="{ minWidth: '134px' }"
-              clearable
-              @change="(value,context)=>onChangeCity(value,context)"
-              :options="options"
-            />
-        </t-form-item>
-        <t-form-item label="区域负责人：" name="managerName">
-          <t-input
-            v-model="formData.managerName"
+        <t-form-item label="冻结原因：" name="phoneNumber">
+          <t-select
+            v-model="formData.serveTypeId"
             class="wt-400"
-            placeholder="请输入"
+            :options="FREEZE_TIME"
+            placeholder="请选择"
             clearable
-          >
-          </t-input>
+          ></t-select>
         </t-form-item>
-        <t-form-item label="联系电话：" name="managerPhone">
-          <t-input
-            v-model="formData.managerPhone"
+        <t-form-item label="详细原因：" name="description"
+          ><t-textarea
+            v-model="formData.description"
             class="wt-400"
-            placeholder="请输入"
-            clearable
+            placeholder="请输入至少5个字符"
+            :maxlength="50"
           >
-          </t-input>
+          </t-textarea>
         </t-form-item>
         <t-form-item style="float: right">
           <div class="bt bt-grey btn-submit" @click="onClickCloseBtn">
             <span>取消</span>
           </div>
           <button theme="primary" type="submit" class="bt btn-submit">
-            <span>保存</span>
+            <span>确定</span>
           </button>
         </t-form-item>
       </t-form>
@@ -62,37 +51,29 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import {  ValidateResultContext } from 'tdesign-vue-next'
+import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
+import { FREEZE_TIME } from '@/constants'
 import {
   validateNum,
   validateText,
   validateText10,
   validatePhone
 } from '@/utils/validate'
+
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false
   },
-  formData: {
+  data: {
     type: Object,
     default: () => {
       return {}
     }
   },
-  edit: {
-    type: Boolean,
-    default: false
-  },
   title: {
     type: String,
     default: '新建产品'
-  },
-  cityList:{
-    type:Array,
-    default:()=>{
-      return []
-    }
   }
 })
 // 重置表单
@@ -100,23 +81,36 @@ const resetType = ref('empty')
 // 表单
 const form = ref()
 // 触发父级事件
-const emit: Function = defineEmits(['handleClose', 'confirmEdit'])
+const emit: Function = defineEmits(['handleClose', 'fetchData'])
 // 弹窗
 const formVisible = ref(false)
 // 表单数据
 const formData = ref({
-  cityCode: '',
+  phoneNumber: '',
+  serviceCallNumber: '',
   name: '',
-  managerPhone: '',
-  managerName: ''
+  description: '',
+  serveTypeId: ''
 })
-const options = ref([])
 // 弹窗标题
 const title = ref()
 // 提交表单
 const onSubmit = (result: ValidateResultContext<FormData>) => {
   if (result.validateResult === true) {
-    emit('confirmEdit', formData.value)
+    // 判断内容时否发生改变
+    // if (
+    //   formData.value.serviceCallNumber === props.data.serviceCallNumber &&
+    //   formData.value.description === props.data.description &&
+    //   formData.value.phoneNumber === props.data.phoneNumber &&
+    //   formData.value.name === props.data.name
+    // ) {
+    //   MessagePlugin.warning('内容未发生改变')
+    //   console.log(formData.value)
+    //   console.log(props.data)
+    // } else {
+    MessagePlugin.success('提交成功')
+    emit('fetchData')
+    onClickCloseBtn()
   }
 }
 // 点击取消关闭
@@ -126,44 +120,34 @@ const onClickCloseBtn = () => {
   formVisible.value = false
   emit('handleClose')
 }
-const onChangeCity = (value,context) => {
-  console.log(value,context);
-  formData.value.cityCode = value
-  formData.value.name = context.node.label
-  console.log(formData.value);
-}
 // 点击叉号关闭
 // 监听器，监听父级传递的visible值，控制弹窗显示隐藏
 watch(
   () => props.visible,
   () => {
-    if(props.edit){
-      formData.value = JSON.parse(JSON.stringify(props.formData))
-    }else{
-      form.value.reset()
-    }
     formVisible.value = props.visible
     title.value = props.title
-    // 一次100条数据，分多次添加
-    options.value = props.cityList
+  }
+)
+// 监听器，监听父级传递的data值，控制表单数据
+watch(
+  () => props.data,
+  (val) => {
+    formData.value = JSON.parse(JSON.stringify(val))
   }
 )
 
-// 监听器，监听父级传递的data值，控制表单数据
+// 字数限制
+const Wordlimit: Function = (num: number) => {
+  if (formData.value.name.length > num) {
+    formData.value.name = formData.value.name.slice(0, num)
+  }
+}
 
 // 表单校验
 const rules = {
-  cityCode: [
+  phoneNumber: [
     // 手机号校验
-    {
-      required: true,
-      message: '请选择区域',
-      type: 'error',
-      trigger: 'change'
-    },
-  ],
-  managerPhone: [
-    // 调用次数校验
     {
       required: true,
       message: '请输入手机号',
@@ -174,20 +158,35 @@ const rules = {
       validator: validatePhone,
       message: '请输入正确格式的手机号',
       type: 'error',
+      trigger: 'blur'
+    }
+  ],
+  serviceCallNumber: [
+    // 调用次数校验
+    {
+      required: true,
+      message: '请输入调用次数',
+      type: 'error',
+      trigger: 'blur'
+    },
+    {
+      validator: validateNum,
+      message: '请输入正确格式的调用次数，0-999',
+      type: 'error',
       trigger: 'change'
     },
     {
-      validator: validatePhone,
-      message: '请输入正确格式的手机号',
+      validator: validateNum,
+      message: '请输入正确格式的调用次数，0-999',
       type: 'error',
       trigger: 'blur'
     }
   ],
-  managerName: [
+  name: [
     // 昵称校验
     {
       required: true,
-      message: '请输入姓名',
+      message: '请输入昵称',
       type: 'error',
       trigger: 'blur'
     },
@@ -198,11 +197,27 @@ const rules = {
       trigger: 'blur'
     }
   ],
+  description: [
+    {
+      required: true,
+      message: '请输入详细原因',
+      type: 'error',
+      trigger: 'blur'
+    },
+    {
+      validator: validateText,
+      message: '请输入至少5个字符,至多50个字符',
+      type: 'error',
+      trigger: 'change'
+    },
+    {
+      validator: validateText,
+      message: '请输入至少5个字符,至多50个字符',
+      type: 'error',
+      trigger: 'blur'
+    }
+  ]
 }
-// 暴露给父级的方法
-defineExpose({
-  onClickCloseBtn
-})
 </script>
 <style lang="less" scoped>
 .btn-submit {
@@ -220,4 +235,3 @@ defineExpose({
   right: 10px;
 }
 </style>
-../city

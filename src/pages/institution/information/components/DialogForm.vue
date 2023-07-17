@@ -18,40 +18,16 @@
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="服务类型：" name="phoneNumber">
-          <t-input
-            v-model="formData.phoneNumber"
+        <t-form-item label="冻结原因：" name="phoneNumber">
+          <t-select
+            v-model="formData.serveTypeId"
             class="wt-400"
-            placeholder="请输入"
+            :options="FREEZE_TIME"
+            placeholder="请选择"
             clearable
-          />
+          ></t-select>
         </t-form-item>
-        <t-form-item label="排序：" name="serviceCallNumber">
-          <t-input
-            v-model="formData.serviceCallNumber"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-          >
-          </t-input>
-        </t-form-item>
-        <t-form-item label="昵称：" name="name">
-          <t-input
-            v-model="formData.name"
-            class="wt-400"
-            placeholder="请输入"
-            clearable
-            @change="Wordlimit(10)"
-          >
-            <template #suffix>
-              <span class="nickname">
-                <span>{{ formData.name ? formData.name.length : 0 }}</span
-                >/10</span
-              >
-            </template>
-          </t-input>
-        </t-form-item>
-        <t-form-item label="产品描述：" name="description"
+        <t-form-item label="详细原因：" name="description"
           ><t-textarea
             v-model="formData.description"
             class="wt-400"
@@ -76,6 +52,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
+import { FREEZE_TIME } from '@/constants'
 import {
   validateNum,
   validateText,
@@ -112,7 +89,8 @@ const formData = ref({
   phoneNumber: '',
   serviceCallNumber: '',
   name: '',
-  description: ''
+  description: '',
+  serveTypeId: ''
 })
 // 弹窗标题
 const title = ref()
@@ -165,6 +143,7 @@ const Wordlimit: Function = (num: number) => {
     formData.value.name = formData.value.name.slice(0, num)
   }
 }
+
 // 表单校验
 const rules = {
   phoneNumber: [
@@ -221,7 +200,7 @@ const rules = {
   description: [
     {
       required: true,
-      message: '请输入产品描述',
+      message: '请输入详细原因',
       type: 'error',
       trigger: 'blur'
     },

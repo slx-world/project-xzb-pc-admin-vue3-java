@@ -20,10 +20,11 @@ export const COLUMNS = [
   {
     align: 'left',
     fixed: 'right',
-    width: 185,
-    minWidth: '185px',
+    width: 260,
+    minWidth: '260px',
     colKey: 'op',
     title: '操作'
   }
 ]
+
 
