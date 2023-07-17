@@ -1,0 +1,127 @@
+<template>
+  <div>
+    <t-dialog
+      :closeBtn="false"
+      :preventScrollThrough="false"
+      :header="false"
+      :footer="false"
+      :on-overlay-click="onOverlayClick"
+      v-model:visible="visible"
+    >
+      <div class="headBox">{{data?.title}}</div>
+      <div class="Box">
+        <div class="bodyBox">
+          <img :src="data?.img" alt="" class="img" />
+          <div class="titleBox">
+            <div>{{data?.title}}</div>
+            <img src="@/assets/test-img/cutter@2x.png" alt="">
+          </div>
+          <img :src="data?.detailImg" alt="" class="img" >
+        </div>
+      </div>
+    </t-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+
+const props = defineProps({
+  previewData: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  previewVisible: {
+    type: Boolean,
+    default: false
+  }
+})
+const  emit  = defineEmits(['handleClose'])
+const visible = ref(false)
+const data = ref()
+const onOverlayClick = () => {
+  emit('handleClose')
+}
+watch(props, () => {
+  visible.value = props.previewVisible
+  data.value = props.previewData
+})
+</script>
+
+<style lang="less" scoped>
+:deep(.t-dialog__header) {
+  display: none;
+}
+:deep(.t-dialog__body) {
+  background-color: transparent;
+  padding: 51.4px 22px 21px;
+  width: 318px;
+  height: 634px;
+  background-image: url('@/assets/test-img/img_mobile@2x.png');
+  background-size: 100% 100%;
+  // 滚动条隐藏
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  .headBox {
+    background-color: #fff;
+    width: 274.5px;
+    height: 35px;
+    line-height: 35px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    font-size: 13px;
+    color: #0f0f0f;
+    text-align: center;
+  }
+  .Box {
+    height: 529px;
+    overflow: auto;
+    border-bottom-right-radius: 26px;
+    border-bottom-left-radius: 26px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .bodyBox {
+      background-color: #f8f8f8;
+      .img {
+        width: 274.5px;
+        height: auto;
+        border-radius: 0;
+        margin-right: 0;
+      }
+      .titleBox {
+        width: 274.5px;
+        height: 56px;
+        line-height: 56px;
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        font-size: 15px;
+        padding-left: 15px;
+        padding-right: 15px;
+        color: #0f0f0f;
+        background-color: #fff;
+        margin-top: -6px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        img{
+          width: 83px;
+          height: 27px;
+        }
+      }
+    }
+  }
+}
+:deep(.t-dialog) {
+  width: auto;
+  border: none;
+  background: transparent;
+}
+:deep(.t-dialog__ctx .t-dialog__position.t-dialog--top){
+  padding-top: 10vh;
+}
+</style>

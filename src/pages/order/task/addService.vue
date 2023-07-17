@@ -226,9 +226,6 @@ const getData = async (val) => {
       ]
       formData.value.name = res.data.name
       formData.value.sortNum = res.data.sortNum
-      previewData.title = res.data.name
-      previewData.img = res.data.img
-      previewData.detailImg = res.data.detailImg
     } else {
       MessagePlugin.error(res.msg)
     }

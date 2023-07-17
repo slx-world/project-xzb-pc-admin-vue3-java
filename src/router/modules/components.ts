@@ -2,6 +2,7 @@ import Layout from '@/layouts/index.vue'
 import ListIcon from '@/assets/test-img/icon_menu_shuju.svg'
 import FormIcon from '@/assets/test-img/icon_menu_cheliang.svg'
 import GrzxIcon from '@/assets/test-img/icon_menu_grzx.svg'
+import orderIcon from '@/assets/test-img/icon_ddgl_nor.svg'
 import DetailIcon from '@/assets/test-img/icon_xq.svg'
 import serviceIcon from '@/assets/test-img/icon_menu_service.svg'
 
@@ -73,6 +74,47 @@ const normalRouter = [
   
         ]
       }
+    ]
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: Layout,
+    redirect: '/order/orderList',
+    meta: {
+      title: '订单管理',
+      icon: orderIcon
+    },
+    children: [
+      {
+        path: 'orderList',
+        name: 'orderList',
+        component: () => import('@/pages/order/orderList/index.vue'),
+        meta: {
+          title: '订单列表',
+          // 用来修改当出现子菜单在active状态不会激活父元素的active状态
+          singles: true
+        },
+        children: [
+          {
+            path: 'orderDetail/:id',
+            name: 'orderDetail',
+            component: () => import('@/pages/order/orderList/orderDetail.vue'),
+            meta: {
+              title: '订单详情'
+            }
+          },
+        ]
+      },
+      {
+        path: 'task',
+        name: 'task',
+        component: () => import('@/pages/order/task/index.vue'),
+        meta: {
+          title: '任务列表',
+          singles: true
+        },
+      },
     ]
   },
   {
