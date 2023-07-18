@@ -1,19 +1,8 @@
 <!-- 搜索表单区域 -->
 <template>
   <div class="formBox bg-wt">
-    <t-form ref="form" :data="formData" :label-width="100">
+    <t-form ref="form" :data="formData" :label-width="60">
       <t-row>
-        <t-col>
-          <t-form-item label="服务人员姓名：" name="name">
-            <t-input
-              v-model="formData.name"
-              class="form-item-content"
-              type="search"
-              placeholder="请输入"
-              clearable
-            />
-          </t-form-item>
-        </t-col>
         <t-col>
           <t-form-item label="手机号：" name="name">
             <t-input

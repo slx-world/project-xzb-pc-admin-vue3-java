@@ -10,26 +10,34 @@
         />
       </div>
       <div class="right">
-        <div class="tag">
-          <div class="label">人员姓名</div>
-          <div class="content">张三</div>
-        </div>
-        <div class="tag">
-          <div class="label">手机号</div>
-          <div class="content">
-            {{
-              // 18899998888脱敏处理
-              '18899998888'.slice(0, 3) +
-              ' ' +
-              '18899998888'.slice(3, 7) +
-              ' ' +
-              '18899998888'.slice(7, 11)
-            }}
+        <div class="leftBox">
+          <div class="tag">
+            <div class="label">人员姓名</div>
+            <div class="content">张三</div>
+          </div>
+          <div class="tag">
+            <div class="label">手机号</div>
+            <div class="content">
+              {{
+                // 18899998888脱敏处理
+                '18899998888'.slice(0, 3) +
+                ' ' +
+                '18899998888'.slice(3, 7) +
+                ' ' +
+                '18899998888'.slice(7, 11)
+              }}
+            </div>
           </div>
         </div>
-        <div class="tag">
-          <div class="label">认证状态</div>
-          <div class="content">已认证</div>
+        <div class="rightBox">
+          <div class="tag">
+            <div class="label">账号状态</div>
+            <div class="content">正常</div>
+          </div>
+          <div class="tag">
+            <div class="label">认证状态</div>
+            <div class="content">已认证</div>
+          </div>
         </div>
       </div>
     </div>
@@ -240,31 +248,37 @@ const changeId = (val) => {
       }
     }
     .right {
-      .tag {
-        display: flex;
-        margin-bottom: 30px;
-        &:last-child {
-          margin-bottom: 6px;
-        }
-        .label {
-          width: 56px;
-          height: 20px;
-          font-family: PingFangSC-Regular;
-          font-weight: 400;
-          font-size: 14px;
-          color: var(--color-bk3);
-          margin-right: 36px;
-          letter-spacing: 0;
-          text-align: justify;
-        }
-        .content {
-          height: 20px;
-          font-family: PingFangSC-Regular;
-          font-weight: 400;
-          font-size: 14px;
-          color: var(--color-bk1);
-          letter-spacing: 0;
-          text-align: justify;
+      width: 100%;
+      display: flex;
+      .leftBox,
+      .rightBox {
+        width: 50%;
+        .tag {
+          display: flex;
+          margin-bottom: 30px;
+          &:last-child {
+            margin-bottom: 50px;
+          }
+          .label {
+            width: 56px;
+            height: 20px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--color-bk3);
+            margin-right: 36px;
+            letter-spacing: 0;
+            text-align: justify;
+          }
+          .content {
+            height: 20px;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--color-bk1);
+            letter-spacing: 0;
+            text-align: justify;
+          }
         }
       }
     }
@@ -326,7 +340,7 @@ const changeId = (val) => {
       }
     }
   }
-  :deep(.tableBoxs){
+  :deep(.tableBoxs) {
     margin: 0;
   }
 }

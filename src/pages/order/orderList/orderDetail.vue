@@ -249,8 +249,11 @@ const imgList = [
           width: 50%;
           display: flex;
         }
+        .rightBox{
+          padding-left: 50px;
+        }
         .tag {
-          width: 225px;
+          width: 172px;
           color: var(--color-bk3);
         }
         .content {

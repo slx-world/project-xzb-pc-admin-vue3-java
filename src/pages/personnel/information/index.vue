@@ -260,3 +260,8 @@ watchEffect(() => {
   }
 })
 </script>
+<style lang="less" scoped>
+.bgTable{
+  min-width: 1100px;
+}
+</style>

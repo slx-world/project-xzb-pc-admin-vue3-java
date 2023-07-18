@@ -18,7 +18,7 @@
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="冻结原因：" name="phoneNumber">
+        <t-form-item label="冻结时间：" name="phoneNumber">
           <t-select
             v-model="formData.serveTypeId"
             class="wt-400"
