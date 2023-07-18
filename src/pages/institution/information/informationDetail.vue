@@ -23,6 +23,10 @@
           <div class="label">法人身份证号</div>
           <div class="content">187765198912196655</div>
         </div>
+        <div class="tag">
+          <div class="label">冻结原因</div>
+          <div class="content">被投诉次数超过5次</div>
+        </div>
       </div>
       <div class="right">
         <div class="tag">
@@ -42,6 +46,10 @@
             }}
           </div>
         </div>
+        <div class="tag">
+          <div class="label">账号状态</div>
+          <div class="content">冻结</div>
+        </div>
       </div>
     </div>
   </div>
@@ -50,11 +58,11 @@
     <!-- 认证信息 -->
     <div class="authentication" v-if="isActive === 3">
       <div class="authTag">
-        <div class="authLabel">姓名：</div>
-        <div class="authContent">张三</div>
+        <div class="authLabel">企业名称</div>
+        <div class="authContent">北京好又快家政服务机构</div>
       </div>
       <div class="authTag">
-        <div class="authLabel">身份证号：</div>
+        <div class="authLabel">统一社会信用代码</div>
         <div class="authContent">130887199912876543</div>
       </div>
       <div class="authImgBox">
@@ -243,10 +251,12 @@ const changeId = (val) => {
   }
   .body {
     display: flex;
-    .left {
-      margin-right: 120px;
+    width: 100%;
+    .right {
+      padding-left: 50px;
     }
     .left ,.right {
+      width: 50%;
       .tag {
         display: flex;
         margin-bottom: 30px;
@@ -260,7 +270,7 @@ const changeId = (val) => {
           font-weight: 400;
           font-size: 14px;
           color: var(--color-bk3);
-          margin-right: 36px;
+          margin-right: 60px;
           letter-spacing: 0;
           text-align: justify;
         }
