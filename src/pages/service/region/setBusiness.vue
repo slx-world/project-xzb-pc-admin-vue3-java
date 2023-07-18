@@ -79,9 +79,9 @@
           </div>
           <div class="footBox">
             <div class="updateInfo" @click="handleBack">
-              <span class="bt bt-grey">返回</span>
+              <span class="bt bt-grey">取消</span>
             </div>
-            <button class="bt updateInfo">提交</button>
+            <button class="bt updateInfo">保存</button>
           </div>
         </t-form>
       </div>
@@ -215,7 +215,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .contentBox {
   padding: 80px 100px 50px;
-  min-height: 85vh;
+  min-height: 90vh;
   .bodybox {
     .topBox {
       display: flex;

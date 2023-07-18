@@ -4,7 +4,18 @@
     <t-form ref="form" :data="formData" :label-width="70">
       <t-row>
         <t-col>
-          <t-form-item label="服务名称：" name="name">
+          <t-form-item label="订单编号：" name="name">
+            <t-input
+              v-model="formData.name"
+              class="form-item-content"
+              type="search"
+              placeholder="请输入"
+              clearable
+            />
+          </t-form-item>
+        </t-col>
+        <t-col>
+          <t-form-item label="客户姓名：" name="name">
             <t-input
               v-model="formData.name"
               class="form-item-content"
@@ -26,12 +37,11 @@
           </t-form-item>
         </t-col>
         <t-col>
-        <t-form-item label="状态：" name="status">
-            <t-select
-              v-model="formData.isActive"
-              class="form-item-content"
-              :options="STATUS"
-              placeholder="请选择"
+        <t-form-item label="创建时间：" name="status">
+          <t-date-range-picker
+              v-model="formData.updateTime"
+              placeholder="日期"
+              :presets="presets"
               clearable
             />
           </t-form-item>
@@ -69,7 +79,8 @@ const typeSelectList = ref([])
 const formData = ref({
   serveTypeId: '',
   name: '',
-  isActive: ''
+  isActive: '',
+  updateTime: []
 })
 // 触发父组件的方法
 const emit: Function = defineEmits(['handleSearch', 'handleReset'])
@@ -77,7 +88,8 @@ const emit: Function = defineEmits(['handleSearch', 'handleReset'])
 const searchForm = {
   serveTypeId: '',
   name: '',
-  isActive: ''
+  isActive: '',
+  updateTime: []
 }
 // 重置表单
 const handleReset = () => {
@@ -88,6 +100,18 @@ const handleReset = () => {
 const handleSearch = () => {
   emit('handleSearch', formData.value)
 }
+// 时间选择器tag
+const presets = ref({
+  近一周: [
+    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+    new Date()
+  ],
+  近三天: [
+    new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000),
+    new Date()
+  ],
+  近一天: [new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000), new Date()]
+}) 
 watchEffect(()=>{
   if(props.initSearch){
     console.log(props.initSearch,'props.initSearch');

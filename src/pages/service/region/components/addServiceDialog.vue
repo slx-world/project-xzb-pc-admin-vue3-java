@@ -270,12 +270,11 @@ watch(
   }
 }
 .middleBox {
-  padding: 25px 0px 25px 30px;
+  padding: 25px 30px 25px;
   border-right: 1px solid #e4e7ed;
   .search {
     width: 240px;
     height: 32px;
-    margin-right: 25.5px;
   }
   .serviceBox {
     height: 252px;
@@ -341,6 +340,10 @@ watch(
   padding-top: 24.5px;
 
   width: 328.5px;
+  :deep(.noData){
+    width: 291.5px;
+    margin-left: 37px;
+  }
   .title {
     font-family: PingFangSC-Medium;
     font-weight: 500;

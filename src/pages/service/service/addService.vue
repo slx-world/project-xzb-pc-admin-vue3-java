@@ -11,7 +11,7 @@
       >
         <div class="topBox">
           <div class="leftBox">
-            <t-form-item label="服务名称" name="name">
+            <t-form-item label="服务项名称" name="name">
               <t-input
                 v-model="formData.name"
                 class="form-item-content"

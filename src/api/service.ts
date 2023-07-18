@@ -147,7 +147,7 @@ export function serviceEdit(value) {
 // 区域服务设置热门/取消
 export function serviceHot(value) {
   return request.put({
-    url: '/serve/hot?id=' + value.id + '&' + 'flag=' + value.flag,
+    url: '/serve/hot?id=' + value.id + '&' + 'flag=' + value.flag + '&' + 'regionId=' + value.regionId,
   })
 }
 // 服务删除

@@ -2,9 +2,6 @@
 <template>
   <div class="baseList bg-wt min-h">
     <div class="tableBoxs">
-      <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
-      </div>
       <t-config-provider :global-config="globalLocale">
         <t-table
           :data="data"
@@ -16,11 +13,9 @@
             pagination.total <= 10 || !pagination.total ? null : pagination
           "
           :disable-data-page="pagination.total <= 10"
-          :selected-row-keys="selectedRowKeys"
           :loading="dataLoading"
           :sort="sort"
           showSizeChanger
-          :filter-value="filterValue"
           :hide-sort-tips="true"
           :show-sort-column-bg-color="true"
           table-layout="fixed"
@@ -28,7 +23,6 @@
           table-content-width="100%"
           @page-change="onPageChange"
           @sort-change="sortChange"
-          @select-change="rehandleSelectChange"
         >
           <!-- 空页面 -->
           <template #empty>
@@ -103,22 +97,22 @@
                   ? 'text-forbidden btn-dl btn-split-right'
                   : 'btn-dl btn-split-right'
               "
-              @click="handleClickDelete(row)"
-              >删除</a
+              @click="handleClickCancel(row)"
+              >取消</a
             >
-            <a
+            <!-- <a
               :class="
                 row.saleStatus === 2
                   ? 'text-forbidden font-bt line'
                   : 'font-bt line'
               "
-              @click="handleClickEdit(row)"
-              >编辑</a
-            >
+              @click="handleClickRefund(row)"
+              >退款</a
+            > -->
             <a
               class="font-bt btn-split-left"
-              @click="handleSetupContract(row, row.saleStatus)"
-              >{{ row.saleStatus !== 2 ? '上架' : '下架' }}</a
+              @click="handleDetail(row)"
+              >查看</a
             >
           </template>
           <!-- end -->
@@ -158,11 +152,11 @@ const props = defineProps({
 // 发送事件给父组件
 const emit = defineEmits([
   'fetchData',
-  'handleSetupContract',
   'handleBuild',
-  'handleClickDelete',
+  'handleClickCancel',
   'handleSortChange',
-  'onPageChange'
+  'onPageChange',
+  'handleClickRefund'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -170,6 +164,8 @@ watch(props, () => {
   pagination.value = props.pagination
   dataLoading.value = false
 })
+// 行key
+const rowKey = ref('id')
 // 路由
 const router = useRouter()
 // 排序
@@ -188,17 +184,12 @@ const globalLocale = ref({
   }
 }) // 排序图标
 const data: any = ref([])
-// 选中的行
+// 分页器
 const pagination: any = ref({
   defaultPageSize: 10,
   total: 0,
   defaultCurrent: 1 // 默认当前页
 })
-// 索引
-const rowKey = 'index' // 行的key
-const filterValue = ref({
-  status: ''
-}) // 过滤
 // 加载状态
 const dataLoading = ref(true)
 
@@ -208,23 +199,18 @@ const sortChange = (val) => {
   emit('handleSortChange', val)
 }
 
-// 选中的行
-const selectedRowKeys = ref([1, 2])
-const rehandleSelectChange = (val: number[]) => {
-  selectedRowKeys.value = val
-}
-// 点击跳转到编辑页
-const handleClickEdit = (val) => {
-  router.push('/service/ServiceList/editService/' + val.id)
+// 点击退款
+const handleClickRefund = (val) => {
+  emit('handleClickRefund', val)
 }
 
-// 打开上下架弹窗
-const handleSetupContract = (val, id) => {
-  emit('handleSetupContract', val, id)
+// 查看详情
+const handleDetail = (val) => {
+  router.push('/order/orderList/orderDetail/' + val.id)
 }
 // 点击删除
-const handleClickDelete = (row: { rowIndex: any }) => {
-  emit('handleClickDelete', row)
+const handleClickCancel = (row: { rowIndex: any }) => {
+  emit('handleClickCancel', row)
 }
 // 点击翻页
 const onPageChange = (val) => {

@@ -56,7 +56,7 @@ const type = ref('login')
     background: var(--color-bk10);
     background-image: url(@/assets/img_denglu-bg@2x.png);
     // 撑满父元素
-    background-size: 100% 100%;
+    background-size: cover;
     background-repeat: no-repeat;
   }
 }
@@ -76,5 +76,8 @@ const type = ref('login')
 .logo {
   width: 150px;
   height: 70px;
+}
+:deep(.t-input .t-input__prefix > .t-icon){
+  color: var(--td-text-color-placeholder);
 }
 </style>

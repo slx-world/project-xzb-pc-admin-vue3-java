@@ -690,11 +690,15 @@ button {
 .t-date-picker__cell:hover .t-date-picker__cell-inner {
   box-shadow: inset 0 0 0 1px var(--color-main) !important;
 }
+// hover时区间颜色
+.t-date-picker__cell--hover-highlight::after{
+  background-color: #fff0ed;
+}
 
 // 日期选择器当日样式
 .t-date-picker__cell--now .t-date-picker__cell-inner {
   color: var(--color-main);
-  background-color: var(--color-bk9);
+  background-color: #fff0ed;
 }
 
 // 日期区间背景样式
@@ -995,6 +999,9 @@ button {
 .t-select-option.t-is-selected {
   background: #FFEFEC;
   color: var(--color-main);
+  &:hover{
+    background: #FFEFEC;
+  }
 }
 // 下拉选择器hover状态
 .t-select-option:not(.t-is-disabled):not(.t-is-selected):hover {
@@ -1167,9 +1174,11 @@ button {
   svg {
     rect{
       stroke: var(--color-main);
+      fill: #fff;
     }
     path {
       stroke: var(--color-main);
+      fill: #fff;
     }
   }
 
@@ -1254,9 +1263,9 @@ button {
 }
 
 // 表格操作栏最小宽
-.t-table--column-fixed .t-table__cell--fixed-right {
-  min-width: 157px;
-}
+// .t-table--column-fixed .t-table__cell--fixed-right {
+//   min-width: 157px;
+// }
 
 // 多选项当前色和背景色
 .t-checkbox__input {
@@ -1270,14 +1279,14 @@ button {
 .t-checkbox {
   .t-checkbox__input {
     &:hover {
-      border-color: var(--color-main);
+      border-color: #0698FF;
     }
   }
 }
 
 .t-checkbox.t-is-checked .t-checkbox__input {
-  border-color: var(--color-main);
-  background-color: var(--color-main);
+  border-color: #0698FF;
+  background-color: #0698FF;
 }
 
 // 选中多选框颜色
@@ -1541,7 +1550,7 @@ button {
 
   .t-form:not(.t-form-inline) .t-form__item:last-of-type {
     margin-top: var(--space-main);
-    padding: 0 8px !important;
+    padding: 0 15px !important;
   }
 
   .t-form .searchBtn {
@@ -1551,6 +1560,9 @@ button {
   .t-col {
     button {
       margin: 0 8px;
+      &:first-child {
+        margin-left: 15px;
+      }
     }
   }
 
@@ -1757,7 +1769,7 @@ button {
 }
 
 .t-default-menu .t-menu__sub .t-menu__item {
-  padding-left: 50px;
+  padding-left: 55px;
 
   div {
     display: none;
@@ -1794,10 +1806,10 @@ button {
   .formBox {
     .t-row {
       &>div.t-col {
-        max-width: calc(25% - 38px) !important;
+        max-width: calc(25% - 40.5px) !important;
 
         &:last-child {
-          max-width: 152px !important;
+          max-width: 159px !important;
         }
       }
     }
@@ -1826,7 +1838,7 @@ button {
         max-width: calc(20% - 30.4px) !important;
 
         &:last-child {
-          max-width: 152px !important;
+          max-width: 159px !important;
         }
       }
     }
@@ -1888,6 +1900,7 @@ button {
 
   &:active {
     color: var(--color-active);
+    animation: none;
   }
 }
 
@@ -2001,5 +2014,19 @@ button {
   display: none;
 }
 .t-cascader__item.t-is-selected{
+  color: var(--color-main);
+}
+.t-dialog__header .t-dialog__close:hover{
+  background-color: #eaeaea;
+}
+// 两个radio框的间距
+.t-radio-group .t-radio{
+  margin-right: 16px;
+}
+.czri-side-nav-logo-wrapper{
+  height: 130px;
+}
+// 下拉框展开
+.t-cascader .t-fake-arrow--active{
   color: var(--color-main);
 }

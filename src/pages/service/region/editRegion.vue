@@ -177,11 +177,12 @@ const handleClickDelete = (val) => {
   deleteId.value = val.id
   dialogDeleteVisible.value = true
 }
-// 确认设为热门
+// 确认设为/取消热门
 const handleConfirm = async () => {
   const data = {
     id: hotId.value,
-    flag: flag.value
+    flag: flag.value,
+    regionId: id
   }
   await serviceHot(data).then((res) => {
     if (res.data.code === 200) {
@@ -287,7 +288,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .contentBox {
   padding: 24px 20px 20px;
-  min-height: 85vh;
+  min-height: 90vh;
   .bodybox {
     .topBox {
       display: flex;
@@ -308,5 +309,11 @@ onMounted(() => {
       margin-top: 26px;
     }
   }
+}
+:deep(.t-input.t-is-error){
+  margin-top: 6px;
+}
+:deep(.t-table td .t-input__tips){
+  margin-bottom: 6px;
 }
 </style>

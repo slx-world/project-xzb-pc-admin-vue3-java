@@ -22,7 +22,6 @@
           :filter-value="filterValue"
           :hide-sort-tips="true"
           :show-sort-column-bg-color="true"
-          table-layout="fixed"
           table-content-width="100%"
           @page-change="onPageChange"
           @sort-change="sortChange"

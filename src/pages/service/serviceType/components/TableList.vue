@@ -142,8 +142,8 @@ const emit = defineEmits([
   'handleBuild',
   'handleClickDelete',
   'handleDisable',
-  'handleSortChange',
-  'onPageChange'
+  'onPageChange',
+  'handleSortChange'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -235,6 +235,9 @@ const handleViewServices = (val) => {
 .baseList {
   :deep(.t-table td) {
     height: 64px !important;
+  }
+  .min-h{
+    min-height: 720px;
   }
 }
 .headPortrait {

@@ -1,6 +1,6 @@
 export const COLUMNS = [
   {
-    title: '服务编号',
+    title: '任务编号',
     align: 'left',
     width: 200,
     minWidth: '200px',
@@ -8,42 +8,35 @@ export const COLUMNS = [
   },
   { title: '服务名称', width: 150, minWidth: '150px', colKey: 'name' },
   {
-    title: '服务图标',
-    colKey: 'serveTypeIcon',
-    width: 125,
-    minWidth: '125px',
-    cell: { col: 'status' }
-  },
-  {
-    title: '服务图片',
-    colKey: 'img',
-    width: 125,
-    minWidth: '125px',
-    cell: { col: 'status' }
-  },
-  {
-    title: '服务单价（元）',
+    title: '客户电话',
     minWidth: '170px',
     sortType: 'all',
     colKey: 'referencePrice'
   },
-  { title: '服务类型', width: 150, minWidth: '150px', colKey: 'serveTypeName' },
   {
-    title: '服务描述',
+    title: '服务地址',
     colKey: 'description',
     width: 200,
     minWidth: '275px',
     cell: { col: 'status' }
   },
   {
-    title: '排序',
-    minWidth: '150px',
+    title: '预约上门时间',
+    minWidth: '180px',
+    colKey: 'updateTime',
     sorter: true,
-    sortType: 'all',
-    colKey: 'sortNum'
+    sortType: 'all'
   },
+  { title: '服务费用（元）', width: 150, minWidth: '150px', colKey: 'serveTypeName' },
+  { title: '服务人员', width: 150, minWidth: '150px', colKey: 'name' },
   {
-    title: '状态',
+    title: '任务创建时间',
+    minWidth: '180px',
+    colKey: 'updateTime',
+    sorter: true,
+    sortType: 'all'
+  },  {
+    title: '任务状态',
     colKey: 'saleStatus',
     width: 120,
     minWidth: '120px',
@@ -89,17 +82,10 @@ export const COLUMNS = [
     }
   },
   {
-    title: '更新时间',
-    minWidth: '180px',
-    colKey: 'updateTime',
-    sorter: true,
-    sortType: 'all'
-  },
-  {
     align: 'left',
     fixed: 'right',
-    width: 157,
-    minWidth: '157px',
+    width: 113,
+    minWidth: '113px',
     colKey: 'op',
     title: '操作'
   }

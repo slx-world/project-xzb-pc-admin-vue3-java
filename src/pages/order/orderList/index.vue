@@ -172,8 +172,8 @@ const onPageChange = (val) => {
   fetchData(requestData.value)
 }
 watchEffect(() => {
-  if (route.path === 'service/ServiceList') {
-    url.value = 'service/ServiceList'
+  if (route.path === 'order/orderList') {
+    url.value = 'order/orderList'
     getServiceTypeSimpleList()
     fetchData(requestData.value)
   } else {
@@ -192,3 +192,9 @@ watchEffect(() => {
   }
 })
 </script>
+<style lang="less" scoped>
+
+.min-h{
+    min-height: 720px !important;
+  }
+</style>

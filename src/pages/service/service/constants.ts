@@ -6,7 +6,7 @@ export const COLUMNS = [
     minWidth: '200px',
     colKey: 'code'
   },
-  { title: '服务名称', width: 150, minWidth: '150px', colKey: 'name' },
+  { title: '服务项名称', width: 150, minWidth: '150px', colKey: 'name' },
   {
     title: '服务图标',
     colKey: 'serveTypeIcon',

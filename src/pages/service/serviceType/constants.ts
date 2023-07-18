@@ -10,15 +10,15 @@ export const COLUMNS = [
   {
     title: '服务类型图标',
     colKey: 'serveTypeIcon',
-    width: 175,
-    minWidth: '175px',
+    width: 225,
+    minWidth: '225px',
     cell: { col: 'status' }
   },
   {
     title: '服务类型图片',
     colKey: 'img',
-    width: 175,
-    minWidth: '175px',
+    width: 200,
+    minWidth: '200px',
     cell: { col: 'status' }
   },
   {
@@ -32,8 +32,8 @@ export const COLUMNS = [
   {
     title: '状态',
     colKey: 'isActive',
-    width: 175,
-    minWidth: '175px',
+    width: 200,
+    minWidth: '200px',
     // 添加筛选
     filter: {
       type: 'single',
@@ -57,10 +57,11 @@ export const COLUMNS = [
           label: '启用'
         },
       }
+      const status = row.isActive + 1
       return h(
         'span',
         {
-          class: `status-dot status-dot-${row.isActive}`
+          class: `status-dot status-dot-${status}`
         },
         statusList[row.isActive].label
       )
@@ -68,8 +69,8 @@ export const COLUMNS = [
   },
   {
     title: '更新时间',
-    minWidth: '200px',
-    width: 200,
+    minWidth: '235px',
+    width: 225,
     colKey: 'updateTime',
     sorter: true,
     sortType: 'all'
@@ -77,8 +78,8 @@ export const COLUMNS = [
   {
     align: 'left',
     fixed: 'right',
-    width: 245,
-    minWidth: '245px',
+    width: 200,
+    minWidth: '247px',
     colKey: 'op',
     title: '操作'
   }

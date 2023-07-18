@@ -201,8 +201,8 @@ const regionCOLUMN = computed(() => [
   {
     align: 'left',
     fixed: 'right',
-    width: 157,
-    minWidth: '157px',
+    width: 140,
+    minWidth: '140px',
     colKey: 'op',
     title: '操作'
   }

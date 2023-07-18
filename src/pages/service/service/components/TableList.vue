@@ -247,6 +247,9 @@ const handleBuild = () => {
   :deep(.t-table td) {
     height: 64px !important;
   }
+  .min-h{
+    min-height: 720px;
+  }
 }
 .headPortrait {
   display: flex;

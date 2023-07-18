@@ -16,7 +16,7 @@
       @handleClickDelete="handleClickDelete"
       @fetchData="fetchData"
       @handleDisable="handleDisable"
-      :handleSortChange="handleSortChange"
+      @handleSortChange="handleSortChange"
       @onPageChange="onPageChange"
     ></tableList>
     <!-- end -->
@@ -257,6 +257,7 @@ const handleSortChange = (val) => {
   })
   fetchData(requestData.value)
 }
+// 分页
 const onPageChange = (val) => {
   requestData.value.pageNo = val.defaultCurrent
   requestData.value.pageSize = val.defaultPageSize

@@ -248,7 +248,7 @@ const rules = ref({
 
 <style lang="less" scoped>
 .contentBox {
-  height: 85vh;
+  height: 90vh;
   padding-top: 81px;
   padding-left: 90px;
   padding-right: 90px;

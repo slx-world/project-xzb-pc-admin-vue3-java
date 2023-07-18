@@ -257,3 +257,8 @@ watchEffect(() => {
   }
 })
 </script>
+<style lang="less" scoped>
+.min-h{
+    min-height: 720px !important;
+  }
+</style>

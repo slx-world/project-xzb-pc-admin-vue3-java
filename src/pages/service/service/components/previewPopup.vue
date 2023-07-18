@@ -1,22 +1,22 @@
 <template>
   <div>
     <t-dialog
-      :closeBtn="false"
       :preventScrollThrough="false"
       :header="false"
       :footer="false"
+      @close="onOverlayClick"
       :on-overlay-click="onOverlayClick"
       v-model:visible="visible"
     >
-      <div class="headBox">{{data?.title}}</div>
+      <div class="headBox">{{ data?.title }}</div>
       <div class="Box">
         <div class="bodyBox">
           <img :src="data?.img" alt="" class="img" />
           <div class="titleBox">
-            <div>{{data?.title}}</div>
-            <img src="@/assets/test-img/cutter@2x.png" alt="">
+            <div>{{ data?.title }}</div>
+            <img src="@/assets/test-img/cutter@2x.png" alt="" />
           </div>
-          <img :src="data?.detailImg" alt="" class="img" >
+          <img :src="data?.detailImg" alt="" class="img" />
         </div>
       </div>
     </t-dialog>
@@ -38,7 +38,7 @@ const props = defineProps({
     default: false
   }
 })
-const  emit  = defineEmits(['handleClose'])
+const emit = defineEmits(['handleClose'])
 const visible = ref(false)
 const data = ref()
 const onOverlayClick = () => {
@@ -52,7 +52,15 @@ watch(props, () => {
 
 <style lang="less" scoped>
 :deep(.t-dialog__header) {
-  display: none;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  .t-dialog__close svg{
+    color: var(--color-bk4);
+  }
 }
 :deep(.t-dialog__body) {
   background-color: transparent;
@@ -108,7 +116,7 @@ watch(props, () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        img{
+        img {
           width: 83px;
           height: 27px;
         }
@@ -120,8 +128,12 @@ watch(props, () => {
   width: auto;
   border: none;
   background: transparent;
+  position: initial;
 }
-:deep(.t-dialog__ctx .t-dialog__position.t-dialog--top){
+:deep(.t-dialog__ctx .t-dialog__position.t-dialog--top) {
   padding-top: 10vh;
+}
+:deep(.t-dialog__ctx .t-dialog__mask){
+  background-color: transparent;
 }
 </style>

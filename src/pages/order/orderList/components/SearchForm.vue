@@ -1,7 +1,7 @@
 <!-- 搜索表单区域 -->
 <template>
   <div class="formBox bg-wt">
-    <t-form ref="form" :data="formData" :label-width="100">
+    <t-form ref="form" :data="formData" :label-width="70">
       <t-row>
         <t-col>
           <t-form-item label="订单编号：" name="name">
@@ -37,7 +37,7 @@
           </t-form-item>
         </t-col>
         <t-col>
-        <t-form-item label="订单创建时间：" name="status">
+        <t-form-item label="创建时间：" name="status">
           <t-date-range-picker
               v-model="formData.updateTime"
               placeholder="日期"

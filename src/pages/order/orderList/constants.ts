@@ -15,6 +15,12 @@ export const COLUMNS = [
     colKey: 'referencePrice'
   },
   {
+    title: '客户电话',
+    minWidth: '170px',
+    sortType: 'all',
+    colKey: 'referencePrice'
+  },
+  {
     title: '服务地址',
     colKey: 'description',
     width: 200,
@@ -31,13 +37,13 @@ export const COLUMNS = [
   },
   { title: '服务人员', width: 150, minWidth: '150px', colKey: 'name' },
   {
-    title: '更新时间',
+    title: '订单创建时间',
     minWidth: '180px',
     colKey: 'updateTime',
     sorter: true,
     sortType: 'all'
   },  {
-    title: '状态',
+    title: '订单状态',
     colKey: 'saleStatus',
     width: 120,
     minWidth: '120px',
