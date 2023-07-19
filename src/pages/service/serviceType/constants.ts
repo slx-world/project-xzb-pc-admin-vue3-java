@@ -78,7 +78,7 @@ export const COLUMNS = [
   {
     align: 'left',
     fixed: 'right',
-    width: 200,
+    width: 247,
     minWidth: '247px',
     colKey: 'op',
     title: '操作'

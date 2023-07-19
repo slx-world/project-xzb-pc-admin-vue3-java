@@ -11,9 +11,7 @@
         <t-form
           ref="form"
           label-align="top"
-          :rules="rules"
           :data="formData"
-          @submit="onSubmit"
         >
           <div class="title">服务费设置</div>
           <div class="cardBox">
@@ -49,7 +47,7 @@
                   clearable
                 />
               </t-form-item>
-              <t-form-item label="抢单转派单时长（小时）" name="name">
+              <t-form-item label="抢单转派单时长（分钟）" name="name">
                 <t-input
                   class="form-item-content"
                   placeholder="请输入"
@@ -67,7 +65,7 @@
                   clearable
                 />
               </t-form-item>
-              <t-form-item label="未接单提醒（小时）" name="name">
+              <t-form-item label="未接单提醒（分钟）" name="name">
                 <t-input
                   class="form-item-content"
                   placeholder="请输入"

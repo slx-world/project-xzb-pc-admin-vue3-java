@@ -6,14 +6,16 @@
       <div class="left">
         <div class="tag">
           <div class="label">账号</div>
-          <div class="content">{{
+          <div class="content">
+            {{
               // 18899998888脱敏处理
               '18899998888'.slice(0, 3) +
               ' ' +
               '18899998888'.slice(3, 7) +
               ' ' +
               '18899998888'.slice(7, 11)
-            }}</div>
+            }}
+          </div>
         </div>
         <div class="tag">
           <div class="label">法人姓名</div>
@@ -57,35 +59,33 @@
     <switchBar :data="tableBar" @changeId="changeId"></switchBar>
     <!-- 认证信息 -->
     <div class="authentication" v-if="isActive === 3">
-      <div class="authTag">
-        <div class="authLabel">企业名称</div>
-        <div class="authContent">北京好又快家政服务机构</div>
-      </div>
-      <div class="authTag">
-        <div class="authLabel">统一社会信用代码</div>
-        <div class="authContent">130887199912876543</div>
-      </div>
-      <div class="authImgBox">
-        <div class="authImgTag">
-          <div class="authLabel">身份证正面</div>
-          <img
-            src="https://img1.baidu.com/it/u=3083143000,4007391502&fm=253&fmt=auto&app=138&f=JPEG?w=417&h=278"
-            alt=""
-          />
+      <div class="leftBox">
+        <div class="authTag">
+          <div class="authLabel">企业名称</div>
+          <div class="authContent">北京好又快家政服务机构</div>
         </div>
-        <div class="authImgTag">
-          <div class="authLabel">身份证反面</div>
-          <img
-            src="https://image2.sina.com.cn/dy/c/2004-03-29/U48P1T1D3073262F23DT20040329135445.jpg"
-            alt=""
-          />
+        <div class="authTag">
+          <div class="authLabel">统一社会信用代码</div>
+          <div class="authContent">130887199912876543</div>
         </div>
-        <div class="authImgTag">
-          <div class="authLabel">证明资料</div>
-          <img
-            src="https://file1.renrendoc.com/fileroot_temp2/2021-1/17/67176dca-8acc-482a-a6b5-7b8131cc4078/67176dca-8acc-482a-a6b5-7b8131cc40781.gif"
-            alt=""
-          />
+        <div class="authTag">
+          <div class="authLabel">法定代表人姓名</div>
+          <div class="authContent">胡德禄</div>
+        </div>
+        <div class="authTag">
+          <div class="authLabel">身份证号</div>
+          <div class="authContent">1897655198776548765</div>
+        </div>
+      </div>
+      <div class="rightBox">
+        <div class="authImgBox">
+          <div class="authImgTag">
+            <div class="authLabel">营业执照</div>
+            <img
+              src="https://img1.baidu.com/it/u=3083143000,4007391502&fm=253&fmt=auto&app=138&f=JPEG?w=417&h=278"
+              alt=""
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -255,7 +255,8 @@ const changeId = (val) => {
     .right {
       padding-left: 50px;
     }
-    .left ,.right {
+    .left,
+    .right {
       width: 50%;
       .tag {
         display: flex;
@@ -289,6 +290,7 @@ const changeId = (val) => {
 }
 .bodyBox {
   padding: 24px 20px 30px 23px;
+  min-height: 56vh;
   :deep(.headBox) {
     padding-bottom: 12px;
     margin-bottom: 19.5px;
@@ -310,11 +312,18 @@ const changeId = (val) => {
   }
   .authentication {
     padding-top: 30px;
+    display: flex;
+    // 宽占满容器
+    .leftBox,
+    .rightBox {
+      width: 50%;
+    }
     .authTag {
       display: flex;
       margin-bottom: 30px;
       .authLabel {
-        margin-right: 6px;
+        width: 112px;
+        margin-right: 36px;
         color: var(--color-bk3);
       }
       .authContent {
@@ -343,7 +352,7 @@ const changeId = (val) => {
       }
     }
   }
-  :deep(.tableBoxs){
+  :deep(.tableBoxs) {
     margin: 0;
   }
 }

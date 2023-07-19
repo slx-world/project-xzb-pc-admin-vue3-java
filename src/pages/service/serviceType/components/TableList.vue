@@ -19,12 +19,13 @@
           :selected-row-keys="selectedRowKeys"
           :loading="dataLoading"
           :sort="sort"
+          showSizeChanger
           :filter-value="filterValue"
           :hide-sort-tips="true"
-          :multiple-sort="true"
-          filterRow="true"
           :show-sort-column-bg-color="true"
           table-layout="fixed"
+          displayType="fixed-width"
+          :multiple-sort="true"
           table-content-width="100%"
           @page-change="onPageChange"
           @sort-change="sortChange"
@@ -247,4 +248,8 @@ const handleViewServices = (val) => {
 :deep(.t-table__filter-icon) {
   display: none;
 }
+:deep(.t-table--column-fixed .t-table__cell--fixed-right) {
+  width: 157px !important;
+}
+
 </style>
