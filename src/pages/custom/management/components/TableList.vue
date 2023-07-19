@@ -51,7 +51,7 @@
                   ? 'btn-dl'
                   : 'font-bt'
               "
-              @click="handleClickFreeze(row)"
+              @click="handleClickFreeze(row, row.status)"
               >{{row.status === 0 ? '冻结' : '解冻'}}</a
             >
           </template>

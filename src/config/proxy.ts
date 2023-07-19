@@ -2,7 +2,7 @@ export default {
   isRequestProxy: true,
   development: {
     // 开发环境接口请求
-    host: 'http://xzb-api-test.ieheima.net',
+    host: 'http://xzb-api-test.itheima.net',
     // 开发环境 cdn 路径
     cdn: ''
   },
@@ -14,7 +14,7 @@ export default {
   },
   release: {
     // 正式环境接口地址
-    host: 'http://xzb-api-test.ieheima.net',
+    host: 'http://xzb-api-test.itheima.net',
     // 正式环境 cdn 路径
     cdn: ''
   }

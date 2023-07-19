@@ -4,9 +4,9 @@
     <t-form ref="form" :data="formData" :label-width="100">
       <t-row>
         <t-col>
-          <t-form-item label="客户名称：" name="name" :label-width="70">
+          <t-form-item label="客户名称：" name="nickname" :label-width="70">
             <t-input
-              v-model="formData.name"
+              v-model="formData.nickname"
               class="form-item-content"
               type="search"
               placeholder="请输入"
@@ -15,9 +15,9 @@
           </t-form-item>
         </t-col>
         <t-col>
-          <t-form-item label="客户手机号：" name="name">
+          <t-form-item label="客户手机号：" name="phone">
             <t-input
-              v-model="formData.name"
+              v-model="formData.phone"
               class="form-item-content"
               type="search"
               placeholder="请输入"
@@ -39,10 +39,6 @@ import { ref, watchEffect } from 'vue'
 import { STATUS } from '@/constants'
 import { forEach } from 'lodash'
 const props = defineProps({
-  initSearch: {
-    type: Number,
-    default: 0
-  },
   typeSelect: {
     type: Array<{
       id: string
@@ -56,17 +52,15 @@ const props = defineProps({
 const typeSelectList = ref([])
 // 表单数据
 const formData = ref({
-  serveTypeId: '',
-  name: '',
-  isActive: ''
+  nickname: '',
+  phone: ''
 })
 // 触发父组件的方法
 const emit: Function = defineEmits(['handleSearch', 'handleReset'])
 // 表单数据
 const searchForm = {
-  serveTypeId: '',
-  name: '',
-  isActive: ''
+  nickname: '',
+  phone: ''
 }
 // 重置表单
 const handleReset = () => {
@@ -78,10 +72,6 @@ const handleSearch = () => {
   emit('handleSearch', formData.value)
 }
 watchEffect(() => {
-  if (props.initSearch) {
-    console.log(props.initSearch, 'props.initSearch')
-    formData.value.serveTypeId = props.initSearch.toString()
-  }
   typeSelectList.value = props.typeSelect.map((item) => {
     return {
       label: item.name,

@@ -184,7 +184,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // 头信息
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         // 数据处理方式
-        transform,
+        transform, // transform,是对响应数据的处理
         // 配置项，下面的选项都可以在独立的接口请求中覆盖
         requestOptions: {
           // 接口地址

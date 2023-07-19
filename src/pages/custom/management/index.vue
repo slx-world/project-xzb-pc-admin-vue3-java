@@ -33,9 +33,9 @@
     <!-- end -->
     <!-- 删除弹窗 -->
     <Delete
-      :dialog-delete-visible="dialogDeleteVisible"
+      :dialog-delete-visible="dialogFreezeVisible"
       :delete-text="deleteText"
-
+      @handle-delete="handleFreeze"
       @handle-close="handleClose"
     ></Delete>
     <!-- end -->
@@ -44,7 +44,7 @@
       :title="confirmTitle"
       :dialog-confirm-visible="dialogConfirmVisible"
       :confirm-text="confirmText"
-
+      @handle-confirm="handleConfirm"
       @handle-close="handleClose"
     ></Confirm>
     <!-- end -->
@@ -71,13 +71,13 @@ const dataLoading = ref(false) // 列表数据加载loading
 const DialogFormData = ref({}) // 弹窗表单内容
 const title = ref('新建') // 弹窗标题
 const confirmTitle = ref('确认下架') // 确认弹窗标题
-const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
+const dialogFreezeVisible = ref(false) // 控制删除弹层显示隐藏
 const dialogConfirmVisible = ref(false) // 控制确认弹层显示隐藏
 const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
 const confirmText = ref('此操作将永久下架这条信息，是否继续？') // 确认的内容
 const initSearch = ref() // 条转过来的携带数据
 const typeSelect = ref([]) // 服务类型下拉框数据
-const deleteId = ref('') // 删除的id
+const freezeId = ref('') // 删除的id
 // 分页
 const pagination = ref({
   defaultPageSize: 10,
@@ -91,7 +91,7 @@ const requestData = ref({
   pageSize: 10,
   name: '',
   serveTypeId: '',
-  nickName: '',
+  nickname: '',
   phone: ''
 }) // 请求参数
 // 上下架数据
@@ -105,8 +105,8 @@ onMounted(() => {
 })
 // 搜索功能
 const handleSearch = (val) => {
-  requestData.value.name = val.name
-  requestData.value.serveTypeId = val.serveTypeId
+  requestData.value.nickname = val.nickname
+  requestData.value.phone = val.phone
   fetchData(requestData.value)
 }
 // 分页
@@ -138,7 +138,7 @@ const fetchData = async (val) => {
 // 关闭弹窗
 const handleClose = () => {
   visible.value = false // 关闭新增弹窗
-  dialogDeleteVisible.value = false // 关闭删除弹层
+  dialogFreezeVisible.value = false // 关闭删除弹层
   dialogConfirmVisible.value = false // 关闭确认弹层
 }
 // 点击新建
@@ -160,36 +160,36 @@ const handleSetupContract = (val, id) => {
   }
 }
 // 确认上下架
-// const handleConfirm = async () => {
-//   await customFreeze(setupContractData.value)
-//     .then((res) => {
-//       if (res.data.code === 200) {
-//         dialogConfirmVisible.value = false
-//         MessagePlugin.success('操作成功')
-//         fetchData(requestData.value)
-//       } else {
-//         MessagePlugin.error(res.data.msg)
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-// }
+const handleConfirm = async () => {
+  await customFreeze(setupContractData.value)
+    .then((res) => {
+      if (res.data.code === 200) {
+        dialogConfirmVisible.value = false
+        MessagePlugin.success('操作成功')
+        fetchData(requestData.value)
+      } else {
+        MessagePlugin.error(res.data.msg)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 // 确认删除
-// const handleDelete = async () => {
-//   await customFreeze(deleteId.value).then((res) => {
-//     if (res.code === 200) {
-//       dialogDeleteVisible.value = false
-//       MessagePlugin.success('删除成功')
-//       fetchData(requestData.value)
-//     } else {
-//       MessagePlugin.error(res.msg)
-//     }
-//   })
-// }
-// 点击删除
+const handleFreeze = async () => {
+  await customFreeze(freezeId.value).then((res) => {
+    if (res.code === 200) {
+      dialogFreezeVisible.value = false
+      MessagePlugin.success('删除成功')
+      fetchData(requestData.value)
+    } else {
+      MessagePlugin.error(res.msg)
+    }
+  })
+}
+// 点击冻结
 const handleClickFreeze = (row) => {
-  deleteId.value = row.id
+  freezeId.value = row.id
   // 编辑弹窗
   visible.value = true
   title.value = '冻结原因'

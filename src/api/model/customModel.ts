@@ -8,7 +8,7 @@ export interface customListRequest {
 }
 // 冻结/解冻
 export interface customFreezeRequest {
-  id: number
+  id: string
   status: number
   accountLockReason?: string
 }

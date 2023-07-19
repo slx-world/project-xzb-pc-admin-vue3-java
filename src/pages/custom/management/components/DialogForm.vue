@@ -18,15 +18,6 @@
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="冻结时间：" name="phoneNumber">
-          <t-select
-            v-model="formData.serveTypeId"
-            class="wt-400"
-            :options="FREEZE_TIME"
-            placeholder="请选择"
-            clearable
-          ></t-select>
-        </t-form-item>
         <t-form-item label="详细原因：" name="description"
           ><t-textarea
             v-model="formData.description"
@@ -52,7 +43,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
-import { FREEZE_TIME } from '@/constants'
 import {
   validateNum,
   validateText,

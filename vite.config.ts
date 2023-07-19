@@ -58,10 +58,10 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       open: false,
       hmr: true,
       proxy: {
-        '/operation': {
-          target: 'http://xzb-api-test.ieheima.net/operation',
+        '/api': {
+          target: 'http://172.17.2.58/api',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/operation/, '')
+          rewrite: (path) => path.replace(/^\/api/, '')
         }
       }
     }
