@@ -230,6 +230,35 @@ export const BREAK_DATA = [
     title: '服务费用'
   }
 ]
+// 服务人员信息
+export const SERVE_COLUMNS =  [
+  {
+    title: '人员编号',
+    align: 'left',
+    width: 200,
+    minWidth: '200px',
+    colKey: 'code'
+  },
+  { title: '服务人员姓名', width: 150, minWidth: '150px', colKey: 'name' },
+  {
+    title: '手机',
+    minWidth: '170px',
+    sortType: 'all',
+    colKey: 'phone'
+  },
+  {
+    title: '评价评分',
+    minWidth: '180px',
+    colKey: 'score',
+  }, 
+  {
+    title: '创建时间',
+    minWidth: '180px',
+    colKey: 'createTime',
+    sorter: true,
+    sortType: 'all'
+  },
+]
   
 
 

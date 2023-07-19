@@ -176,3 +176,10 @@ export function servicePersonStatus(value) {
     data: value
   })
 }
+// 机构下属服务人员相关接口分页查询
+export function servicePersonItemList(value) {
+  return request.get({
+    url: '/institution-staff/page',
+    params: value
+  })
+}

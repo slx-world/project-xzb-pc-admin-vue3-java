@@ -85,6 +85,7 @@
       :pagination="pagination"
       :isActive="isActive"
       @handleSortChange="handleSortChange"
+      @onPageChange="onPageChange"
     ></tableList>
   </div>
 </template>
@@ -97,13 +98,17 @@ export default {
 import { ref, onMounted, reactive } from 'vue'
 import switchBar from '@/components/switchBar/switchBartop.vue'
 import {
-  servicePersonDetail
+  servicePersonDetail,
+  servicePersonItemList
 } from '@/api/service'
 import {  useRoute } from 'vue-router'
 import tableList from './components/TableList.vue' // 表格
 // 引用正则
 import { MessagePlugin } from 'tdesign-vue-next'
+import { forEach } from 'lodash'
 const isActive = ref() // 当前选中的tab
+const route = useRoute()
+const { id } = route.params
 const formData = ref({
   phone: '18899998888',
   verifyStatus: 0,
@@ -112,6 +117,14 @@ const formData = ref({
   status: 0,
   idCardNo: '187765198912196655'
 })
+// 服务人员请求数据
+const requestPerson = ref({
+  institutionId: id,
+  isAsc1: false,
+  orderBy1: 'createTime',
+  pageNo: 1,
+  pageSize: 10,
+}) // 请求参数
 const listData = ref([]) // 表格数据
 const pagination = reactive({
   defaultPageSize: 10,
@@ -133,11 +146,13 @@ const tableBar = [
   },
   {
     id: 4,
+    name: '服务人员信息'
+  },
+  {
+    id: 5,
     name: '违约记录'
   }
 ]
-const route = useRoute()
-const { id } = route.params
 // 生命周期
 onMounted(() => {
   isActive.value = 1
@@ -155,14 +170,45 @@ const getData = async (val) => {
     }
   })
 }
-
+// 获取服务人员列表数据
+const getPersonList = async () => {
+  await servicePersonItemList(requestPerson.value).then((res) => {
+    if (res.code == 200) {
+      listData.value = res.data.list
+      pagination.total = res.data.total
+    } else {
+      MessagePlugin.error(res.msg)
+    }
+  })
+}
 // 翻页
+const onPageChange = (val) => {
+  pagination.defaultCurrent = val.defaultCurrent
+  requestPerson.value.pageNo = val.defaultCurrent
+  pagination.defaultPageSize = val.defaultPageSize
+  requestPerson.value.pageSize = val.defaultPageSize
+  if(isActive.value === 4){
+    getPersonList()
+  }
+}
+// 排序
 const handleSortChange = (val) => {
-  pagination.defaultCurrent = val
+  console.log(val);
+  if(isActive.value === 4){
+    forEach(val, (item) => {
+      if (item.sortBy === 'createTime') {
+        requestPerson.value.isAsc1 = item.descending === true ? false : true
+      }
+    })
+    getPersonList()
+  }
 }
 // 切换tab
 const changeId = (val) => {
   isActive.value = val
+  if (val === 4) {
+    getPersonList()
+  }
 }
 </script>
 
