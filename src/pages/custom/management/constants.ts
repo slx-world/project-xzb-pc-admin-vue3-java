@@ -22,7 +22,7 @@ export const COLUMNS = [
   {
     title: '创建时间',
     minWidth: '180px',
-    colKey: 'updateTime',
+    colKey: 'createTime',
     sorter: true,
     sortType: 'all'
   },

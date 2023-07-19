@@ -4,9 +4,9 @@
     <t-form ref="form" :data="formData" :label-width="60">
       <t-row>
         <t-col>
-          <t-form-item label="手机号：" name="name">
+          <t-form-item label="手机号：" name="phone">
             <t-input
-              v-model="formData.name"
+              v-model="formData.phone"
               class="form-item-content"
               type="search"
               placeholder="请输入"
@@ -16,10 +16,10 @@
         </t-col>
         <t-col>
           <t-form-item label="状态：" name="status">
-            <t-radio-group default-value="1">
-              <t-radio value="1">全部</t-radio>
-              <t-radio value="2">正常</t-radio>
-              <t-radio value="3">冻结</t-radio>
+            <t-radio-group  v-model="formData.status">
+              <t-radio :value="1">全部</t-radio>
+              <t-radio :value="2">正常</t-radio>
+              <t-radio :value="3">冻结</t-radio>
             </t-radio-group>
           </t-form-item>
         </t-col>
@@ -51,20 +51,17 @@ const props = defineProps({
     }
   }
 })
-const typeSelectList = ref([])
 // 表单数据
 const formData = ref({
-  serveTypeId: '',
-  name: '',
-  isActive: ''
+  phone: '',
+  status: 1
 })
 // 触发父组件的方法
 const emit: Function = defineEmits(['handleSearch', 'handleReset'])
 // 表单数据
 const searchForm = {
-  serveTypeId: '',
-  name: '',
-  isActive: ''
+  phone: '',
+  status: 1
 }
 // 重置表单
 const handleReset = () => {
@@ -72,21 +69,9 @@ const handleReset = () => {
   emit('handleSearch', formData.value)
 }
 // 搜索表单
-const handleSearch = () => {
+const handleSearch = () => {  
   emit('handleSearch', formData.value)
 }
-watchEffect(() => {
-  if (props.initSearch) {
-    console.log(props.initSearch, 'props.initSearch')
-    formData.value.serveTypeId = props.initSearch.toString()
-  }
-  typeSelectList.value = props.typeSelect.map((item) => {
-    return {
-      label: item.name,
-      value: item.id
-    }
-  })
-})
 </script>
 
 <style lang="less" scoped></style>

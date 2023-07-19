@@ -111,11 +111,13 @@ const transform: AxiosTransform = {
         config.data = params
         config.params = undefined
       }
+
       if (joinParamsToUrl) {
         config.url = setObjToUrlParams(config.url as string, {
           ...config.params,
           ...config.data
         })
+        
       }
     } else {
       // 兼容restful风格
@@ -141,7 +143,7 @@ const transform: AxiosTransform = {
   },
 
   // 响应拦截器处理
-  responseInterceptors: (res) => {
+  responseInterceptors: (res) => {  
     return res
   },
 

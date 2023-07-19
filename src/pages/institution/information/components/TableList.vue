@@ -95,13 +95,13 @@
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
             <a
-              :class="
-                row.saleStatus === 2
-                  ? 'text-forbidden btn-dl btn-split-right'
-                  : 'btn-dl btn-split-right'
+            :class="
+                row.status === 0
+                  ? 'btn-dl btn-split-right'
+                  : 'font-bt btn-split-right'
               "
-              @click="handleClickFreeze(row)"
-              >冻结</a
+              @click="handleClickFreeze(row, row.status)"
+              >{{row.status === 0 ? '冻结' : '解冻'}}</a
             >
             <a
               :class="
@@ -157,7 +157,8 @@ const emit = defineEmits([
   'handleBuild',
   'handleClickFreeze',
   'handleSortChange',
-  'onPageChange'
+  'onPageChange',
+  'handleClickThaw',
 ])
 // 监听器赋值
 watch(props, () => {
@@ -229,8 +230,13 @@ const handleClickEdit = (val) => {
 }
 
 // 点击删除
-const handleClickFreeze = (row: { rowIndex: any }) => {
-  emit('handleClickFreeze', row)
+const handleClickFreeze = (row,flag) => {
+  if(flag === 0){
+    emit('handleClickFreeze', row)
+    return
+  }else{
+    emit('handleClickThaw', row)
+  }
 }
 // 点击翻页
 const onPageChange = (val) => {
