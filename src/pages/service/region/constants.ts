@@ -11,8 +11,8 @@ export const COLUMNS = [
   { title: '联系电话', width: 300, minWidth:'300px' ,colKey: 'managerPhone' },
   {
     title: '更新时间',
-    width: 300,
     minWidth: '300px',
+    width: 300,
     colKey: 'updateTime',
     sorter: true,
     sortType: 'all'
@@ -20,7 +20,7 @@ export const COLUMNS = [
   {
     align: 'left',
     fixed: 'right',
-    width: 100,
+    width: 252,
     minWidth: '252px',
     colKey: 'op',
     title: '操作'

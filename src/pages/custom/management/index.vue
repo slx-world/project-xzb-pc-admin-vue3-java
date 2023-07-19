@@ -1,7 +1,6 @@
 <!-- 基础列表页（带图） -->
 <template>
-  <router-view v-if="url !== '/personnel/information'"></router-view>
-  <div v-else class="base-up-wapper bgTable min-h">
+  <div class="base-up-wapper bgTable min-h">
     <!-- 搜索表单区域 -->
     <searchFormBox
       :initSearch="initSearch"
@@ -56,12 +55,7 @@
 import { ref, onMounted, watchEffect } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { useRoute, useRouter } from 'vue-router'
-import {
-  serviceTypeSimpleList,
-  serviceItemList,
-  serviceItemStatus,
-  serviceItemDelete
-} from '@/api/service'
+import { getCustomList, customFreeze } from '@/api/custom'
 import { forEach } from 'lodash'
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
@@ -81,7 +75,6 @@ const dialogDeleteVisible = ref(false) // 控制删除弹层显示隐藏
 const dialogConfirmVisible = ref(false) // 控制确认弹层显示隐藏
 const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
 const confirmText = ref('此操作将永久下架这条信息，是否继续？') // 确认的内容
-const url = ref('') // 当前路由
 const initSearch = ref() // 条转过来的携带数据
 const typeSelect = ref([]) // 服务类型下拉框数据
 const deleteId = ref('') // 删除的id
@@ -93,13 +86,13 @@ const pagination = ref({
 })
 const requestData = ref({
   isAsc1: true,
-  isAsc2: false,
-  orderBy1: 'sortNum',
-  orderBy2: 'updateTime',
+  orderBy1: 'createTime',
   pageNo: 1,
   pageSize: 10,
   name: '',
-  serveTypeId: ''
+  serveTypeId: '',
+  nickName: '',
+  phone: ''
 }) // 请求参数
 // 上下架数据
 const setupContractData = ref({
@@ -126,25 +119,12 @@ const handleReset = () => {
   fetchData(requestData.value)
   // 重新渲染table
 }
-// 获取服务类型下拉框数据
-const getServiceTypeSimpleList = async () => {
-  await serviceTypeSimpleList()
-    .then((res) => {
-      if (res.code === 200) {
-        typeSelect.value = res.data
-      } else {
-        MessagePlugin.error(res.message)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
 // 获取列表数据
 const fetchData = async (val) => {
   dataLoading.value = true
-  await serviceItemList(val)
+  await getCustomList(val)
     .then((res) => {
+      console.log(res)
       if (res.code === 200) {
         listData.value = res.data.list
         pagination.value.total = Number(res.data.total)
@@ -181,7 +161,7 @@ const handleSetupContract = (val, id) => {
 }
 // 确认上下架
 const handleConfirm = async () => {
-  await serviceItemStatus(setupContractData.value)
+  await customFreeze(setupContractData.value)
     .then((res) => {
       if (res.data.code === 200) {
         dialogConfirmVisible.value = false
@@ -197,7 +177,7 @@ const handleConfirm = async () => {
 }
 // 确认删除
 const handleDelete = async () => {
-  await serviceItemDelete(deleteId.value).then((res) => {
+  await customFreeze(deleteId.value).then((res) => {
     if (res.code === 200) {
       dialogDeleteVisible.value = false
       MessagePlugin.success('删除成功')
@@ -223,12 +203,6 @@ const handleSortChange = (val) => {
       } else {
         requestData.value.isAsc1 = true
       }
-    } else {
-      if (item.descending === true) {
-        requestData.value.isAsc2 = false
-      } else {
-        requestData.value.isAsc2 = true
-      }
     }
   })
   fetchData(requestData.value)
@@ -239,26 +213,6 @@ const onPageChange = (val) => {
   requestData.value.pageSize = val.defaultPageSize
   fetchData(requestData.value)
 }
-watchEffect(() => {
-  if (route.path === 'personnel/information') {
-    url.value = 'personnel/information'
-    getServiceTypeSimpleList()
-    fetchData(requestData.value)
-  } else {
-    url.value = route.path
-    getServiceTypeSimpleList()
-    fetchData(requestData.value)
-  }
-  if (!initSearch.value && route.query.id) {
-    initSearch.value = route.query.id
-    requestData.value.serveTypeId = initSearch.value
-    fetchData(requestData.value)
-    router.replace({
-      path: route.path,
-      query: {}
-    })
-  }
-})
 </script>
 <style lang="less" scoped>
 

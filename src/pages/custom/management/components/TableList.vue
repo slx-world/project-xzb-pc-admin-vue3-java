@@ -2,12 +2,9 @@
 <template>
   <div class="baseList bg-wt min-h">
     <div class="tableBoxs">
-      <div class="newBox">
-        <button class="bt newBoxbutton" @click="handleBuild()">新建</button>
-      </div>
       <t-config-provider :global-config="globalLocale">
         <t-table
-        :data="data"
+          :data="data"
           :columns="COLUMNS"
           :row-key="rowKey"
           vertical-align="middle"
@@ -34,71 +31,29 @@
           <template #empty>
             <NoData></NoData>
           </template>
-          <!-- 服务类型图标 -->
-          <template #serveTypeIcon="{ row }">
-            <div class="headPortrait">
-              <img
-                :src="row.serveTypeIcon"
-                alt=""
-                class="tdesign-demo-image-viewer__ui-image--img"
-              />
+          <!-- end -->
+          <!-- 手机号 -->
+          <template #phoneNumber="{ row }">
+            <div class="phoneNumber">
+              <!-- 手机号做脱敏处理 -->
+              <span>
+                {{ row.phoneNumber.toString().substring(0, 3) }}
+                ****
+                {{ row.phoneNumber.toString().substring(7, 4) }}
+              </span>
             </div>
           </template>
-          <!-- end -->
-          <!-- 服务类型图片 -->
-          <template #img="{ row }">
-            <div class="headPortrait">
-              <t-image-viewer :images="[row.img]">
-                <template #trigger="{ open }">
-                  <div class="tdesign-demo-image-viewer__ui-image">
-                    <img
-                      alt="test"
-                      :src="row.img"
-                      class="tdesign-demo-image-viewer__ui-image--img"
-                    />
-                    <div
-                      class="tdesign-demo-image-viewer__ui-image--hover"
-                      @click="open"
-                    >
-                      <span><ZoomInIcon size="1.8em" /></span>
-                    </div>
-                  </div>
-                </template>
-              </t-image-viewer>
-            </div>
-          </template>
-          <!-- end -->
-          <!-- 在表格中添加自定义列 -->
-          <template #updateTime="{ row }">
-            <div class="updateTime">
-              <span>{{ row.updateTime }}</span>
-            </div>
-          </template>
-          <!-- end -->
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
             <a
               :class="
-                row.isActive === 1
-                  ? 'text-forbidden btn-dl btn-split-right'
-                  : 'btn-dl btn-split-right'
+                row.status === 0
+                  ? 'btn-dl'
+                  : 'font-bt'
               "
-              @click="handleClickDelete(row)"
-              >删除</a
+              @click="handleClickFreeze(row)"
+              >{{row.status === 0 ? '冻结' : '解冻'}}</a
             >
-            <a
-              :class="
-                row.isActive !== 1
-                  ? 'text-forbidden font-bt btn-split-right line'
-                  : 'font-bt btn-split-right line'
-              "
-              @click="handleViewServices(row)"
-              >查看服务项</a
-            >
-            <a class="font-bt line" @click="handleEdit(row)">编辑</a>
-            <a class="font-bt btn-split-left" @click="handleDisable(row)">{{
-              row.isActive === 1 ? '禁用' : '启用'
-            }}</a>
           </template>
           <!-- end -->
         </t-table>
@@ -117,7 +72,6 @@ export default {
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { CaretDownSmallIcon, ZoomInIcon } from 'tdesign-icons-vue-next'
-// import { isNumber } from 'lodash'
 import { COLUMNS } from '../constants'
 import NoData from '@/components/noData/index.vue'
 // 接收父组件传递的值
@@ -133,25 +87,41 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  isActive: {
+    type: Number,
   }
 })
 // 发送事件给父组件
 const emit = defineEmits([
   'fetchData',
-  'handleEdit',
+  'handleSetupContract',
   'handleBuild',
-  'handleClickDelete',
-  'handleDisable',
-  'onPageChange',
-  'handleSortChange'
+  'handleClickFreeze',
+  'handleSortChange',
+  'onPageChange'
 ])
 // 监听器赋值
 watch(props, () => {
   data.value = props.listData
   pagination.value = props.pagination
   dataLoading.value = false
+  if (props.isActive === 0) {
+      tableCOLUMNS.value = []
+      tableCOLUMNS.value = COLUMNS
+    } else if (props.isActive === 1) {
+      tableCOLUMNS.value = []
+      tableCOLUMNS.value = SERVE_DATA
+    } else if (props.isActive === 2) {
+      tableCOLUMNS.value = []
+      tableCOLUMNS.value = WITHDRAW_DATA
+    } else if (props.isActive === 4) {
+      tableCOLUMNS.value = []
+      tableCOLUMNS.value = BREAK_DATA
+    }
 })
-const filterValue = ref({})
+// 表头COLUMNS
+const tableCOLUMNS = ref(COLUMNS)
 // 路由
 const router = useRouter()
 // 排序
@@ -164,6 +134,11 @@ const sort = ref([
     sortBy: 'updateTime'
   }
 ]) // 排序
+const globalLocale = ref({
+  table: {
+    sortIcon: (h) => h && h(CaretDownSmallIcon)
+  }
+}) // 排序图标
 const data: any = ref([])
 // 选中的行
 const pagination: any = ref({
@@ -173,11 +148,9 @@ const pagination: any = ref({
 })
 // 索引
 const rowKey = 'index' // 行的key
-const globalLocale = ref({
-  table: {
-    sortIcon: (h) => h && h(CaretDownSmallIcon)
-  }
-})
+const filterValue = ref({
+  status: ''
+}) // 过滤
 // 加载状态
 const dataLoading = ref(true)
 
@@ -186,24 +159,20 @@ const sortChange = (val) => {
   sort.value = val
   emit('handleSortChange', val)
 }
+
 // 选中的行
 const selectedRowKeys = ref([1, 2])
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
-// 点击查看详情
-const handleDisable = (val) => {
-  emit('handleDisable', val)
+// 点击跳转到编辑页
+const handleClickEdit = (val) => {
+  router.push('/personnel/information/informationDetail/' + val.id)
 }
-// 打开编辑弹窗
-const handleEdit = (val) => {
-  emit('handleEdit', val)
-}
+
 // 点击删除
-const deleteIdx = ref(-1) // 删除的索引
-const handleClickDelete = (row: { rowIndex: any }) => {
-  emit('handleClickDelete', row)
-  deleteIdx.value = row.rowIndex
+const handleClickFreeze = (row: { rowIndex: any }) => {
+  emit('handleClickFreeze', row)
 }
 // 点击翻页
 const onPageChange = (val) => {
@@ -219,25 +188,12 @@ const onPageChange = (val) => {
 const handleBuild = () => {
   emit('handleBuild')
 }
-
-// 点击查看服务项
-const handleViewServices = (val) => {
-  router.push({
-    path: 'ServiceList',
-    query: {
-      id: val.id
-    }
-  })
-}
 </script>
 <style lang="less" scoped src="../../index.less"></style>
 <style lang="less" scoped>
 .baseList {
   :deep(.t-table td) {
     height: 64px !important;
-  }
-  .min-h{
-    min-height: 720px;
   }
 }
 .headPortrait {
@@ -247,8 +203,4 @@ const handleViewServices = (val) => {
 :deep(.t-table__filter-icon) {
   display: none;
 }
-:deep(.t-table--column-fixed .t-table__cell--fixed-right) {
-  width: 157px !important;
-}
-
 </style>
