@@ -14,8 +14,6 @@
       :list-data="listData"
       :pagination="pagination"
       :isActive="0"
-      @handleSetupContract="handleSetupContract"
-      @handleBuild="handleBuild"
       @handleClickFreeze="handleClickFreeze"
       @fetchData="fetchData"
       @handleClickThaw="handleClickThaw"
@@ -27,27 +25,20 @@
     <DialogForm
       :visible="visible"
       :title="title"
+      ref="dialogForm"
       :data="DialogFormData"
       @handleClose="handleClose"
       @fetchData="fetchData"
+      @handleSubmit="handleFreeze"
     />
     <!-- end -->
     <!-- 删除弹窗 -->
     <Delete
       :dialog-delete-visible="dialogFreezeVisible"
       :delete-text="deleteText"
-      @handle-delete="handleFreeze"
+      @handle-delete="handleThaw"
       @handle-close="handleClose"
     ></Delete>
-    <!-- end -->
-    <!-- 上架/下架弹窗 -->
-    <Confirm
-      :title="confirmTitle"
-      :dialog-confirm-visible="dialogConfirmVisible"
-      :confirm-text="confirmText"
-      @handle-confirm="handleConfirm"
-      @handle-close="handleClose"
-    ></Confirm>
     <!-- end -->
   </div>
 </template>
@@ -55,30 +46,24 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { useRoute, useRouter } from 'vue-router'
 import { getCustomList, customFreeze } from '@/api/custom'
 import { forEach } from 'lodash'
 import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
 import Delete from '@/components/Delete/index.vue' // 删除弹层
-import Confirm from '@/components/Confirm/index.vue' // 确认弹层
 import searchFormBox from './components/SearchForm.vue' // 搜索框表单
 
-const route = useRoute()
-const router = useRouter()
 const visible = ref(false) // 新增，编辑弹窗
 const listData = ref([]) // 列表数据
 const dataLoading = ref(false) // 列表数据加载loading
 const DialogFormData = ref({}) // 弹窗表单内容
 const title = ref('新建') // 弹窗标题
-const confirmTitle = ref('确认下架') // 确认弹窗标题
 const dialogFreezeVisible = ref(false) // 控制删除弹层显示隐藏
-const dialogConfirmVisible = ref(false) // 控制确认弹层显示隐藏
-const deleteText = ref('此操作将永久删除这条信息，是否继续？') // 删除的内容
-const confirmText = ref('此操作将永久下架这条信息，是否继续？') // 确认的内容
+const deleteText = ref('解冻用户的所有已禁操作皆可恢复，是否确认解冻该用户？') // 删除的内容
 const initSearch = ref() // 条转过来的携带数据
 const typeSelect = ref([]) // 服务类型下拉框数据
 const freezeId = ref('') // 删除的id
+const dialogForm = ref(null) // 弹窗组件
 // 分页
 const pagination = ref({
   defaultPageSize: 10,
@@ -95,11 +80,6 @@ const requestData = ref({
   nickname: '',
   phone: ''
 }) // 请求参数
-// 上下架数据
-const setupContractData = ref({
-  id: '',
-  flag: 0
-})
 // 生命周期
 onMounted(() => {
   fetchData(requestData.value)
@@ -140,53 +120,23 @@ const fetchData = async (val) => {
 const handleClose = () => {
   visible.value = false // 关闭新增弹窗
   dialogFreezeVisible.value = false // 关闭删除弹层
-  dialogConfirmVisible.value = false // 关闭确认弹层
 }
-// 点击新建
-const handleBuild = () => {
-  router.push('/personnel/information/informationDetail')
-}
-// 上下架
-const handleSetupContract = (val, id) => {
-  dialogConfirmVisible.value = true
-  setupContractData.value.id = val.id
-  if (id !== 2) {
-    confirmTitle.value = '确认上架'
-    confirmText.value = '确定上架该服务吗？'
-    setupContractData.value.flag = 2
-  } else {
-    confirmTitle.value = '确认下架'
-    confirmText.value = '确定下架该服务吗？'
-    setupContractData.value.flag = 1
-  }
-}
-// 确认上下架
-const handleConfirm = async () => {
-  // await customFreeze()
-  //   .then((res) => {
-  //     if (res.data.code === 200) {
-  //       dialogConfirmVisible.value = false
-  //       MessagePlugin.success('操作成功')
-  //       fetchData(requestData.value)
-  //     } else {
-  //       MessagePlugin.error(res.data.msg)
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
-}
-// 确认删除
-const handleFreeze = async () => {
-  // await customFreeze(freezeId.value).then((res) => {
-  //   if (res.code === 200) {
-  //     dialogFreezeVisible.value = false
-  //     MessagePlugin.success('删除成功')
-  //     fetchData(requestData.value)
-  //   } else {
-  //     MessagePlugin.error(res.msg)
-  //   }
-  // })
+
+// 确认冻结
+const handleFreeze = async (val) => {
+  await customFreeze({
+    id: freezeId.value,
+    status: 1,
+    accountLockReason: val.accountLockReason
+  }).then((res) => {
+    if (res.code === 200) {
+      dialogFreezeVisible.value = false
+      MessagePlugin.success('删除成功')
+      fetchData(requestData.value)
+    } else {
+      MessagePlugin.error(res.msg)
+    }
+  })
 }
 // 点击冻结
 const handleClickFreeze = (row) => {
@@ -200,7 +150,22 @@ const handleClickThaw = (row) => {
   freezeId.value = row.id
   // 编辑弹窗
   visible.value = true
-  title.value = '解冻原因'
+  title.value = '解冻确认'
+}
+// 确认解冻
+const handleThaw = async () => {
+  await customFreeze({
+    id: freezeId.value,
+    status: 0
+  }).then((res) => {
+    if (res.code === 200) {
+      dialogFreezeVisible.value = false
+      MessagePlugin.success('解冻成功')
+      fetchData(requestData.value)
+    } else {
+      MessagePlugin.error(res.msg)
+    }
+  })
 }
 // 排序
 const handleSortChange = (val) => {
@@ -222,6 +187,4 @@ const onPageChange = (val) => {
   fetchData(requestData.value)
 }
 </script>
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

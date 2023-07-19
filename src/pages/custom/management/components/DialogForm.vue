@@ -18,12 +18,12 @@
         :reset-type="resetType"
         @submit="onSubmit"
       >
-        <t-form-item label="详细原因：" name="description"
+        <t-form-item label="冻结原因：" name="accountLockReason"
           ><t-textarea
-            v-model="formData.description"
+            v-model="formData.accountLockReason"
             class="wt-400"
             placeholder="请输入至少5个字符"
-            :maxlength="50"
+            :maxlength="140"
           >
           </t-textarea>
         </t-form-item>
@@ -42,12 +42,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { MessagePlugin, ValidateResultContext } from 'tdesign-vue-next'
+import {  ValidateResultContext } from 'tdesign-vue-next'
 import {
-  validateNum,
-  validateText,
-  validateText10,
-  validatePhone
+  validateText140,
 } from '@/utils/validate'
 
 const props = defineProps({
@@ -76,31 +73,14 @@ const emit: Function = defineEmits(['handleClose', 'fetchData'])
 const formVisible = ref(false)
 // 表单数据
 const formData = ref({
-  phoneNumber: '',
-  serviceCallNumber: '',
-  name: '',
-  description: '',
-  serveTypeId: ''
+  accountLockReason: '',
 })
 // 弹窗标题
 const title = ref()
 // 提交表单
 const onSubmit = (result: ValidateResultContext<FormData>) => {
   if (result.validateResult === true) {
-    // 判断内容时否发生改变
-    // if (
-    //   formData.value.serviceCallNumber === props.data.serviceCallNumber &&
-    //   formData.value.description === props.data.description &&
-    //   formData.value.phoneNumber === props.data.phoneNumber &&
-    //   formData.value.name === props.data.name
-    // ) {
-    //   MessagePlugin.warning('内容未发生改变')
-    //   console.log(formData.value)
-    //   console.log(props.data)
-    // } else {
-    MessagePlugin.success('提交成功')
-    emit('fetchData')
-    onClickCloseBtn()
+    emit('handleSubmit', formData.value)
   }
 }
 // 点击取消关闭
@@ -127,67 +107,10 @@ watch(
   }
 )
 
-// 字数限制
-const Wordlimit: Function = (num: number) => {
-  if (formData.value.name.length > num) {
-    formData.value.name = formData.value.name.slice(0, num)
-  }
-}
 
 // 表单校验
 const rules = {
-  phoneNumber: [
-    // 手机号校验
-    {
-      required: true,
-      message: '请输入手机号',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validatePhone,
-      message: '请输入正确格式的手机号',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
-  serviceCallNumber: [
-    // 调用次数校验
-    {
-      required: true,
-      message: '请输入调用次数',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
-      type: 'error',
-      trigger: 'change'
-    },
-    {
-      validator: validateNum,
-      message: '请输入正确格式的调用次数，0-999',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
-  name: [
-    // 昵称校验
-    {
-      required: true,
-      message: '请输入昵称',
-      type: 'error',
-      trigger: 'blur'
-    },
-    {
-      validator: validateText10,
-      message: '请输入至少2个字符,至多10个字符',
-      type: 'error',
-      trigger: 'blur'
-    }
-  ],
-  description: [
+  accountLockReason: [
     {
       required: true,
       message: '请输入详细原因',
@@ -195,19 +118,22 @@ const rules = {
       trigger: 'blur'
     },
     {
-      validator: validateText,
-      message: '请输入至少5个字符,至多50个字符',
+      validator: validateText140,
+      message: '请输入至少5个字符,至多140个字符',
       type: 'error',
       trigger: 'change'
     },
     {
-      validator: validateText,
-      message: '请输入至少5个字符,至多50个字符',
+      validator: validateText140,
+      message: '请输入至少5个字符,至多140个字符',
       type: 'error',
       trigger: 'blur'
     }
   ]
 }
+defineExpose({
+  onClickCloseBtn
+})
 </script>
 <style lang="less" scoped>
 .btn-submit {
