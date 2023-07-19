@@ -162,31 +162,31 @@ const handleSetupContract = (val, id) => {
 }
 // 确认上下架
 const handleConfirm = async () => {
-  await customFreeze(setupContractData.value)
-    .then((res) => {
-      if (res.data.code === 200) {
-        dialogConfirmVisible.value = false
-        MessagePlugin.success('操作成功')
-        fetchData(requestData.value)
-      } else {
-        MessagePlugin.error(res.data.msg)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  // await customFreeze()
+  //   .then((res) => {
+  //     if (res.data.code === 200) {
+  //       dialogConfirmVisible.value = false
+  //       MessagePlugin.success('操作成功')
+  //       fetchData(requestData.value)
+  //     } else {
+  //       MessagePlugin.error(res.data.msg)
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
 }
 // 确认删除
 const handleFreeze = async () => {
-  await customFreeze(freezeId.value).then((res) => {
-    if (res.code === 200) {
-      dialogFreezeVisible.value = false
-      MessagePlugin.success('删除成功')
-      fetchData(requestData.value)
-    } else {
-      MessagePlugin.error(res.msg)
-    }
-  })
+  // await customFreeze(freezeId.value).then((res) => {
+  //   if (res.code === 200) {
+  //     dialogFreezeVisible.value = false
+  //     MessagePlugin.success('删除成功')
+  //     fetchData(requestData.value)
+  //   } else {
+  //     MessagePlugin.error(res.msg)
+  //   }
+  // })
 }
 // 点击冻结
 const handleClickFreeze = (row) => {
