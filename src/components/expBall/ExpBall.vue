@@ -11,12 +11,12 @@
       v-model:visible="visible"
       placement="top"
       :footer="false"
-      top="1%"
-      width="90%"
+      top="10vh"
+      width="70%"
     >
       <div class="expCont">
         <img
-          src="https://yjy-oss-videos.oss-cn-zhangjiakou.aliyuncs.com/ObjectExplain/formDs.gif"
+          src="https://yjy-oss-videos.oss-accelerate.aliyuncs.com/ObjectExplain/xiaozhibang.png"
           alt=""
         />
       </div>
@@ -96,7 +96,7 @@ const moveExp = (e) => {
 }
 :deep(.t-dialog__body) {
   width: 100%;
-  height: 800px;
+  height: 80vh;
   .expCont {
     display: flex;
     justify-content: center;
@@ -104,5 +104,28 @@ const moveExp = (e) => {
       width: 100%;
     }
   }
+}
+:deep(.t-dialog) {
+  width: auto;
+  border: none;
+  // background: transparent;
+  position: initial;
+}
+:deep(.t-dialog__ctx .t-dialog__position.t-dialog--top) {
+  padding-top: 10vh;
+}
+// :deep(.t-dialog__ctx .t-dialog__mask){
+//   background-color: transparent;
+// }
+:deep(.t-dialog__header){
+  position: absolute;
+    top: 30px;
+    right: 30px;
+    height: auto;
+    background: transparent;
+    padding: 0;
+}
+:deep(.t-dialog__header .t-dialog__close){
+  color: aliceblue;
 }
 </style>

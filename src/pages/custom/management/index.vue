@@ -36,6 +36,7 @@
     <Delete
       :dialog-delete-visible="dialogFreezeVisible"
       :delete-text="deleteText"
+      :title="title"
       @handle-delete="handleThaw"
       @handle-close="handleClose"
     ></Delete>
@@ -48,7 +49,7 @@ import { ref, onMounted, watchEffect } from 'vue'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { getCustomList, customFreeze } from '@/api/custom'
 import { forEach } from 'lodash'
-import DialogForm from './components/DialogForm.vue' // 新增,编辑弹窗.
+import DialogForm from '../../institution/information/components/DialogForm.vue' // 新增,编辑弹窗.
 import tableList from './components/TableList.vue' // 表格
 import Delete from '@/components/Delete/index.vue' // 删除弹层
 import searchFormBox from './components/SearchForm.vue' // 搜索框表单
@@ -105,7 +106,6 @@ const fetchData = async (val) => {
   dataLoading.value = true
   await getCustomList(val)
     .then((res) => {
-      console.log(res)
       if (res.code === 200) {
         listData.value = res.data.list
         pagination.value.total = Number(res.data.total)
@@ -129,10 +129,11 @@ const handleFreeze = async (val) => {
     status: 1,
     accountLockReason: val.accountLockReason
   }).then((res) => {
-    if (res.code === 200) {
+    if (res.data.code === 200) {
       dialogFreezeVisible.value = false
-      MessagePlugin.success('删除成功')
+      MessagePlugin.success('冻结成功')
       fetchData(requestData.value)
+      dialogForm.value.onClickCloseBtn()
     } else {
       MessagePlugin.error(res.msg)
     }
@@ -149,7 +150,7 @@ const handleClickFreeze = (row) => {
 const handleClickThaw = (row) => {
   freezeId.value = row.id
   // 编辑弹窗
-  visible.value = true
+  dialogFreezeVisible.value = true
   title.value = '解冻确认'
 }
 // 确认解冻
@@ -158,7 +159,7 @@ const handleThaw = async () => {
     id: freezeId.value,
     status: 0
   }).then((res) => {
-    if (res.code === 200) {
+    if (res.data.code === 200) {
       dialogFreezeVisible.value = false
       MessagePlugin.success('解冻成功')
       fetchData(requestData.value)
@@ -170,13 +171,11 @@ const handleThaw = async () => {
 // 排序
 const handleSortChange = (val) => {
   forEach(val, (item) => {
-    if (item.sortBy === 'sortNum') {
       if (item.descending === true) {
         requestData.value.isAsc1 = false
       } else {
         requestData.value.isAsc1 = true
       }
-    }
   })
   fetchData(requestData.value)
 }

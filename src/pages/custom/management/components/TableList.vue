@@ -17,7 +17,6 @@
           :loading="dataLoading"
           :sort="sort"
           showSizeChanger
-          :filter-value="filterValue"
           :hide-sort-tips="true"
           :show-sort-column-bg-color="true"
           table-layout="fixed"
@@ -108,17 +107,13 @@ watch(props, () => {
   pagination.value = props.pagination
   dataLoading.value = false
 })
-// 路由
-const router = useRouter()
+
 // 排序
 const sort = ref([
   {
     // 按照服务调用次数进行排序
-    sortBy: 'sortNum'
+    sortBy: 'createTime'
   },
-  {
-    sortBy: 'updateTime'
-  }
 ]) // 排序
 const globalLocale = ref({
   table: {
@@ -134,9 +129,6 @@ const pagination: any = ref({
 })
 // 索引
 const rowKey = 'index' // 行的key
-const filterValue = ref({
-  status: ''
-}) // 过滤
 // 加载状态
 const dataLoading = ref(true)
 

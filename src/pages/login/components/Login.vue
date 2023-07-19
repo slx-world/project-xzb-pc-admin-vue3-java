@@ -65,7 +65,7 @@ const loadSt = ref(false)
 
 const INITIAL_DATA = {
   username: 'lisi',
-  password: '',
+  password: '123456',
 }
 
 const FORM_RULES: Record<string, FormRule[]> = {

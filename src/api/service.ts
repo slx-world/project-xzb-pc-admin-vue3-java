@@ -156,3 +156,23 @@ export function serviceDelete(id) {
     url: '/serve/' + id
   })
 }
+// 接口名称：服务人员、机构分页查询
+export function servicePersonList(value) {
+  return request.get({
+    url: '/serve-provider/page',
+    params: value
+  })
+}
+// 服务人员、机构详情
+export function servicePersonDetail(id) {
+  return request.get({
+    url: '/serve-provider/' + id
+  })
+}
+// 服务人员、机构冻结/解冻
+export function servicePersonStatus(value) {
+  return request.put({
+    url: '/serve-provider/updateStatus',
+    data: value
+  })
+}

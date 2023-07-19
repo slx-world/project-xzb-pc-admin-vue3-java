@@ -61,7 +61,12 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         '/api': {
           target: 'http://172.17.2.58/api',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/api/, ''),
+          // bypass(req,res,options){
+          //   const proxyUrl = new URL (req.url , (options.target)as string)?.href
+          //   req.headers['refererss'] = proxyUrl
+          //   res.setHeader('refererss', proxyUrl)
+          // }
         }
       }
     }

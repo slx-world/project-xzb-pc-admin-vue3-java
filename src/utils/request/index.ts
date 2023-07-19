@@ -111,11 +111,13 @@ const transform: AxiosTransform = {
         config.data = params
         config.params = undefined
       }
+
       if (joinParamsToUrl) {
         config.url = setObjToUrlParams(config.url as string, {
           ...config.params,
           ...config.data
         })
+        
       }
     } else {
       // 兼容restful风格
@@ -141,7 +143,7 @@ const transform: AxiosTransform = {
   },
 
   // 响应拦截器处理
-  responseInterceptors: (res) => {
+  responseInterceptors: (res) => {  
     return res
   },
 
@@ -193,7 +195,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           isJoinPrefix: true,
           // 接口前缀
           // 例如: https://www.baidu.com/api
-          urlPrefix: '/operation',
+          urlPrefix: '/api/operation',
           // urlPrefix: '',
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
