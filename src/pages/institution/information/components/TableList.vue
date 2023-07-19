@@ -95,13 +95,13 @@
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
             <a
-            :class="
+              :class="
                 row.status === 0
                   ? 'btn-dl btn-split-right'
                   : 'font-bt btn-split-right'
               "
               @click="handleClickFreeze(row, row.status)"
-              >{{row.status === 0 ? '冻结' : '解冻'}}</a
+              >{{ row.status === 0 ? '冻结' : '解冻' }}</a
             >
             <a
               :class="
@@ -130,7 +130,13 @@ export default {
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { CaretDownSmallIcon, ZoomInIcon } from 'tdesign-icons-vue-next'
-import { COLUMNS, SERVE_DATA, WITHDRAW_DATA, BREAK_DATA } from '../constants'
+import {
+  COLUMNS,
+  SERVE_DATA,
+  WITHDRAW_DATA,
+  BREAK_DATA,
+  SERVE_COLUMNS
+} from '../constants'
 import NoData from '@/components/noData/index.vue'
 // 接收父组件传递的值
 const props = defineProps({
@@ -147,7 +153,7 @@ const props = defineProps({
     }
   },
   isActive: {
-    type: Number,
+    type: Number
   }
 })
 // 发送事件给父组件
@@ -158,7 +164,7 @@ const emit = defineEmits([
   'handleClickFreeze',
   'handleSortChange',
   'onPageChange',
-  'handleClickThaw',
+  'handleClickThaw'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -166,21 +172,25 @@ watch(props, () => {
   pagination.value = props.pagination
   dataLoading.value = false
   if (props.isActive === 0) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = COLUMNS
-    } else if (props.isActive === 1) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = SERVE_DATA
-    } else if (props.isActive === 2) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = WITHDRAW_DATA
-    } else if (props.isActive === 4) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = BREAK_DATA
-    }
+    tableCOLUMNS.value = []
+    tableCOLUMNS.value = COLUMNS
+  } else if (props.isActive === 1) {
+    tableCOLUMNS.value = []
+    tableCOLUMNS.value = SERVE_DATA
+  } else if (props.isActive === 2) {
+    tableCOLUMNS.value = []
+    tableCOLUMNS.value = WITHDRAW_DATA
+  } else if (props.isActive === 4) {
+    tableCOLUMNS.value = []
+    console.log(sort.value);
+    tableCOLUMNS.value = SERVE_COLUMNS
+  } else {
+    tableCOLUMNS.value = []
+    tableCOLUMNS.value = BREAK_DATA
+  }
 })
 // 表头COLUMNS
-const tableCOLUMNS = ref(COLUMNS)
+const tableCOLUMNS = ref()
 // 路由
 const router = useRouter()
 // 排序
@@ -224,17 +234,17 @@ const selectedRowKeys = ref([1, 2])
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
-// 点击跳转到编辑页
+// 点击跳转到详情页
 const handleClickEdit = (val) => {
   router.push('/institution/information/informationDetail/' + val.id)
 }
 
 // 点击删除
-const handleClickFreeze = (row,flag) => {
-  if(flag === 0){
+const handleClickFreeze = (row, flag) => {
+  if (flag === 0) {
     emit('handleClickFreeze', row)
     return
-  }else{
+  } else {
     emit('handleClickThaw', row)
   }
 }

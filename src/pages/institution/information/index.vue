@@ -158,7 +158,7 @@ const handleFreeze = async (val) => {
     }
   })
 }
-// 点击删除
+// 点击冻结
 const handleClickFreeze = (row) => {
   freezeId.value = row.id
   // 编辑弹窗

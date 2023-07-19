@@ -13,30 +13,43 @@
         <div class="leftBox">
           <div class="tag">
             <div class="label">人员姓名</div>
-            <div class="content">张三</div>
+            <div class="content">{{ formData.name }}</div>
           </div>
           <div class="tag">
             <div class="label">手机号</div>
             <div class="content">
               {{
                 // 18899998888脱敏处理
-                '18899998888'.slice(0, 3) +
+                formData.phone.slice(0, 3) +
                 ' ' +
-                '18899998888'.slice(3, 7) +
+                formData.phone.slice(3, 7) +
                 ' ' +
-                '18899998888'.slice(7, 11)
+                formData.phone.slice(7, 11)
               }}
             </div>
+          </div>
+          <div class="tag" v-if="formData.accountLockReason">
+            <div class="label">冻结原因</div>
+            <div class="content">{{formData.accountLockReason}}</div>
           </div>
         </div>
         <div class="rightBox">
           <div class="tag">
-            <div class="label">账号状态</div>
-            <div class="content">正常</div>
+            <div class="label">认证状态</div>
+            <div class="content" v-if="formData.verifyStatus === 0">未认证</div>
+            <div class="content" v-if="formData.verifyStatus === 1">认证中</div>
+            <div class="content" v-if="formData.verifyStatus === 2">
+              认证通过
+            </div>
+            <div class="content" v-if="formData.verifyStatus === 3">
+              认证失败
+            </div>
           </div>
           <div class="tag">
-            <div class="label">认证状态</div>
-            <div class="content">已认证</div>
+            <div class="label">账号状态</div>
+            <div class="content">
+              {{ formData.status === 1 ? '冻结' : '正常' }}
+            </div>
           </div>
         </div>
       </div>
@@ -95,34 +108,27 @@ export default {
 <script setup lang="ts">
 import { ref, onMounted, reactive, computed } from 'vue'
 import switchBar from '@/components/switchBar/switchBartop.vue'
-import {
-  serviceTypeSimpleList,
-  serviceItemAdd,
-  serviceItemById,
-  serviceItemEdit
-} from '@/api/service'
+import { servicePersonDetail } from '@/api/service'
 import { useRouter, useRoute } from 'vue-router'
 import tableList from './components/TableList.vue' // 表格
 // 引用正则
-import { validateText5 } from '@/utils/validate'
 import { MessagePlugin } from 'tdesign-vue-next'
 const isActive = ref() // 当前选中的tab
+const route = useRoute()
+const { id } = route.params
 const previewData = reactive({
   title: '',
   img: '',
   detailImg: ''
 }) // 预览数据
 const formData = ref({
-  serveTypeId: '',
-  img: [],
-  description: '',
-  referencePrice: null,
-  unit: '',
-  serveItemIcon: [],
-  detailImg: [],
-  name: '',
-  sortNum: ''
+  phone: '18899998888',
+  verifyStatus: 0,
+  accountLockReason: '',
+  name: '胡德禄',
+  status: 0
 })
+// 服务人员请求数据
 const listData = ref([]) // 表格数据
 const pagination = reactive({
   defaultPageSize: 10,
@@ -147,77 +153,25 @@ const tableBar = ref([
     name: '违约记录'
   }
 ])
-const router = useRouter()
-const route = useRoute()
-const { id } = route.params
-const typeSelect = ref([]) // 服务类型下拉框数据
-// 显示的图片
-// 默认图片
-const token = localStorage.getItem('xzb') // 获取token
-const uploadRef1 = ref() // 上传图片
+
 // 生命周期
 onMounted(() => {
   isActive.value = 1
-  getServiceTypeSimpleList() // 获取服务类型下拉框数据
   if (id) {
     getData(id)
   }
 })
 // 获取接口数据
 const getData = async (val) => {
-  await serviceItemById(val).then((res) => {
+  await servicePersonDetail(val).then((res) => {
     if (res.code == 200) {
-      formData.value.serveTypeId = res.data.serveTypeId
-      formData.value.img = [
-        {
-          url: res.data.img
-        }
-      ]
-      formData.value.description = res.data.description
-      formData.value.referencePrice = res.data.referencePrice
-      formData.value.unit = res.data.unit
-      formData.value.serveItemIcon = [
-        {
-          url: res.data.serveItemIcon
-        }
-      ]
-      formData.value.detailImg = [
-        {
-          url: res.data.detailImg
-        }
-      ]
-      formData.value.name = res.data.name
-      formData.value.sortNum = res.data.sortNum
-      previewData.title = res.data.name
-      previewData.img = res.data.img
-      previewData.detailImg = res.data.detailImg
+      formData.value = res.data
     } else {
       MessagePlugin.error(res.msg)
     }
   })
 }
 
-// 获取服务类型下拉框数据
-const getServiceTypeSimpleList = async () => {
-  await serviceTypeSimpleList({
-    isActive: 1
-  })
-    .then((res) => {
-      if (res.code == 200) {
-        typeSelect.value = res.data.map((item) => {
-          return {
-            label: item.name,
-            value: item.id
-          }
-        })
-      } else {
-        MessagePlugin.error(res.msg)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
 // 翻页
 const handleSortChange = (val) => {
   pagination.defaultCurrent = val
@@ -245,6 +199,7 @@ const changeId = (val) => {
       img {
         width: 70px;
         height: 70px;
+        border-radius: 50%;
       }
     }
     .right {
@@ -257,7 +212,7 @@ const changeId = (val) => {
           display: flex;
           margin-bottom: 30px;
           &:last-child {
-            margin-bottom: 50px;
+            margin-bottom: 5px;
           }
           .label {
             width: 56px;
