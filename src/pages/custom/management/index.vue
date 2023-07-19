@@ -18,6 +18,7 @@
       @handleBuild="handleBuild"
       @handleClickFreeze="handleClickFreeze"
       @fetchData="fetchData"
+      @handleClickThaw="handleClickThaw"
       @onPageChange="onPageChange"
       @handleSortChange="handleSortChange"
     ></tableList>
@@ -193,6 +194,13 @@ const handleClickFreeze = (row) => {
   // 编辑弹窗
   visible.value = true
   title.value = '冻结原因'
+}
+// 点击解冻
+const handleClickThaw = (row) => {
+  freezeId.value = row.id
+  // 编辑弹窗
+  visible.value = true
+  title.value = '解冻原因'
 }
 // 排序
 const handleSortChange = (val) => {

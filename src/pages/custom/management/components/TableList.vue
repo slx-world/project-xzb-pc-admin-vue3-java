@@ -99,7 +99,8 @@ const emit = defineEmits([
   'handleBuild',
   'handleClickFreeze',
   'handleSortChange',
-  'onPageChange'
+  'onPageChange',
+  'handleClickThaw'
 ])
 // 监听器赋值
 watch(props, () => {
@@ -150,14 +151,14 @@ const selectedRowKeys = ref([1, 2])
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
-// 点击跳转到编辑页
-const handleClickEdit = (val) => {
-  router.push('/personnel/information/informationDetail/' + val.id)
-}
-
-// 点击删除
-const handleClickFreeze = (row: { rowIndex: any }) => {
-  emit('handleClickFreeze', row)
+// 点击冻结
+const handleClickFreeze = (row,flag) => {
+  if(flag === 0){
+    emit('handleClickFreeze', row)
+    return
+  }else{
+    emit('handleClickThaw', row)
+  }
 }
 // 点击翻页
 const onPageChange = (val) => {
