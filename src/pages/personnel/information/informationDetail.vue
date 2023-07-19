@@ -122,10 +122,10 @@ const previewData = reactive({
   detailImg: ''
 }) // 预览数据
 const formData = ref({
-  phone: '18899998888',
+  phone: '',
   verifyStatus: 0,
   accountLockReason: '',
-  name: '胡德禄',
+  name: '',
   status: 0
 })
 // 服务人员请求数据
