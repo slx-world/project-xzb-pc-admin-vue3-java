@@ -8,7 +8,7 @@ export default {
   },
   test: {
     // 测试环境接口地址
-    host: '/',
+    host: '/http://xzb-api-test.itheima.net',
     // 测试环境 cdn 路径
     cdn: ''
   },
