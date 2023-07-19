@@ -106,22 +106,7 @@ watch(props, () => {
   data.value = props.listData
   pagination.value = props.pagination
   dataLoading.value = false
-  if (props.isActive === 0) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = COLUMNS
-    } else if (props.isActive === 1) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = SERVE_DATA
-    } else if (props.isActive === 2) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = WITHDRAW_DATA
-    } else if (props.isActive === 4) {
-      tableCOLUMNS.value = []
-      tableCOLUMNS.value = BREAK_DATA
-    }
 })
-// 表头COLUMNS
-const tableCOLUMNS = ref(COLUMNS)
 // 路由
 const router = useRouter()
 // 排序

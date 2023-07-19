@@ -35,7 +35,7 @@
     <Delete
       :dialog-delete-visible="dialogDeleteVisible"
       :delete-text="deleteText"
-      @handle-delete="handleDelete"
+
       @handle-close="handleClose"
     ></Delete>
     <!-- end -->
@@ -44,7 +44,7 @@
       :title="confirmTitle"
       :dialog-confirm-visible="dialogConfirmVisible"
       :confirm-text="confirmText"
-      @handle-confirm="handleConfirm"
+
       @handle-close="handleClose"
     ></Confirm>
     <!-- end -->
@@ -160,33 +160,33 @@ const handleSetupContract = (val, id) => {
   }
 }
 // 确认上下架
-const handleConfirm = async () => {
-  await customFreeze(setupContractData.value)
-    .then((res) => {
-      if (res.data.code === 200) {
-        dialogConfirmVisible.value = false
-        MessagePlugin.success('操作成功')
-        fetchData(requestData.value)
-      } else {
-        MessagePlugin.error(res.data.msg)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
+// const handleConfirm = async () => {
+//   await customFreeze(setupContractData.value)
+//     .then((res) => {
+//       if (res.data.code === 200) {
+//         dialogConfirmVisible.value = false
+//         MessagePlugin.success('操作成功')
+//         fetchData(requestData.value)
+//       } else {
+//         MessagePlugin.error(res.data.msg)
+//       }
+//     })
+//     .catch((err) => {
+//       console.log(err)
+//     })
+// }
 // 确认删除
-const handleDelete = async () => {
-  await customFreeze(deleteId.value).then((res) => {
-    if (res.code === 200) {
-      dialogDeleteVisible.value = false
-      MessagePlugin.success('删除成功')
-      fetchData(requestData.value)
-    } else {
-      MessagePlugin.error(res.msg)
-    }
-  })
-}
+// const handleDelete = async () => {
+//   await customFreeze(deleteId.value).then((res) => {
+//     if (res.code === 200) {
+//       dialogDeleteVisible.value = false
+//       MessagePlugin.success('删除成功')
+//       fetchData(requestData.value)
+//     } else {
+//       MessagePlugin.error(res.msg)
+//     }
+//   })
+// }
 // 点击删除
 const handleClickFreeze = (row) => {
   deleteId.value = row.id
