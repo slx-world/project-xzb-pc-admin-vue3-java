@@ -95,11 +95,7 @@
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
             <a
-              :class="
-                row.status === 0
-                  ? 'btn-dl btn-split-right'
-                  : 'font-bt btn-split-right'
-              "
+              class="font-bt btn-split-right"
               @click="handleClickFreeze(row, row.status)"
               >{{ row.status === 0 ? '冻结' : '解冻' }}</a
             >
@@ -182,7 +178,7 @@ watch(props, () => {
     tableCOLUMNS.value = WITHDRAW_DATA
   } else if (props.isActive === 4) {
     tableCOLUMNS.value = []
-    console.log(sort.value);
+    console.log(sort.value)
     tableCOLUMNS.value = SERVE_COLUMNS
   } else {
     tableCOLUMNS.value = []

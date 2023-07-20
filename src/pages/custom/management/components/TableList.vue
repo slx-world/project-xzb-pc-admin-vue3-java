@@ -44,15 +44,9 @@
           </template>
           <!-- 在操作栏添加删除、编辑、查看三种操作 -->
           <template #op="{ row }">
-            <a
-              :class="
-                row.status === 0
-                  ? 'btn-dl'
-                  : 'font-bt'
-              "
-              @click="handleClickFreeze(row, row.status)"
-              >{{row.status === 0 ? '冻结' : '解冻'}}</a
-            >
+            <a class="font-bt" @click="handleClickFreeze(row, row.status)">{{
+              row.status === 0 ? '冻结' : '解冻'
+            }}</a>
           </template>
           <!-- end -->
         </t-table>
@@ -88,7 +82,7 @@ const props = defineProps({
     }
   },
   isActive: {
-    type: Number,
+    type: Number
   }
 })
 // 发送事件给父组件
@@ -113,7 +107,7 @@ const sort = ref([
   {
     // 按照服务调用次数进行排序
     sortBy: 'createTime'
-  },
+  }
 ]) // 排序
 const globalLocale = ref({
   table: {
@@ -144,11 +138,11 @@ const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val
 }
 // 点击冻结
-const handleClickFreeze = (row,flag) => {
-  if(flag === 0){
+const handleClickFreeze = (row, flag) => {
+  if (flag === 0) {
     emit('handleClickFreeze', row)
     return
-  }else{
+  } else {
     emit('handleClickThaw', row)
   }
 }

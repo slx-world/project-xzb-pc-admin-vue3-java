@@ -55,11 +55,11 @@ export const COLUMNS = [
           label: '冻结'
         }
       }
-      // const status = row.saleStatus === 2 ? '1' : 0
+      const status = row.status === 0 ? '2' : 1
       return h(
         'span',
         {
-          class: `status-dot status-dot-${row.status}`
+          class: `status-dot status-dot-${status}`
         },
         statusList[row.status].label
       )

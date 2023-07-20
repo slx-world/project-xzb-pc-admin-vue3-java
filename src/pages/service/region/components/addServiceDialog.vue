@@ -3,7 +3,7 @@
   <t-dialog
     v-model:visible="formVisible"
     :header="title"
-    :width="777"
+    :width="791"
     :on-close="onClickCloseBtn"
   >
     <template #body>
@@ -270,8 +270,12 @@ watch(
   }
 }
 .middleBox {
-  padding: 25px 30px 25px;
+  padding: 25px 32px 25px;
+  width: 315px;
   border-right: 1px solid #e4e7ed;
+  :deep(.noData){
+    margin: 0 auto;
+  }
   .search {
     width: 240px;
     height: 32px;
@@ -280,7 +284,6 @@ watch(
     height: 252px;
     width: 250px;
     margin-top: 18.4px;
-    margin-right: 15.5px;
     overflow-y: scroll;
     scroll-behavior: smooth;
     // 滚动条不占位置
